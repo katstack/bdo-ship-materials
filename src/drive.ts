@@ -13,8 +13,9 @@ interface GoogleTokenClient { requestAccessToken: (options?: { prompt?: string }
 interface GoogleTokenResponse { access_token?: string; error?: string; error_description?: string; expires_in?: number }
 interface DriveFile { id: string; modifiedTime?: string }
 
-export function getClientId() { return localStorage.getItem('bdo-drive-client-id') || import.meta.env.VITE_GOOGLE_CLIENT_ID || '' }
-export function setClientId(clientId: string) { localStorage.setItem('bdo-drive-client-id', clientId.trim()) }
+// OAuth client IDs are public identifiers, not secrets. Never add a client secret here.
+const GOOGLE_CLIENT_ID = '865764819056-o9i2pcvdqeb1r94fms5e4v19v24hn1ma.apps.googleusercontent.com'
+export function getClientId() { return GOOGLE_CLIENT_ID }
 export function isDriveConnected() { return localStorage.getItem('bdo-drive-connected') === 'true' }
 export function setDriveConnected(connected: boolean) { localStorage.setItem('bdo-drive-connected', String(connected)) }
 

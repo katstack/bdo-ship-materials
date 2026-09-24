@@ -25,12 +25,10 @@ VITE_BASE_PATH=/bdo-ship-materials/ npm run build
 
 ## Google Drive 동기화
 
-설정 화면에서 OAuth Client ID를 입력하거나, 빌드 시 `VITE_GOOGLE_CLIENT_ID` 환경변수를 설정할 수 있습니다.
-
-제공된 Client ID로 시작하려면 `.env.example`을 `.env`로 복사한 뒤 빌드하세요. `VITE_` 값은 프론트엔드에 공개되는 값이므로 Client Secret을 넣으면 안 됩니다.
+OAuth Client ID는 앱 코드에 공개 식별자로 고정되어 있습니다. Client ID는 비밀값이 아니며, Client Secret은 이 앱에서 사용하거나 저장하지 않습니다.
 
 ```bash
-VITE_GOOGLE_CLIENT_ID=YOUR_CLIENT_ID VITE_BASE_PATH=/bdo-ship-materials/ npm run build
+VITE_BASE_PATH=/bdo-ship-materials/ npm run build
 ```
 
 Google Cloud Console에서 이 앱의 배포 주소와 로컬 개발 주소를 OAuth **승인된 JavaScript 원본**에 등록해야 합니다. 이 앱은 Google Identity Services의 브라우저 OAuth 토큰 흐름만 쓰며 Client Secret을 사용하거나 저장하지 않습니다. 요청 권한은 `https://www.googleapis.com/auth/drive.appdata` 하나이며, 데이터는 사용자 Drive 파일 목록에 표시되지 않는 앱 전용 `appDataFolder/bdo-ship-materials.json`에 저장됩니다.
