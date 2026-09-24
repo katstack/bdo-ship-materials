@@ -4,6 +4,7 @@ import { normalize } from './storage'
 export const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.appdata'
 const FILE_NAME = 'bdo-ship-materials.json'
 const GIS_URL = 'https://accounts.google.com/gsi/client'
+const TOKEN_CACHE_KEY = 'bdo-drive-access-token:v1'
 
 declare global {
   interface Window { google?: { accounts: { oauth2: { initTokenClient: (options: GoogleTokenClientConfig) => GoogleTokenClient } } } }
@@ -18,6 +19,11 @@ const GOOGLE_CLIENT_ID = '865764819056-o9i2pcvdqeb1r94fms5e4v19v24hn1ma.apps.goo
 export function getClientId() { return GOOGLE_CLIENT_ID }
 export function isDriveConnected() { return localStorage.getItem('bdo-drive-connected') === 'true' }
 export function setDriveConnected(connected: boolean) { localStorage.setItem('bdo-drive-connected', String(connected)) }
+// GIS 토큰은 짧게 유효한 bearer credential이다. 유효 시간 안에 새로고침해도 GIS를 다시
+// 호출하지 않도록 보관하며, 만료 30초 전에는 폐기한다. 장기 갱신 토큰·비밀값은 저장하지 않는다.
+export function getCachedDriveToken() { try { const cached = JSON.parse(localStorage.getItem(TOKEN_CACHE_KEY) || 'null') as { accessToken?: string; expiresAt?: number } | null; if (cached?.accessToken && typeof cached.expiresAt === 'number' && cached.expiresAt > Date.now() + 30_000) return cached.accessToken; localStorage.removeItem(TOKEN_CACHE_KEY) } catch { localStorage.removeItem(TOKEN_CACHE_KEY) } return '' }
+export function cacheDriveToken(accessToken: string, expiresIn?: number) { const lifetime = Math.max(60, Number(expiresIn) || 3600); localStorage.setItem(TOKEN_CACHE_KEY, JSON.stringify({ accessToken, expiresAt: Date.now() + lifetime * 1000 })) }
+export function clearCachedDriveToken() { localStorage.removeItem(TOKEN_CACHE_KEY) }
 
 export async function loadGoogleIdentity() {
   if (window.google?.accounts.oauth2) return
