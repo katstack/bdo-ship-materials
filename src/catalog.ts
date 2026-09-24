@@ -1,4 +1,4 @@
-import type { EquipmentSlot, Hull, MaterialDefinition, Recipe, Stage } from './types'
+import type { DailyTask, EquipmentSlot, Hull, MaterialDefinition, Recipe, Stage } from './types'
 const m=(id:string,name:string,crowCoinPrice:number|undefined,...sources:string[]):MaterialDefinition=>({id,name,crowCoinPrice,sources})
 export const materials:MaterialDefinition[]=[
  m('graphite','증축용 흑연 주괴',undefined,'해양 괴수의 진액 + 아연 주괴 가열','라비니아의 선박 증축 일지'),m('timber','증축용 목재',undefined,'해양 괴수의 진액 + 붉은 나무혹 장작패기','라비니아의 선박 증축 일지'),m('glue','증축용 접착제',undefined,'해양 괴수의 진액 + 수액 가열','라비니아의 선박 증축 일지'),
@@ -7,6 +7,24 @@ export const materials:MaterialDefinition[]=[
  m('blue-figure','+10 파템 선수상',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-plating','+10 파템 장갑',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-cannon','+10 파템 함포',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-sail','+10 파템 돛',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
  m('violent','난폭한 파도가 새겨진 합판',undefined,'난폭한 해양 괴수의 비늘 + 바다 악어의 비늘 공작'),m('support','정교하게 다듬어진 지지대',undefined,'난폭한 해양 괴수의 뼈 + 별빛 강화제 공작'),m('adhesive','파도의 흔적이 담긴 접착제',undefined,'난폭한 해양 괴수의 진액 + 별빛 유화제 간이 연금'),m('rough','거센 파도가 새겨진 합판',undefined,'린바크의 비늘 + 별빛 강화제 + 별빛 유화제 공작'),m('coral','견고한 산호 지지대',undefined,'린바크의 뼈 + 별빛 강화제 + 별빛 유화제 공작'),m('crimson','진홍빛 산호가 잠든 접착제',undefined,'린바크의 진액 + 별빛 강화제 + 별빛 유화제 간이 연금')]
 const r=(materialId:string,quantity:number)=>({materialId,quantity})
+// 보상은 수급 탭에서 "수령 처리"할 때 공유 재고에 한 번에 더해진다.
+// 선택 보상 의뢰는 실제로 선택한 보상만 체크하도록 별도 카드로 분리했다.
+export const dailyTasks:DailyTask[]=[
+ {id:'ravikel-test',name:'[일일] 라비켈의 시험',period:'daily',rewards:[r('deep-glue',8)],note:'심해의 기억이 담긴 아교 수급'},
+ {id:'lively-iliya-1',name:'[일일] 활기찬 일리야 섬 I',period:'daily',rewards:[r('pearl',2),r('reef',8)],note:'순수한 진주 결정·순수한 암초 조각 일일 루트'},
+ {id:'lively-iliya-2',name:'[일일] 활기찬 일리야 섬 II',period:'daily',rewards:[r('enhanced',10),r('high',1)],note:'강화된 섬나무 증착합판·협상 상급 일일 루트'},
+ {id:'supply-iliya',name:'[일일] 보급 물자 운송 · 일리야',period:'daily',rewards:[r('low',1)],note:'협상 하급 수급'},
+ {id:'supply-oquilla',name:'[일일] 보급 물자 운송 · 오킬루아',period:'daily',rewards:[r('low',2)],note:'협상 하급 수급'},
+ {id:'self-defense',name:'[일일] 제 몸 하나는 스스로 지켜야',period:'daily',rewards:[r('combat',3)],note:'콕스해적단의 유물 (전투) 수급'},
+ {id:'moon-young-sea',name:'[일일] 그믐달 어린 해왕류',period:'daily',rewards:[r('moon',10)],note:'달의 비늘이 새겨진 합판 수급'},
+ {id:'guild-not-charity',name:'[일일] 길드는 자선단체가 아니다',period:'daily',rewards:[r('wave',3)],note:'파도빛이 감도는 규격 각목 수급'},
+ {id:'moon-flax',name:'[일일] 그믐달 어린 해왕류 사냥꾼',period:'daily',rewards:[r('flax',3)],note:'달의 핏줄이 새겨진 아마포 수급'},
+ {id:'both-good',name:'[일일] 너도 좋고, 나도 좋고',period:'daily',rewards:[r('deep-tide',4)],note:'짙은 파도빛이 감도는 규격 각목 수급'},
+ {id:'young-sea-tear',name:'[일일] 어린 해양 괴수 사냥꾼',period:'daily',rewards:[r('tear',3)],note:'심해의 눈물 수급'},
+ {id:'candidum-red-rock',name:'[주간] 칸디둠 사냥꾼 · 홍조빛 선택',period:'weekly',rewards:[r('rock',4)],note:'선택 보상입니다. 홍조빛 해저단괴를 고른 경우에만 처리하세요.'},
+ {id:'otter-seaweed',name:'[주간] 어린 해달 상인들을 위해',period:'weekly',rewards:[r('seaweed',45)],note:'심해초 줄기 수급'},
+ {id:'nineshark-tear',name:'[주간] 나인샤크 사냥꾼 · 눈물 선택',period:'weekly',rewards:[r('tear',2)],note:'선택 보상입니다. 심해의 눈물을 고른 경우에만 처리하세요.'},
+]
 const blue=(hull:Hull):Recipe[]=>[{id:`blue-figure-${hull}`,name:'파템 선수상',slot:'figurehead',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',50),r('enhanced',300),r('seaweed',125),r('steel',150)]},{id:`blue-plating-${hull}`,name:'파템 장갑',slot:'plating',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('pearl',45),r('low',60),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200)]},{id:`blue-cannon-${hull}`,name:'파템 함포',slot:'cannon',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('wave',180),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200),r('reef',180)]},{id:`blue-sail-${hull}`,name:'파템 돛',slot:'sail',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',40),r('high',30),r('seaweed',80),r('cobalt',30)]}]
 const gear=(stage:Stage,name:string,slot:EquipmentSlot,reqs:ReturnType<typeof r>[]):Recipe=>({id:`${stage}-${name}`,name,slot,stage,hulls:['balance','advance','volante','valor'],description:stage===4?'중범선 파템(치로 장비) 제작':'중범선 노템(팔라시 장비) 제작',requirements:reqs})
 const bluePlus=[r('blue-figure',1),r('blue-plating',1),r('blue-cannon',1),r('blue-sail',1)]
