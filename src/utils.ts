@@ -1,21 +1,9 @@
-import type { AggregateMaterial, AppData, Equipment } from './types'
-
-export const number = (value: number) => new Intl.NumberFormat('ko-KR').format(value)
-export const clamp = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
-export const progress = (owned: number, required: number) => required > 0 ? Math.min(100, Math.round((owned / required) * 100)) : 100
-export const keyOf = (name: string) => name.trim().toLocaleLowerCase()
-export function aggregate(data: AppData): AggregateMaterial[] {
-  const map = new Map<string, AggregateMaterial>()
-  data.equipment.forEach(e => e.materials.forEach(m => {
-    const key = keyOf(m.name); const existing = map.get(key)
-    if (existing) existing.required += m.required
-    else map.set(key, { key, name: m.name.trim(), required: m.required, owned: clamp(data.inventory[key]), shortage: 0, progress: 0, note: m.note, crowCoinPrice: m.crowCoinPrice })
-  }))
-  return [...map.values()].map(m => ({ ...m, shortage: Math.max(m.required - m.owned, 0), progress: progress(m.owned, m.required) }))
-}
-export function equipmentProgress(equipment: Equipment, inventory: Record<string, number>) {
-  if (!equipment.materials.length) return 0
-  return Math.round(equipment.materials.reduce((total, m) => total + progress(clamp(inventory[keyOf(m.name)]), m.required), 0) / equipment.materials.length)
-}
-export function isComplete(equipment: Equipment, inventory: Record<string, number>) { return equipment.materials.length > 0 && equipmentProgress(equipment, inventory) === 100 }
-export function overallProgress(data: AppData) { const all = data.equipment.flatMap(e => e.materials); return all.length ? Math.round(all.reduce((sum, m) => sum + progress(clamp(data.inventory[keyOf(m.name)]), m.required), 0) / all.length) : 0 }
+import { materialById, recipes } from './catalog'
+import type { AggregateMaterial, AppData, Recipe, Ship } from './types'
+export const number=(n:number)=>new Intl.NumberFormat('ko-KR').format(n)
+export const clamp=(n:number)=>Math.max(0,Math.floor(Number(n)||0))
+export const progress=(owned:number,required:number)=>required?Math.min(100,Math.round(owned/required*100)):100
+export const shipRecipes=(ship:Ship)=>recipes.filter(recipe=>recipe.hulls.includes(ship.hull)&&recipe.stage===ship.activeStage)
+export const recipeProgress=(recipe:Recipe,inventory:Record<string,number>)=>recipe.requirements.length?Math.round(recipe.requirements.reduce((sum,x)=>sum+progress(clamp(inventory[x.materialId]),x.quantity),0)/recipe.requirements.length):0
+export function aggregate(data:AppData,scope:'current'|'all'='all'):AggregateMaterial[]{const map=new Map<string,AggregateMaterial>();data.ships.forEach(ship=>recipes.filter(x=>x.hulls.includes(ship.hull)&&(scope==='all'?x.stage>=ship.activeStage:x.stage===ship.activeStage)).forEach(recipe=>recipe.requirements.forEach(req=>{const base=materialById[req.materialId];if(!base)return;const old=map.get(req.materialId);if(old){old.required+=req.quantity;old.recipes.push(`${ship.name} · ${recipe.name}`)}else map.set(req.materialId,{...base,required:req.quantity,owned:clamp(data.inventory[req.materialId]),shortage:0,progress:0,crowCoinTotal:undefined,recipes:[`${ship.name} · ${recipe.name}`]})})));return[...map.values()].map(x=>({...x,shortage:Math.max(0,x.required-x.owned),progress:progress(x.owned,x.required),crowCoinTotal:x.crowCoinPrice===undefined?undefined:Math.max(0,x.required-x.owned)*x.crowCoinPrice}))}
+export const stageProgress=(data:AppData,ship:Ship)=>{const list=shipRecipes(ship);return list.length?Math.round(list.reduce((sum,x)=>sum+recipeProgress(x,data.inventory),0)/list.length):0}

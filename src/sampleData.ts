@@ -1,13 +1,8 @@
 import type { AppData } from './types'
 
 export const sampleData: AppData = {
-  version: 1,
+  version: 2,
   updatedAt: new Date().toISOString(),
-  inventory: { '섬나무 증착합판': 48, '강화된 섬나무 증착합판': 12, '심해의 기억이 담긴 접착제': 8, '콕스 해적단의 유물': 42, '달의 비늘이 새겨진 합판': 20, '암염 주괴': 5 },
-  equipment: [
-    { id: 'figurehead', name: '무역선 선수상', grade: '파란 등급', materials: [{ id: 'f1', name: '섬나무 증착합판', required: 100, note: '오킬루아의 눈 교환', crowCoinPrice: 160 }, { id: 'f2', name: '심해의 기억이 담긴 접착제', required: 30, note: '까마귀 주화 교환', crowCoinPrice: 600 }] },
-    { id: 'plating', name: '무역선 장갑', grade: '파란 등급', materials: [{ id: 'p1', name: '강화된 섬나무 증착합판', required: 50, note: '가공 재료', crowCoinPrice: 400 }, { id: 'p2', name: '콕스 해적단의 유물', required: 80, note: '해양 몬스터', crowCoinPrice: 100 }] },
-    { id: 'sail', name: '무역선 돛', grade: '파란 등급', materials: [{ id: 's1', name: '섬나무 증착합판', required: 80, note: '오킬루아의 눈 교환', crowCoinPrice: 160 }, { id: 's2', name: '달의 비늘이 새겨진 합판', required: 50, note: '까마귀 주화 교환', crowCoinPrice: 160 }] },
-    { id: 'cannon', name: '무역선 함포', grade: '파란 등급', materials: [{ id: 'c1', name: '콕스 해적단의 유물', required: 100, note: '해양 몬스터', crowCoinPrice: 100 }, { id: 'c2', name: '암염 주괴', required: 20, note: '가공/거래소' }] }
-  ]
+  inventory: { enhanced: 70, seaweed: 90, steel: 12, low: 35, reef: 44, pearl: 14, moon: 1160, wave: 37, high: 9, cobalt: 0, rock: 49, combat: 60, flax: 60, 'deep-tide': 77, 'brilliant-salt': 2, tear: 19 },
+  ships: [{ id: 'trade-a', name: '무역선 A', hull: 'trade', activeStage: 2 }, { id: 'advance-a', name: '중범선 점진 A', hull: 'advance', activeStage: 3 }]
 }
