@@ -41,7 +41,7 @@ export const materials: MaterialDefinition[] = [
     "deep-glue",
     "심해의 기억이 담긴 아교",
     110,
-    "[물물교환][일일] 활기찬 일리야 섬 I",
+    "[물물교환][일일] 활기찬 일리야 섬",
     "3단계 교역품 물물교환",
   ),
   m(
@@ -51,7 +51,7 @@ export const materials: MaterialDefinition[] = [
     "[주간] 어린 해달 상인들을 위해",
     "어린 해달 상인 교환",
   ),
-  m("enhanced", "강화된 섬나무 증착합판", 40, "[일일] 활기찬 일리야 섬 II"),
+  m("enhanced", "강화된 섬나무 증착합판", 40, "[물물교환][일일] 활기찬 일리야 섬"),
   m("steel", "대양의 견고한 현철", 130, "4단계 교역품 물물교환"),
   m(
     "low",
@@ -64,14 +64,14 @@ export const materials: MaterialDefinition[] = [
     "reef",
     "순수한 암초 조각",
     30,
-    "[일일] 활기찬 일리야 섬 I",
+    "[물물교환][일일] 활기찬 일리야 섬",
     "3단계 교역품 물물교환",
   ),
   m(
     "pearl",
     "순수한 진주 결정",
     200,
-    "[일일] 활기찬 일리야 섬 I",
+    "[물물교환][일일] 활기찬 일리야 섬",
     "3단계 교역품 물물교환",
   ),
   m(
@@ -93,7 +93,7 @@ export const materials: MaterialDefinition[] = [
     "high",
     "콕스해적단의 유물 (협상 상급)",
     400,
-    "[일일] 활기찬 일리야 섬 II",
+    "[물물교환][일일] 활기찬 일리야 섬",
     "4단계 교역품 물물교환",
   ),
   m(
@@ -256,18 +256,13 @@ const choice = (
 // rewards는 기본 보상, choices는 셋 중 실제로 하나를 고르는 선택 보상이다.
 export const dailyTasks: DailyTask[] = [
   {
-    id: "lively-iliya-1",
-    name: "[물물교환][일일] 활기찬 일리야 섬 I",
+    id: "lively-iliya",
+    name: "[물물교환][일일] 활기찬 일리야 섬",
     period: "daily",
-    rewards: [r("pearl", 2), r("deep-glue", 8), r("reef", 8)],
-    note: "순수한 진주 결정·심해의 기억이 담긴 아교·순수한 암초 조각",
-  },
-  {
-    id: "lively-iliya-2",
-    name: "[일일] 활기찬 일리야 섬 II",
-    period: "daily",
-    rewards: [r("enhanced", 10), r("high", 1)],
-    note: "강화된 섬나무 증착합판·협상 상급 일일 루트",
+    rewards: [
+      r("pearl", 2), r("deep-glue", 8), r("reef", 8), r("enhanced", 10), r("high", 1), r("crow-coin", 50),
+    ],
+    note: "물물교환 15회 · 기존 I~III 의뢰 보상을 한 번에 획득",
   },
   {
     id: "supply-iliya",
