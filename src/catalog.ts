@@ -8,21 +8,17 @@ import type {
   Stage,
 } from "./types";
 import { quests as verifiedCodexQuests } from "./data/quests";
-import { materialCodexIds } from "./data/materials";
-import { officialCrowCoinPrices } from "./data/crowCoinPrices";
+import { itemByMaterialId } from "./data/items";
 const m = (
   id: string,
-  name: string,
-  crowCoinPrice: number | undefined,
+  _legacyName: string,
+  _legacyCrowCoinPrice: number | undefined,
   ...sources: string[]
-): MaterialDefinition => ({
-  id,
-  name,
-  codexItemId: materialCodexIds[id],
-  // 공식 가격 표에 있는 항목은 항상 해당 표의 최신 수집값을 우선한다.
-  crowCoinPrice: officialCrowCoinPrices[id] ?? crowCoinPrice,
-  sources,
-});
+): MaterialDefinition => {
+  const item = itemByMaterialId[id];
+  if (!item) throw new Error(`아이템 DB에 없는 materialId: ${id}`);
+  return { id, name: item.name, codexItemId: item.codexItemId, crowCoinPrice: item.crowCoinPrice, sources };
+};
 export const materials: MaterialDefinition[] = [
   m(
     "graphite",
