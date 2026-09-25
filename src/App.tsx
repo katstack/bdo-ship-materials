@@ -106,6 +106,7 @@ export default function App() {
   const [notice, setNotice] = useState("");
   const [source, setSource] = useState<string | null>(null);
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({});
+  const [questChoices, setQuestChoices] = useState<Record<string, string>>({});
   const importRef = useRef<HTMLInputElement>(null);
   const update = (next: AppData) => {
     const stamped = { ...next, updatedAt: new Date().toISOString() };
@@ -144,8 +145,15 @@ export default function App() {
     update({ ...data, inventory: { ...data.inventory, [materialId]: value } });
   const claimTask = (task: (typeof dailyTasks)[number]) => {
     if (!taskAvailable(data.completedTasks[task.id], task.period)) return;
+    const selectedChoice = task.choices?.find(
+      (choice) => choice.id === questChoices[task.id],
+    );
+    if (task.choices && !selectedChoice) {
+      setNotice("선택 보상을 고른 뒤 수령 처리하세요.");
+      return;
+    }
     const inventory = { ...data.inventory };
-    task.rewards.forEach((reward) => {
+    [...task.rewards, ...(selectedChoice?.rewards || [])].forEach((reward) => {
       inventory[reward.materialId] =
         clamp(inventory[reward.materialId]) + reward.quantity;
     });
@@ -515,6 +523,9 @@ export default function App() {
                 data.completedTasks[task.id],
                 task.period,
               );
+              const selectedChoice = task.choices?.find(
+                (choice) => choice.id === questChoices[task.id],
+              );
               return (
                 <article className="task-card" key={task.id}>
                   <span className={`period ${task.period}`}>
@@ -530,9 +541,35 @@ export default function App() {
                       </span>
                     ))}
                   </div>
+                  {task.choices && (
+                    <label className="quest-choice">
+                      선택 보상
+                      <select
+                        value={questChoices[task.id] || ""}
+                        onChange={(event) =>
+                          setQuestChoices({
+                            ...questChoices,
+                            [task.id]: event.target.value,
+                          })
+                        }
+                      >
+                        <option value="">선택하세요</option>
+                        {task.choices.map((choice) => (
+                          <option key={choice.id} value={choice.id}>
+                            {choice.label} · {choice.rewards
+                              .map(
+                                (reward) =>
+                                  `${number(reward.quantity)} ${materialById[reward.materialId].name}`,
+                              )
+                              .join(", ")}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
                   <button
                     className={available ? "primary" : ""}
-                    disabled={!available}
+                    disabled={!available || (!!task.choices && !selectedChoice)}
                     onClick={() => claimTask(task)}
                   >
                     {available
@@ -541,7 +578,9 @@ export default function App() {
                   </button>
                   <small>
                     {available
-                      ? "체크하면 재료가 자동으로 더해집니다."
+                      ? task.choices && !selectedChoice
+                        ? "선택 보상을 고르면 수령 처리할 수 있습니다."
+                        : "체크하면 재료가 자동으로 더해집니다."
                       : `${data.completedTasks[task.id]}에 처리됨`}
                   </small>
                 </article>

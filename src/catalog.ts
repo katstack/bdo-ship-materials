@@ -1,38 +1,664 @@
-import type { CarrackHull, DailyTask, EquipmentSlot, Hull, MaterialDefinition, Recipe, Stage } from './types'
-const m=(id:string,name:string,crowCoinPrice:number|undefined,...sources:string[]):MaterialDefinition=>({id,name,crowCoinPrice,sources})
-export const materials:MaterialDefinition[]=[
- m('graphite','증축용 흑연 주괴',undefined,'해양 괴수의 진액 + 아연 주괴 가열','라비니아의 선박 증축 일지'),m('timber','증축용 목재',undefined,'해양 괴수의 진액 + 붉은 나무혹 장작패기','라비니아의 선박 증축 일지'),m('glue','증축용 접착제',undefined,'해양 괴수의 진액 + 수액 가열','라비니아의 선박 증축 일지'),
- m('island','섬나무 증착합판',undefined,'2단계 교역품 물물교환'),m('salt','암염 주괴',undefined,'2단계 교역품 물물교환'),m('deep-glue','심해의 기억이 담긴 아교',110,'[일일] 라비켈의 시험','3단계 교역품 물물교환'),m('seaweed','심해초 줄기',80,'[일일] 고귀한 산호초 조각','어린 해달 상인 교환'),m('enhanced','강화된 섬나무 증착합판',40,'[일일] 활기찬 일리야 섬 II'),m('steel','대양의 견고한 현철',130,'4단계 교역품 물물교환'),m('low','콕스해적단의 유물 (협상 하급)',120,'[일일] 보급 물자 운송','2단계 교역품 물물교환'),m('reef','순수한 암초 조각',30,'[일일] 활기찬 일리야 섬 I','3단계 교역품 물물교환'),m('pearl','순수한 진주 결정',200,'[일일] 활기찬 일리야 섬 I','3단계 교역품 물물교환'),m('moon','달의 비늘이 새겨진 합판',15,'[일일] 그믐달 어린 해왕류','칸의 비늘 건조','5단계 교역품 물물교환'),m('wave','파도빛이 감도는 규격 각목',80,'[일일] 길드는 자선단체가 아니다','난파된 유령선 잔해 장작패기'),m('high','콕스해적단의 유물 (협상 상급)',400,'[일일] 활기찬 일리야 섬 II','4단계 교역품 물물교환'),m('cobalt','빛나는 코발트 주괴',400,'해양 괴수 처치','4단계 교역품 물물교환'),m('combat','콕스해적단의 유물 (전투)',120,'[일일] 제 몸 하나는 스스로 지켜야','토벌증표 200개 간이연금'),m('rock','홍조빛 해저단괴',200,'[주간] 어린 해달 상인들을 위해','까마귀 주화 상점'),
- m('flax','달의 핏줄이 새겨진 아마포',40,'[일일] 그믐달 어린 해왕류','칸의 힘줄 건조'),m('deep-tide','짙은 파도빛이 감도는 규격 각목',80,'[일일] 너도 좋고, 나도 좋고','쓸만한 해적선 파편 장작패기'),m('brilliant-salt','화려한 암염 주괴',400,'5단계 교역품 물물교환'),m('brilliant-pearl','화려한 진주 결정',400,'5단계 교역품 물물교환'),m('tear','심해의 눈물',400,'[주간] 나인샤크 사냥꾼','5단계 교역품 물물교환','파푸아크리니 낚시'),
- m('blue-figure','+10 파템 선수상',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-plating','+10 파템 장갑',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-cannon','+10 파템 함포',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),m('blue-sail','+10 파템 돛',undefined,'선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
- m('violent','난폭한 파도가 새겨진 합판',undefined,'난폭한 해양 괴수의 비늘 + 바다 악어의 비늘 공작'),m('support','정교하게 다듬어진 지지대',undefined,'난폭한 해양 괴수의 뼈 + 별빛 강화제 공작'),m('adhesive','파도의 흔적이 담긴 접착제',undefined,'난폭한 해양 괴수의 진액 + 별빛 유화제 간이 연금'),m('rough','거센 파도가 새겨진 합판',undefined,'린바크의 비늘 + 별빛 강화제 + 별빛 유화제 공작'),m('coral','견고한 산호 지지대',undefined,'린바크의 뼈 + 별빛 강화제 + 별빛 유화제 공작'),m('crimson','진홍빛 산호가 잠든 접착제',undefined,'린바크의 진액 + 별빛 강화제 + 별빛 유화제 간이 연금')]
-const r=(materialId:string,quantity:number)=>({materialId,quantity})
-// 보상은 수급 탭에서 "수령 처리"할 때 공유 재고에 한 번에 더해진다.
-// 선택 보상 의뢰는 실제로 선택한 보상만 체크하도록 별도 카드로 분리했다.
-export const dailyTasks:DailyTask[]=[
- {id:'ravikel-test',name:'[일일] 라비켈의 시험',period:'daily',rewards:[r('deep-glue',8)],note:'심해의 기억이 담긴 아교 수급'},
- {id:'lively-iliya-1',name:'[일일] 활기찬 일리야 섬 I',period:'daily',rewards:[r('pearl',2),r('reef',8)],note:'순수한 진주 결정·순수한 암초 조각 일일 루트'},
- {id:'lively-iliya-2',name:'[일일] 활기찬 일리야 섬 II',period:'daily',rewards:[r('enhanced',10),r('high',1)],note:'강화된 섬나무 증착합판·협상 상급 일일 루트'},
- {id:'supply-iliya',name:'[일일] 보급 물자 운송 · 일리야',period:'daily',rewards:[r('low',1)],note:'협상 하급 수급'},
- {id:'supply-oquilla',name:'[일일] 보급 물자 운송 · 오킬루아',period:'daily',rewards:[r('low',2)],note:'협상 하급 수급'},
- {id:'self-defense',name:'[일일] 제 몸 하나는 스스로 지켜야',period:'daily',rewards:[r('combat',3)],note:'콕스해적단의 유물 (전투) 수급'},
- {id:'moon-young-sea',name:'[일일] 그믐달 어린 해왕류',period:'daily',rewards:[r('moon',10)],note:'달의 비늘이 새겨진 합판 수급'},
- {id:'guild-not-charity',name:'[일일] 길드는 자선단체가 아니다',period:'daily',rewards:[r('wave',3)],note:'파도빛이 감도는 규격 각목 수급'},
- {id:'moon-young-sea-hunter',name:'[일일] 그믐달 어린 해왕류 사냥꾼',period:'daily',rewards:[r('flax',3),r('tear',3)],note:'달의 핏줄이 새겨진 아마포·심해의 눈물 수급'},
- {id:'both-good',name:'[일일] 너도 좋고, 나도 좋고',period:'daily',rewards:[r('deep-tide',4)],note:'짙은 파도빛이 감도는 규격 각목 수급'},
- {id:'candidum-red-rock',name:'[주간] 칸디둠 사냥꾼 · 홍조빛 선택',period:'weekly',rewards:[r('rock',4)],note:'선택 보상입니다. 홍조빛 해저단괴를 고른 경우에만 처리하세요.'},
- {id:'otter-traders',name:'[주간] 어린 해달 상인들을 위해',period:'weekly',rewards:[r('rock',15),r('seaweed',45)],note:'홍조빛 해저단괴·심해초 줄기 수급'},
- {id:'nineshark-tear',name:'[주간] 나인샤크 사냥꾼 · 눈물 선택',period:'weekly',rewards:[r('tear',2)],note:'선택 보상입니다. 심해의 눈물을 고른 경우에만 처리하세요.'},
- {id:'population-report',name:'[주간] 개체수 증가 보고',period:'weekly',rewards:[r('combat',2)],note:'콕스해적단의 유물 (전투) 수급'},
- {id:'black-rust-combat',name:'[주간] 그믐달 길드의 검은무쇠이빨 사냥꾼 · 전투 선택',period:'weekly',rewards:[r('combat',6)],note:'선택 보상입니다. 콕스해적단의 유물 (전투)을 고른 경우에만 처리하세요.'},
-]
-const blue=(hull:Hull):Recipe[]=>[{id:`blue-figure-${hull}`,name:'파템 선수상',slot:'figurehead',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',50),r('enhanced',300),r('seaweed',125),r('steel',150)]},{id:`blue-plating-${hull}`,name:'파템 장갑',slot:'plating',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('pearl',45),r('low',60),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200)]},{id:`blue-cannon-${hull}`,name:'파템 함포',slot:'cannon',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('wave',180),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200),r('reef',180)]},{id:`blue-sail-${hull}`,name:'파템 돛',slot:'sail',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',40),r('high',30),r('seaweed',80),r('cobalt',30)]}]
-const gear=(stage:Stage,name:string,slot:EquipmentSlot,reqs:ReturnType<typeof r>[]):Recipe=>({id:`${stage}-${name}`,name,slot,stage,hulls:['balance','advance','volante','valor'],description:stage===4?'중범선 파템(치로 장비) 제작':'중범선 노템(팔라시 장비) 제작',requirements:reqs})
-const bluePlus=[r('blue-figure',1),r('blue-plating',1),r('blue-cannon',1),r('blue-sail',1)]
-export const recipes:Recipe[]=[{id:'expand-trade',name:'무역선 증축',stage:1,hulls:['trade'],description:'개량형 경범선 → 무역선',requirements:[r('graphite',100),r('timber',100),r('glue',100),r('island',100),r('salt',100),r('deep-glue',4),r('seaweed',4)]},{id:'expand-warship',name:'구축함 증축',stage:1,hulls:['warship'],description:'개량형 호위함 → 구축함',requirements:[r('graphite',100),r('timber',100),r('glue',100),r('island',100),r('wave',3),r('moon',10)]},...blue('trade'),...blue('warship'),{id:'balance',name:'중범선 균형 증축',stage:3,hulls:['balance'],description:'무역선 파템 +10 4종 필요',requirements:[...bluePlus,r('flax',180),r('deep-tide',144),r('brilliant-salt',30),r('brilliant-pearl',30),r('tear',50)]},{id:'advance',name:'중범선 점진 증축',stage:3,hulls:['advance'],description:'무역선 파템 +10 4종 필요',requirements:[...bluePlus,r('flax',180),r('deep-tide',144),r('brilliant-salt',35),r('brilliant-pearl',35),r('tear',42)]},{id:'volante',name:'중범선 비상 증축',stage:3,hulls:['volante'],description:'구축함 파템 +10 4종 필요',requirements:[...bluePlus,r('flax',210),r('deep-tide',144),r('brilliant-salt',30),r('brilliant-pearl',30),r('tear',42)]},{id:'valor',name:'중범선 용맹 증축',stage:3,hulls:['valor'],description:'구축함 파템 +10 4종 필요',requirements:[...bluePlus,r('flax',180),r('deep-tide',170),r('brilliant-salt',30),r('brilliant-pearl',30),r('tear',42)]},...(['선수상','장갑','함포','돛'] as const).map((n,i)=>gear(4,`치로의 ${n}`,['figurehead','plating','cannon','sail'][i] as EquipmentSlot,[r('violent',100),r('support',100),r('adhesive',100)])),...(['선수상','장갑','함포','돛'] as const).map((n,i)=>gear(5,`팔라시의 ${n}`,['figurehead','plating','cannon','sail'][i] as EquipmentSlot,[r('rough',75),r('coral',125),r('crimson',50)]))]
-export const hullLabel:Record<Hull,string>={trade:'무역선',warship:'구축함',balance:'중범선 균형',advance:'중범선 점진',volante:'중범선 비상',valor:'중범선 용맹'}
-export const upgradeTargets:Record<'trade'|'warship',CarrackHull[]>={trade:['balance','advance'],warship:['volante','valor']}
-export const defaultUpgradeHull:Record<'trade'|'warship',CarrackHull>={trade:'advance',warship:'valor'}
-export const defaultEquipmentOrder:Record<Hull,EquipmentSlot[]>={trade:['plating','cannon','figurehead','sail'],warship:['cannon','plating','figurehead','sail'],balance:['plating','cannon','figurehead','sail'],advance:['plating','cannon','figurehead','sail'],volante:['figurehead','sail','cannon','plating'],valor:['cannon','plating','figurehead','sail']}
-export const stageLabel:Record<Stage,string>={1:'무역선/구축함 증축',2:'파템 제작',3:'중범선 증축',4:'중범선 파템 제작',5:'중범선 노템 제작'}
-export const materialById=Object.fromEntries(materials.map(x=>[x.id,x]))
+import type {
+  CarrackHull,
+  DailyTask,
+  EquipmentSlot,
+  Hull,
+  MaterialDefinition,
+  Recipe,
+  Stage,
+} from "./types";
+const m = (
+  id: string,
+  name: string,
+  crowCoinPrice: number | undefined,
+  ...sources: string[]
+): MaterialDefinition => ({ id, name, crowCoinPrice, sources });
+export const materials: MaterialDefinition[] = [
+  m(
+    "graphite",
+    "증축용 흑연 주괴",
+    undefined,
+    "해양 괴수의 진액 + 아연 주괴 가열",
+    "라비니아의 선박 증축 일지",
+  ),
+  m(
+    "timber",
+    "증축용 목재",
+    undefined,
+    "해양 괴수의 진액 + 붉은 나무혹 장작패기",
+    "라비니아의 선박 증축 일지",
+  ),
+  m(
+    "glue",
+    "증축용 접착제",
+    undefined,
+    "해양 괴수의 진액 + 수액 가열",
+    "라비니아의 선박 증축 일지",
+  ),
+  m("island", "섬나무 증착합판", undefined, "2단계 교역품 물물교환"),
+  m("salt", "암염 주괴", undefined, "2단계 교역품 물물교환"),
+  m(
+    "deep-glue",
+    "심해의 기억이 담긴 아교",
+    110,
+    "[물물교환][일일] 활기찬 일리야 섬 I",
+    "3단계 교역품 물물교환",
+  ),
+  m(
+    "seaweed",
+    "심해초 줄기",
+    80,
+    "[주간] 어린 해달 상인들을 위해",
+    "어린 해달 상인 교환",
+  ),
+  m("enhanced", "강화된 섬나무 증착합판", 40, "[일일] 활기찬 일리야 섬 II"),
+  m("steel", "대양의 견고한 현철", 130, "4단계 교역품 물물교환"),
+  m(
+    "low",
+    "콕스해적단의 유물 (협상 하급)",
+    120,
+    "[일일] 보급 물자 운송",
+    "2단계 교역품 물물교환",
+  ),
+  m(
+    "reef",
+    "순수한 암초 조각",
+    30,
+    "[일일] 활기찬 일리야 섬 I",
+    "3단계 교역품 물물교환",
+  ),
+  m(
+    "pearl",
+    "순수한 진주 결정",
+    200,
+    "[일일] 활기찬 일리야 섬 I",
+    "3단계 교역품 물물교환",
+  ),
+  m(
+    "moon",
+    "달의 비늘이 새겨진 합판",
+    15,
+    "[일일] 그믐달 어린 해왕류",
+    "칸의 비늘 건조",
+    "5단계 교역품 물물교환",
+  ),
+  m(
+    "wave",
+    "파도빛이 감도는 규격 각목",
+    80,
+    "[일일] 길드는 자선단체가 아니다",
+    "난파된 유령선 잔해 장작패기",
+  ),
+  m(
+    "high",
+    "콕스해적단의 유물 (협상 상급)",
+    400,
+    "[일일] 활기찬 일리야 섬 II",
+    "4단계 교역품 물물교환",
+  ),
+  m(
+    "cobalt",
+    "빛나는 코발트 주괴",
+    400,
+    "해양 괴수 처치",
+    "4단계 교역품 물물교환",
+  ),
+  m(
+    "combat",
+    "콕스해적단의 유물 (전투)",
+    120,
+    "[일일] 제 몸 하나는 스스로 지켜야",
+    "[주간] 개체수 증가 보고",
+    "[주간] 그믐달 길드의 검은무쇠이빨 사냥꾼 선택 보상",
+    "토벌증표 200개 간이연금",
+  ),
+  m(
+    "rock",
+    "홍조빛 해저단괴",
+    200,
+    "[주간] 어린 해달 상인들을 위해",
+    "[주간] 그믐달 길드의 칸디둠 사냥꾼 선택 보상",
+    "까마귀 주화 상점",
+  ),
+  m(
+    "flax",
+    "달의 핏줄이 새겨진 아마포",
+    40,
+    "[일일] 그믐달 어린 해왕류 사냥꾼",
+    "칸의 힘줄 건조",
+  ),
+  m(
+    "deep-tide",
+    "짙은 파도빛이 감도는 규격 각목",
+    80,
+    "[일일] 너도 좋고, 나도 좋고",
+    "쓸만한 해적선 파편 장작패기",
+  ),
+  m("brilliant-salt", "화려한 암염 주괴", 400, "5단계 교역품 물물교환"),
+  m("brilliant-pearl", "화려한 진주 결정", 400, "5단계 교역품 물물교환"),
+  m(
+    "tear",
+    "심해의 눈물",
+    400,
+    "[일일] 그믐달 어린 해왕류 사냥꾼",
+    "[주간] 그믐달 길드의 나인샤크 사냥꾼 선택 보상",
+    "5단계 교역품 물물교환",
+    "파푸아크리니 낚시",
+  ),
+  m(
+    "crow-coin",
+    "까마귀 주화",
+    undefined,
+    "항해 의뢰 보상",
+    "까마귀 주화 상점",
+  ),
+  m(
+    "oquilla-token",
+    "오킬루아 기념 주화",
+    undefined,
+    "오킬루아의 눈 항해 의뢰 보상",
+  ),
+  m(
+    "wave-blackstone",
+    "파도의 블랙스톤",
+    undefined,
+    "오킬루아의 눈 항해 의뢰 선택 보상",
+  ),
+  m(
+    "oquilla-green",
+    "오킬루아 녹빛 담수",
+    undefined,
+    "레크라샨 사냥터 항해 의뢰 선택 보상",
+  ),
+  m(
+    "oquilla-blue",
+    "오킬루아 물빛 담수",
+    undefined,
+    "레크라샨 사냥터 항해 의뢰 선택 보상",
+  ),
+  m(
+    "oquilla-gold",
+    "오킬루아 금빛 담수",
+    undefined,
+    "레크라샨 사냥터 항해 의뢰 선택 보상",
+  ),
+  m(
+    "blue-figure",
+    "+10 파템 선수상",
+    undefined,
+    "선박 부품 공방 제작 후 파도의 블랙스톤 강화",
+  ),
+  m(
+    "blue-plating",
+    "+10 파템 장갑",
+    undefined,
+    "선박 부품 공방 제작 후 파도의 블랙스톤 강화",
+  ),
+  m(
+    "blue-cannon",
+    "+10 파템 함포",
+    undefined,
+    "선박 부품 공방 제작 후 파도의 블랙스톤 강화",
+  ),
+  m(
+    "blue-sail",
+    "+10 파템 돛",
+    undefined,
+    "선박 부품 공방 제작 후 파도의 블랙스톤 강화",
+  ),
+  m(
+    "violent",
+    "난폭한 파도가 새겨진 합판",
+    undefined,
+    "오킬루아의 눈 항해 의뢰 선택 보상",
+    "난폭한 해양 괴수의 비늘 + 바다 악어의 비늘 공작",
+  ),
+  m(
+    "support",
+    "정교하게 다듬어진 지지대",
+    undefined,
+    "오킬루아의 눈 항해 의뢰 선택 보상",
+    "난폭한 해양 괴수의 뼈 + 별빛 강화제 공작",
+  ),
+  m(
+    "adhesive",
+    "파도의 흔적이 담긴 접착제",
+    undefined,
+    "오킬루아의 눈 항해 의뢰 선택 보상",
+    "난폭한 해양 괴수의 진액 + 별빛 유화제 간이 연금",
+  ),
+  m(
+    "rough",
+    "거센 파도가 새겨진 합판",
+    undefined,
+    "린바크의 비늘 + 별빛 강화제 + 별빛 유화제 공작",
+  ),
+  m(
+    "coral",
+    "견고한 산호 지지대",
+    undefined,
+    "린바크의 뼈 + 별빛 강화제 + 별빛 유화제 공작",
+  ),
+  m(
+    "crimson",
+    "진홍빛 산호가 잠든 접착제",
+    undefined,
+    "린바크의 진액 + 별빛 강화제 + 별빛 유화제 간이 연금",
+  ),
+];
+const r = (materialId: string, quantity: number) => ({ materialId, quantity });
+const choice = (
+  id: string,
+  label: string,
+  ...rewards: ReturnType<typeof r>[]
+) => ({ id, label, rewards });
+// 2025-02-05 항해 의뢰 개편 공지의 최신 완료 보상 기준.
+// rewards는 기본 보상, choices는 셋 중 실제로 하나를 고르는 선택 보상이다.
+export const dailyTasks: DailyTask[] = [
+  {
+    id: "lively-iliya-1",
+    name: "[물물교환][일일] 활기찬 일리야 섬 I",
+    period: "daily",
+    rewards: [r("pearl", 2), r("deep-glue", 8), r("reef", 8)],
+    note: "순수한 진주 결정·심해의 기억이 담긴 아교·순수한 암초 조각",
+  },
+  {
+    id: "lively-iliya-2",
+    name: "[일일] 활기찬 일리야 섬 II",
+    period: "daily",
+    rewards: [r("enhanced", 10), r("high", 1)],
+    note: "강화된 섬나무 증착합판·협상 상급 일일 루트",
+  },
+  {
+    id: "supply-iliya",
+    name: "[일일] 보급물자 운송 · 일리야 섬",
+    period: "daily",
+    rewards: [r("low", 1), r("crow-coin", 50)],
+    note: "협상 하급·까마귀 주화 기본 보상",
+  },
+  {
+    id: "supply-oquilla",
+    name: "[일일] 보급물자 운송 · 오킬루아의 눈",
+    period: "daily",
+    rewards: [r("low", 2), r("crow-coin", 100)],
+    note: "협상 하급·까마귀 주화 기본 보상",
+  },
+  {
+    id: "moon-young-sea",
+    name: "[일일] 그믐달 어린 해왕류",
+    period: "daily",
+    rewards: [r("moon", 10)],
+    note: "달의 비늘이 새겨진 합판 수급",
+  },
+  {
+    id: "guild-not-charity",
+    name: "[일일] 길드는 자선단체가 아니다",
+    period: "daily",
+    rewards: [r("oquilla-token", 1)],
+    choices: [
+      choice("wave", "파도빛이 감도는 규격 각목", r("wave", 5)),
+      choice("violent", "난폭한 파도가 새겨진 합판", r("violent", 1)),
+    ],
+    note: "오킬루아 기념 주화 기본 보상 + 파템 재료 선택",
+  },
+  {
+    id: "self-defense",
+    name: "[일일] 제 몸 하나는 스스로 지켜야",
+    period: "daily",
+    rewards: [r("oquilla-token", 1)],
+    choices: [
+      choice("combat", "콕스해적단의 유물 (전투)", r("combat", 3)),
+      choice("support", "정교하게 다듬어진 지지대", r("support", 1)),
+    ],
+    note: "오킬루아 기념 주화 기본 보상 + 파템 재료 선택",
+  },
+  {
+    id: "both-good",
+    name: "[일일] 너도 좋고, 나도 좋고",
+    period: "daily",
+    rewards: [r("oquilla-token", 1)],
+    choices: [
+      choice("deep-tide", "짙은 파도빛이 감도는 규격 각목", r("deep-tide", 4)),
+      choice("adhesive", "파도의 흔적이 담긴 접착제", r("adhesive", 1)),
+    ],
+    note: "오킬루아 기념 주화 기본 보상 + 파템 재료 선택",
+  },
+  {
+    id: "moon-young-sea-hunter",
+    name: "[일일] 그믐달 어린 해왕류 사냥꾼",
+    period: "daily",
+    rewards: [r("moon", 10), r("flax", 3), r("tear", 1), r("oquilla-token", 3)],
+    note: "중범선 증축 재료 기본 보상",
+  },
+  {
+    id: "candidum-daily",
+    name: "[일일] 그믐달 길드의 칸디둠 사냥꾼",
+    period: "daily",
+    rewards: [r("oquilla-token", 1), r("crow-coin", 100)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 14)),
+      choice("violent", "난폭한 파도가 새겨진 합판", r("violent", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "nineshark-daily",
+    name: "[일일] 그믐달 길드의 나인샤크 사냥꾼",
+    period: "daily",
+    rewards: [r("oquilla-token", 1), r("crow-coin", 100)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 14)),
+      choice("support", "정교하게 다듬어진 지지대", r("support", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "black-rust-daily",
+    name: "[일일] 그믐달 길드의 검은무쇠이빨 사냥꾼",
+    period: "daily",
+    rewards: [r("oquilla-token", 1), r("crow-coin", 100)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 14)),
+      choice("adhesive", "파도의 흔적이 담긴 접착제", r("adhesive", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "otter-traders",
+    name: "[주간] 어린 해달 상인들을 위해",
+    period: "weekly",
+    rewards: [r("rock", 15), r("seaweed", 45)],
+    note: "홍조빛 해저단괴·심해초 줄기 수급",
+  },
+  {
+    id: "candidum-weekly",
+    name: "[주간] 그믐달 길드의 칸디둠 사냥꾼",
+    period: "weekly",
+    rewards: [r("crow-coin", 500)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 60)),
+      choice("rock", "홍조빛 해저단괴", r("rock", 4)),
+      choice("violent", "난폭한 파도가 새겨진 합판", r("violent", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "nineshark-weekly",
+    name: "[주간] 그믐달 길드의 나인샤크 사냥꾼",
+    period: "weekly",
+    rewards: [r("crow-coin", 500)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 60)),
+      choice("tear", "심해의 눈물", r("tear", 2)),
+      choice("support", "정교하게 다듬어진 지지대", r("support", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "black-rust-weekly",
+    name: "[주간] 그믐달 길드의 검은무쇠이빨 사냥꾼",
+    period: "weekly",
+    rewards: [r("crow-coin", 500)],
+    choices: [
+      choice("blackstone", "파도의 블랙스톤", r("wave-blackstone", 60)),
+      choice("combat", "콕스해적단의 유물 (전투)", r("combat", 6)),
+      choice("adhesive", "파도의 흔적이 담긴 접착제", r("adhesive", 1)),
+    ],
+    note: "까마귀 주화 기본 보상 + 선택 보상",
+  },
+  {
+    id: "population-report",
+    name: "[주간] 개체수 증가 보고",
+    period: "weekly",
+    rewards: [r("combat", 2)],
+    note: "콕스해적단의 유물 (전투) 수급",
+  },
+  {
+    id: "ruthless-monsters",
+    name: "[주간] 무자비한 괴수 무리",
+    period: "weekly",
+    rewards: [r("crow-coin", 500)],
+    choices: [
+      choice("green", "오킬루아 녹빛 담수", r("oquilla-green", 3)),
+      choice("blue", "오킬루아 물빛 담수", r("oquilla-blue", 3)),
+      choice("gold", "오킬루아 금빛 담수", r("oquilla-gold", 3)),
+    ],
+    note: "레크라샨 사냥터 의뢰 · 까마귀 주화 기본 보상 + 담수 선택",
+  },
+  {
+    id: "blocking-sea-route",
+    name: "[일일] 바닷길을 막고있는 괴수들",
+    period: "daily",
+    rewards: [r("crow-coin", 200)],
+    choices: [
+      choice("green", "오킬루아 녹빛 담수", r("oquilla-green", 1)),
+      choice("blue", "오킬루아 물빛 담수", r("oquilla-blue", 1)),
+      choice("gold", "오킬루아 금빛 담수", r("oquilla-gold", 1)),
+    ],
+    note: "레크라샨 사냥터 의뢰 · 까마귀 주화 기본 보상 + 담수 선택",
+  },
+];
+const blue = (hull: Hull): Recipe[] => [
+  {
+    id: `blue-figure-${hull}`,
+    name: "파템 선수상",
+    slot: "figurehead",
+    stage: 2,
+    hulls: [hull],
+    description: "선박 부품 공방 4단계 제작",
+    requirements: [
+      r("rock", 50),
+      r("enhanced", 300),
+      r("seaweed", 125),
+      r("steel", 150),
+    ],
+  },
+  {
+    id: `blue-plating-${hull}`,
+    name: "파템 장갑",
+    slot: "plating",
+    stage: 2,
+    hulls: [hull],
+    description: "선박 부품 공방 4단계 제작",
+    requirements: [
+      r("pearl", 45),
+      r("low", 60),
+      r("combat", hull === "warship" ? 125 : 60),
+      r("moon", hull === "warship" ? 300 : 200),
+    ],
+  },
+  {
+    id: `blue-cannon-${hull}`,
+    name: "파템 함포",
+    slot: "cannon",
+    stage: 2,
+    hulls: [hull],
+    description: "선박 부품 공방 4단계 제작",
+    requirements: [
+      r("wave", 180),
+      r("combat", hull === "warship" ? 125 : 60),
+      r("moon", hull === "warship" ? 300 : 200),
+      r("reef", 180),
+    ],
+  },
+  {
+    id: `blue-sail-${hull}`,
+    name: "파템 돛",
+    slot: "sail",
+    stage: 2,
+    hulls: [hull],
+    description: "선박 부품 공방 4단계 제작",
+    requirements: [
+      r("rock", 40),
+      r("high", 30),
+      r("seaweed", 80),
+      r("cobalt", 30),
+    ],
+  },
+];
+const gear = (
+  stage: Stage,
+  name: string,
+  slot: EquipmentSlot,
+  reqs: ReturnType<typeof r>[],
+): Recipe => ({
+  id: `${stage}-${name}`,
+  name,
+  slot,
+  stage,
+  hulls: ["balance", "advance", "volante", "valor"],
+  description:
+    stage === 4
+      ? "중범선 파템(치로 장비) 제작"
+      : "중범선 노템(팔라시 장비) 제작",
+  requirements: reqs,
+});
+const bluePlus = [
+  r("blue-figure", 1),
+  r("blue-plating", 1),
+  r("blue-cannon", 1),
+  r("blue-sail", 1),
+];
+export const recipes: Recipe[] = [
+  {
+    id: "expand-trade",
+    name: "무역선 증축",
+    stage: 1,
+    hulls: ["trade"],
+    description: "개량형 경범선 → 무역선",
+    requirements: [
+      r("graphite", 100),
+      r("timber", 100),
+      r("glue", 100),
+      r("island", 100),
+      r("salt", 100),
+      r("deep-glue", 4),
+      r("seaweed", 4),
+    ],
+  },
+  {
+    id: "expand-warship",
+    name: "구축함 증축",
+    stage: 1,
+    hulls: ["warship"],
+    description: "개량형 호위함 → 구축함",
+    requirements: [
+      r("graphite", 100),
+      r("timber", 100),
+      r("glue", 100),
+      r("island", 100),
+      r("wave", 3),
+      r("moon", 10),
+    ],
+  },
+  ...blue("trade"),
+  ...blue("warship"),
+  {
+    id: "balance",
+    name: "중범선 균형 증축",
+    stage: 3,
+    hulls: ["balance"],
+    description: "무역선 파템 +10 4종 필요",
+    requirements: [
+      ...bluePlus,
+      r("flax", 180),
+      r("deep-tide", 144),
+      r("brilliant-salt", 30),
+      r("brilliant-pearl", 30),
+      r("tear", 50),
+    ],
+  },
+  {
+    id: "advance",
+    name: "중범선 점진 증축",
+    stage: 3,
+    hulls: ["advance"],
+    description: "무역선 파템 +10 4종 필요",
+    requirements: [
+      ...bluePlus,
+      r("flax", 180),
+      r("deep-tide", 144),
+      r("brilliant-salt", 35),
+      r("brilliant-pearl", 35),
+      r("tear", 42),
+    ],
+  },
+  {
+    id: "volante",
+    name: "중범선 비상 증축",
+    stage: 3,
+    hulls: ["volante"],
+    description: "구축함 파템 +10 4종 필요",
+    requirements: [
+      ...bluePlus,
+      r("flax", 210),
+      r("deep-tide", 144),
+      r("brilliant-salt", 30),
+      r("brilliant-pearl", 30),
+      r("tear", 42),
+    ],
+  },
+  {
+    id: "valor",
+    name: "중범선 용맹 증축",
+    stage: 3,
+    hulls: ["valor"],
+    description: "구축함 파템 +10 4종 필요",
+    requirements: [
+      ...bluePlus,
+      r("flax", 180),
+      r("deep-tide", 170),
+      r("brilliant-salt", 30),
+      r("brilliant-pearl", 30),
+      r("tear", 42),
+    ],
+  },
+  ...(["선수상", "장갑", "함포", "돛"] as const).map((n, i) =>
+    gear(
+      4,
+      `치로의 ${n}`,
+      ["figurehead", "plating", "cannon", "sail"][i] as EquipmentSlot,
+      [r("violent", 100), r("support", 100), r("adhesive", 100)],
+    ),
+  ),
+  ...(["선수상", "장갑", "함포", "돛"] as const).map((n, i) =>
+    gear(
+      5,
+      `팔라시의 ${n}`,
+      ["figurehead", "plating", "cannon", "sail"][i] as EquipmentSlot,
+      [r("rough", 75), r("coral", 125), r("crimson", 50)],
+    ),
+  ),
+];
+export const hullLabel: Record<Hull, string> = {
+  trade: "무역선",
+  warship: "구축함",
+  balance: "중범선 균형",
+  advance: "중범선 점진",
+  volante: "중범선 비상",
+  valor: "중범선 용맹",
+};
+export const upgradeTargets: Record<"trade" | "warship", CarrackHull[]> = {
+  trade: ["balance", "advance"],
+  warship: ["volante", "valor"],
+};
+export const defaultUpgradeHull: Record<"trade" | "warship", CarrackHull> = {
+  trade: "advance",
+  warship: "valor",
+};
+export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
+  trade: ["plating", "cannon", "figurehead", "sail"],
+  warship: ["cannon", "plating", "figurehead", "sail"],
+  balance: ["plating", "cannon", "figurehead", "sail"],
+  advance: ["plating", "cannon", "figurehead", "sail"],
+  volante: ["figurehead", "sail", "cannon", "plating"],
+  valor: ["cannon", "plating", "figurehead", "sail"],
+};
+export const stageLabel: Record<Stage, string> = {
+  1: "무역선/구축함 증축",
+  2: "파템 제작",
+  3: "중범선 증축",
+  4: "중범선 파템 제작",
+  5: "중범선 노템 제작",
+};
+export const materialById = Object.fromEntries(materials.map((x) => [x.id, x]));
