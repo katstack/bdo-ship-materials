@@ -18,12 +18,13 @@ export const dailyTasks:DailyTask[]=[
  {id:'self-defense',name:'[일일] 제 몸 하나는 스스로 지켜야',period:'daily',rewards:[r('combat',3)],note:'콕스해적단의 유물 (전투) 수급'},
  {id:'moon-young-sea',name:'[일일] 그믐달 어린 해왕류',period:'daily',rewards:[r('moon',10)],note:'달의 비늘이 새겨진 합판 수급'},
  {id:'guild-not-charity',name:'[일일] 길드는 자선단체가 아니다',period:'daily',rewards:[r('wave',3)],note:'파도빛이 감도는 규격 각목 수급'},
- {id:'moon-flax',name:'[일일] 그믐달 어린 해왕류 사냥꾼',period:'daily',rewards:[r('flax',3)],note:'달의 핏줄이 새겨진 아마포 수급'},
+ {id:'moon-young-sea-hunter',name:'[일일] 그믐달 어린 해왕류 사냥꾼',period:'daily',rewards:[r('flax',3),r('tear',3)],note:'달의 핏줄이 새겨진 아마포·심해의 눈물 수급'},
  {id:'both-good',name:'[일일] 너도 좋고, 나도 좋고',period:'daily',rewards:[r('deep-tide',4)],note:'짙은 파도빛이 감도는 규격 각목 수급'},
- {id:'young-sea-tear',name:'[일일] 어린 해양 괴수 사냥꾼',period:'daily',rewards:[r('tear',3)],note:'심해의 눈물 수급'},
  {id:'candidum-red-rock',name:'[주간] 칸디둠 사냥꾼 · 홍조빛 선택',period:'weekly',rewards:[r('rock',4)],note:'선택 보상입니다. 홍조빛 해저단괴를 고른 경우에만 처리하세요.'},
- {id:'otter-seaweed',name:'[주간] 어린 해달 상인들을 위해',period:'weekly',rewards:[r('seaweed',45)],note:'심해초 줄기 수급'},
+ {id:'otter-traders',name:'[주간] 어린 해달 상인들을 위해',period:'weekly',rewards:[r('rock',15),r('seaweed',45)],note:'홍조빛 해저단괴·심해초 줄기 수급'},
  {id:'nineshark-tear',name:'[주간] 나인샤크 사냥꾼 · 눈물 선택',period:'weekly',rewards:[r('tear',2)],note:'선택 보상입니다. 심해의 눈물을 고른 경우에만 처리하세요.'},
+ {id:'population-report',name:'[주간] 개체수 증가 보고',period:'weekly',rewards:[r('combat',2)],note:'콕스해적단의 유물 (전투) 수급'},
+ {id:'black-rust-combat',name:'[주간] 그믐달 길드의 검은무쇠이빨 사냥꾼 · 전투 선택',period:'weekly',rewards:[r('combat',6)],note:'선택 보상입니다. 콕스해적단의 유물 (전투)을 고른 경우에만 처리하세요.'},
 ]
 const blue=(hull:Hull):Recipe[]=>[{id:`blue-figure-${hull}`,name:'파템 선수상',slot:'figurehead',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',50),r('enhanced',300),r('seaweed',125),r('steel',150)]},{id:`blue-plating-${hull}`,name:'파템 장갑',slot:'plating',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('pearl',45),r('low',60),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200)]},{id:`blue-cannon-${hull}`,name:'파템 함포',slot:'cannon',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('wave',180),r('combat',hull==='warship'?125:60),r('moon',hull==='warship'?300:200),r('reef',180)]},{id:`blue-sail-${hull}`,name:'파템 돛',slot:'sail',stage:2,hulls:[hull],description:'선박 부품 공방 4단계 제작',requirements:[r('rock',40),r('high',30),r('seaweed',80),r('cobalt',30)]}]
 const gear=(stage:Stage,name:string,slot:EquipmentSlot,reqs:ReturnType<typeof r>[]):Recipe=>({id:`${stage}-${name}`,name,slot,stage,hulls:['balance','advance','volante','valor'],description:stage===4?'중범선 파템(치로 장비) 제작':'중범선 노템(팔라시 장비) 제작',requirements:reqs})
