@@ -153,10 +153,11 @@ export default function App() {
     if (!selectedOption) return;
     const routeQuestIds = route.options.flatMap((option) => option.questIds);
     const supplyPlans = { ...data.supplyPlans };
+    supplyPlans[`route:${route.id}`] = { enabled: true, choiceId: optionId };
     routeQuestIds.forEach((questId) => {
       supplyPlans[questId] = {
         ...supplyPlans[questId],
-        enabled: selectedOption.questIds.includes(questId),
+        enabled: false,
       };
     });
     update({ ...data, supplyPlans });
@@ -564,10 +565,13 @@ export default function App() {
                           <small> 의뢰 수령 NPC · BDO Codex</small>
                         </h3>
                         {giverRoutes.map((route) => {
+                          const routePlan = data.supplyPlans[`route:${route.id}`];
                           const selectedOption = route.options.find((option) =>
-                            option.questIds.some(
-                              (questId) => data.supplyPlans[questId]?.enabled,
-                            ),
+                            routePlan?.choiceId
+                              ? option.id === routePlan.choiceId
+                              : option.questIds.some(
+                                  (questId) => data.supplyPlans[questId]?.enabled,
+                                ),
                           );
                           return (
                             <div className="route-picker" key={route.id} data-route-id={route.id}>
@@ -897,16 +901,11 @@ function QuestPlanCard({
           </select>
         </label>
       )}
-      {routeManaged ? (
-        <small>상위 수급 루트 선택에 따라 포함됩니다.</small>
-      ) : (
-        <>
-          <button className={plan?.enabled ? "planned-button" : "primary"} onClick={() => onPlan(task, { enabled: !plan?.enabled })}>
-            {plan?.enabled ? "수급 계획에 포함됨" : "이 의뢰를 수행할 예정"}
-          </button>
-          <small>{plan?.enabled ? task.choices && !plan?.choiceId ? "기본 보상만 계산 중입니다. 선택 보상도 지정하세요." : "재료별 일일·주간 수급량과 완료 예상에 반영됩니다." : "재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다."}</small>
-        </>
-      )}
+      {routeManaged && <small>위에서 수행 루트를 고른 뒤, 이 의뢰를 수급 계획에 따로 포함할 수 있습니다.</small>}
+      <button className={plan?.enabled ? "planned-button" : "primary"} onClick={() => onPlan(task, { enabled: !plan?.enabled })}>
+        {plan?.enabled ? "수급 계획에서 제외" : "수급 계획에 포함"}
+      </button>
+      <small>{plan?.enabled ? task.choices && !plan?.choiceId ? "기본 보상만 계산 중입니다. 선택 보상도 지정하세요." : "재료별 일일·주간 수급량과 완료 예상에 반영됩니다." : "재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다."}</small>
     </article>
   );
 }

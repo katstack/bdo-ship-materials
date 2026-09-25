@@ -45,6 +45,29 @@ export const quests: QuestRecord[] = [
     note: "오킬루아의 눈 라비켈 · Codex 확인",
   },
   {
+    id: "small-repayment-1", codexQuestId: "3707/12/", period: "daily",
+    name: "[일일] 그믐달 길드의 작은 보답 I", startLocationId: "oquilla-eye", giverId: "herad-romson",
+    objective: "그믐달 길드원·원주민·세렌디아 병사를 도운 보답 수령", rewards: [],
+    choices: [
+      choice("seaweed", "심해초 줄기", r("seaweed", 8)), choice("rock", "홍조빛 해저단괴", r("rock", 4)),
+      choice("pearl", "순수한 진주 결정", r("pearl", 4)), choice("deep-glue", "심해의 기억이 담긴 아교", r("deep-glue", 16)),
+      choice("reef", "순수한 암초 조각", r("reef", 16)), choice("enhanced", "강화된 섬나무 증착합판", r("enhanced", 20)),
+      choice("high", "콕스해적단의 유물(협상 상급)", r("high", 2)),
+    ],
+    note: "헤라드 롬슨에게 수령 · 매일 자정 재수락 · Codex 선택 보상 기준",
+  },
+  {
+    id: "small-repayment-2", codexQuestId: "3707/13/", period: "daily",
+    name: "[일일] 그믐달 길드의 작은 보답 II", startLocationId: "oquilla-eye", giverId: "herad-romson",
+    objective: "그믐달 길드원·원주민·세렌디아 병사를 도운 보답 수령", rewards: [],
+    choices: [
+      choice("wave", "파도빛이 감도는 규격 각목", r("wave", 6)), choice("combat", "콕스해적단의 유물(전투)", r("combat", 6)),
+      choice("deep-tide", "짙은 파도빛이 감도는 규격 각목", r("deep-tide", 6)), choice("moon", "달의 비늘이 새겨진 합판", r("moon", 20)),
+      choice("flax", "달의 핏줄이 새겨진 아마포", r("flax", 6)), choice("tear", "심해의 눈물", r("tear", 2)),
+    ],
+    note: "헤라드 롬슨에게 수령 · 매일 자정 재수락 · Codex 선택 보상 기준",
+  },
+  {
     id: "moon-young-sea-hunter", codexQuestId: "3707/23/", period: "daily",
     name: "[일일] 그믐달 어린 해왕류 사냥꾼", startLocationId: "oquilla-eye", giverId: "ravikel",
     objective: "오킬루아의 눈 주변에서 어린 해왕류 5마리 처치", rewards: [r("moon", 10), r("flax", 3), r("tear", 1), r("oquilla-token", 3)],
