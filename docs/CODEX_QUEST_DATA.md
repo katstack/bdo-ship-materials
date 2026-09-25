@@ -1,6 +1,8 @@
 # BDO Codex 의뢰 카탈로그
 
-앱의 활성 수급 의뢰는 `src/data/quests.ts`에만 둔다. 각 레코드는 문자열 `codexQuestId`, 원문 URL, 시작 지역/NPC ID, 목표, 보상과 Codex에서 확인한 충돌 의뢰 ID를 가진다.
+앱의 활성 수급 의뢰는 `src/data/quests.ts`에만 둔다. 각 레코드는 문자열 `codexQuestId`, 시작 지역/NPC ID, 목표, 보상과 Codex에서 확인한 충돌 의뢰 ID를 가진다.
+
+Codex origin과 URL 조합은 `src/data/codex.ts`에만 둔다. 데이터 레코드에는 URL을 중복 저장하지 않고, 의뢰는 `group/id/`, 아이템은 숫자 문자열 ID만 저장한다. `items.json`과 `quests.json`은 개발용 로컬 인덱스이며 Git에 포함하지 않는다.
 
 ## 확인 방식
 

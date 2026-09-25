@@ -31,6 +31,7 @@ import {
 import { locationById, locations } from "./data/locations";
 import { npcById } from "./data/npcs";
 import { questRoutes } from "./data/questRoutes";
+import { codexQuestUrl } from "./data/codex";
 import type { QuestRoute } from "./types";
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
@@ -863,7 +864,7 @@ function QuestPlanCard({
       <h3>{task.name}</h3>
       <p>{task.objective || task.note}</p>
       <small className="quest-meta">
-        {task.codexQuestId} · <a href={task.codexUrl} target="_blank" rel="noreferrer">BDO Codex</a>
+        {task.codexQuestId} · <a href={task.codexQuestId ? codexQuestUrl(task.codexQuestId) : undefined} target="_blank" rel="noreferrer">BDO Codex</a>
       </small>
       <div className="rewards">
         {task.rewards.map((reward) => (

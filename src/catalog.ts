@@ -8,12 +8,13 @@ import type {
   Stage,
 } from "./types";
 import { quests as verifiedCodexQuests } from "./data/quests";
+import { materialCodexIds } from "./data/materials";
 const m = (
   id: string,
   name: string,
   crowCoinPrice: number | undefined,
   ...sources: string[]
-): MaterialDefinition => ({ id, name, crowCoinPrice, sources });
+): MaterialDefinition => ({ id, name, codexItemId: materialCodexIds[id], crowCoinPrice, sources });
 export const materials: MaterialDefinition[] = [
   m(
     "graphite",
