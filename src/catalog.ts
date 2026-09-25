@@ -7,6 +7,7 @@ import type {
   Recipe,
   Stage,
 } from "./types";
+import { quests as verifiedCodexQuests } from "./data/quests";
 const m = (
   id: string,
   name: string,
@@ -254,7 +255,9 @@ const choice = (
 ) => ({ id, label, rewards });
 // 2025-02-05 항해 의뢰 개편 공지의 최신 완료 보상 기준.
 // rewards는 기본 보상, choices는 셋 중 실제로 하나를 고르는 선택 보상이다.
-export const dailyTasks: DailyTask[] = [
+// 이전 수기/공식 공지 기반 목록은 활성 카탈로그에서 제외했다.
+// Codex ID가 확인된 항목만 아래 verifiedCodexQuests를 통해 앱에 제공한다.
+export const unverifiedLegacyQuestData: DailyTask[] = [
   {
     id: "lively-iliya",
     name: "[물물교환][일일] 활기찬 일리야 섬",
@@ -433,6 +436,7 @@ export const dailyTasks: DailyTask[] = [
     note: "레크라샨 사냥터 의뢰 · 까마귀 주화 기본 보상 + 담수 선택",
   },
 ];
+export const dailyTasks = verifiedCodexQuests;
 const blue = (hull: Hull): Recipe[] => [
   {
     id: `blue-figure-${hull}`,

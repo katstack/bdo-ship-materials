@@ -18,7 +18,7 @@ import {
   saveData,
 } from "./storage";
 import { useDriveSync } from "./useDriveSync";
-import type { AppData, Hull, MaterialSortKey, Ship, Stage } from "./types";
+import type { AppData, DailyTask, Hull, MaterialSortKey, Ship, Stage, SupplyPlan } from "./types";
 import {
   aggregate,
   clamp,
@@ -28,6 +28,10 @@ import {
   shipRecipes,
   stageProgress,
 } from "./utils";
+import { locationById, locations } from "./data/locations";
+import { npcById } from "./data/npcs";
+import { questRoutes } from "./data/questRoutes";
+import type { QuestRoute } from "./types";
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
 const id = () => crypto.randomUUID();
@@ -133,7 +137,7 @@ export default function App() {
   const setOwned = (materialId: string, value: number) =>
     update({ ...data, inventory: { ...data.inventory, [materialId]: value } });
   const setSupplyPlan = (
-    task: (typeof dailyTasks)[number],
+    task: DailyTask,
     patch: { enabled?: boolean; choiceId?: string },
   ) =>
     update({
@@ -143,6 +147,19 @@ export default function App() {
         [task.id]: { ...data.supplyPlans[task.id], ...patch },
       },
     });
+  const chooseRoute = (route: QuestRoute, optionId: string) => {
+    const selectedOption = route.options.find((option) => option.id === optionId);
+    if (!selectedOption) return;
+    const routeQuestIds = route.options.flatMap((option) => option.questIds);
+    const supplyPlans = { ...data.supplyPlans };
+    routeQuestIds.forEach((questId) => {
+      supplyPlans[questId] = {
+        ...supplyPlans[questId],
+        enabled: selectedOption.questIds.includes(questId),
+      };
+    });
+    update({ ...data, supplyPlans });
+  };
   const addManual = (materialId: string) => {
     const amount = clamp(Number(manualAdds[materialId]));
     if (!amount) {
@@ -498,71 +515,83 @@ export default function App() {
               재고는 변경하지 않습니다 · 선택 보상은 계획한 보상만 계산합니다
             </span>
           </div>
-          <div className="task-grid">
-            {dailyTasks.map((task) => {
-              const plan = data.supplyPlans[task.id];
+          <div className="location-quest-list">
+            {locations.map((location) => {
+              const locationTasks = dailyTasks.filter(
+                (task) => task.startLocationId === location.id,
+              );
+              if (!locationTasks.length) return null;
+              const locationRoutes = questRoutes.filter(
+                (route) => route.startLocationId === location.id,
+              );
+              const routedQuestIds = new Set(
+                locationRoutes.flatMap((route) =>
+                  route.options.flatMap((option) => option.questIds),
+                ),
+              );
+              const giverIds = [...new Set(locationTasks.map((task) => task.giverId || "unknown"))];
               return (
-                <article
-                  className={`task-card ${plan?.enabled ? "planned" : ""}`}
-                  key={task.id}
-                >
-                  <span className={`period ${task.period}`}>
-                    {task.period === "daily" ? "일일" : "주간"}
-                  </span>
-                  <h3>{task.name}</h3>
-                  <p>{task.note}</p>
-                  <div className="rewards">
-                    {task.rewards.map((reward) => (
-                      <span key={reward.materialId}>
-                        +{number(reward.quantity)}{" "}
-                        {materialById[reward.materialId].name}
-                      </span>
-                    ))}
-                    {task.otherRewards?.map((reward) => (
-                      <span className="info-reward" key={reward}>
-                        {reward}
-                      </span>
-                    ))}
-                  </div>
-                  {task.choices && (
-                    <label className="quest-choice">
-                      선택 보상
-                      <select
-                        value={plan?.choiceId || ""}
-                        onChange={(event) =>
-                          setSupplyPlan(task, { choiceId: event.target.value })
-                        }
-                      >
-                        <option value="">선택하세요</option>
-                        {task.choices.map((choice) => (
-                          <option key={choice.id} value={choice.id}>
-                            {choice.label} · {choice.rewards
-                              .map(
-                                (reward) =>
-                                  `${number(reward.quantity)} ${materialById[reward.materialId].name}`,
-                              )
-                              .join(", ")}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  )}
-                  <button
-                    className={plan?.enabled ? "planned-button" : "primary"}
-                    onClick={() =>
-                      setSupplyPlan(task, { enabled: !plan?.enabled })
-                    }
-                  >
-                    {plan?.enabled ? "수급 계획에 포함됨" : "이 의뢰를 수행할 예정"}
-                  </button>
-                  <small>
-                    {plan?.enabled
-                      ? task.choices && !plan?.choiceId
-                        ? "기본 보상만 계산 중입니다. 선택 보상도 지정하세요."
-                        : "재료별 일일·주간 수급량과 완료 예상에 반영됩니다."
-                      : "재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다."}
-                  </small>
-                </article>
+                <details className="location-quests" key={location.id} open>
+                  <summary>
+                    <span>{locationById[location.id].name}</span>
+                    <small>Codex 확인 의뢰 {locationTasks.length}개</small>
+                  </summary>
+                  {giverIds.map((giverId) => {
+                    const giverTasks = locationTasks.filter(
+                      (task) => (task.giverId || "unknown") === giverId,
+                    );
+                    const giverRoutes = locationRoutes.filter(
+                      (route) => (route.giverId || "unknown") === giverId,
+                    );
+                    const standalone = giverTasks.filter(
+                      (task) => !routedQuestIds.has(task.id),
+                    );
+                    return (
+                      <div className="giver-group" key={giverId}>
+                        <h3>{npcById[giverId]?.name || "수령 NPC 확인 필요"}</h3>
+                        {giverRoutes.map((route) => {
+                          const selectedOption = route.options.find((option) =>
+                            option.questIds.some(
+                              (questId) => data.supplyPlans[questId]?.enabled,
+                            ),
+                          );
+                          return (
+                            <div className="route-picker" key={route.id} data-route-id={route.id}>
+                              <div>
+                                <b>{route.name}</b>
+                                <p>{route.description}</p>
+                              </div>
+                              <div className="route-options">
+                                {route.options.map((option) => (
+                                  <button
+                                    key={option.id}
+                                    className={selectedOption?.id === option.id ? "primary" : ""}
+                                    onClick={() => chooseRoute(route, option.id)}
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                              </div>
+                              {selectedOption && (
+                                <div className="task-grid route-task-grid">
+                                  {selectedOption.questIds.map((questId) => {
+                                    const task = dailyTasks.find((item) => item.id === questId);
+                                    return task ? <QuestPlanCard key={task.id} task={task} plan={data.supplyPlans[task.id]} onPlan={setSupplyPlan} routeManaged /> : null;
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                        {!!standalone.length && (
+                          <div className="task-grid">
+                            {standalone.map((task) => <QuestPlanCard key={task.id} task={task} plan={data.supplyPlans[task.id]} onPlan={setSupplyPlan} />)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </details>
               );
             })}
           </div>
@@ -815,6 +844,56 @@ export default function App() {
         </div>
       )}
     </main>
+  );
+}
+function QuestPlanCard({
+  task,
+  plan,
+  onPlan,
+  routeManaged = false,
+}: {
+  task: DailyTask;
+  plan?: SupplyPlan;
+  onPlan: (task: DailyTask, patch: { enabled?: boolean; choiceId?: string }) => void;
+  routeManaged?: boolean;
+}) {
+  return (
+    <article className={`task-card ${plan?.enabled ? "planned" : ""}`} data-quest-id={task.codexQuestId}>
+      <span className={`period ${task.period}`}>{task.period === "daily" ? "일일" : "주간"}</span>
+      <h3>{task.name}</h3>
+      <p>{task.objective || task.note}</p>
+      <small className="quest-meta">
+        {task.codexQuestId} · <a href={task.codexUrl} target="_blank" rel="noreferrer">BDO Codex</a>
+      </small>
+      <div className="rewards">
+        {task.rewards.map((reward) => (
+          <span key={reward.materialId}>+{number(reward.quantity)} {materialById[reward.materialId].name}</span>
+        ))}
+      </div>
+      {task.choices && (
+        <label className="quest-choice">
+          선택 보상
+          <select value={plan?.choiceId || ""} onChange={(event) => onPlan(task, { choiceId: event.target.value })}>
+            <option value="">선택하세요</option>
+            {task.choices.map((choice) => (
+              <option key={choice.id} value={choice.id}>
+                {choice.label} · {choice.rewards.map((reward) => `${number(reward.quantity)} ${materialById[reward.materialId].name}`).join(", ")}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {routeManaged ? (
+        <small>상위 수급 루트 선택에 따라 포함됩니다.</small>
+      ) : (
+        <>
+          <button className={plan?.enabled ? "planned-button" : "primary"} onClick={() => onPlan(task, { enabled: !plan?.enabled })}>
+            {plan?.enabled ? "수급 계획에 포함됨" : "이 의뢰를 수행할 예정"}
+          </button>
+          <small>{plan?.enabled ? task.choices && !plan?.choiceId ? "기본 보상만 계산 중입니다. 선택 보상도 지정하세요." : "재료별 일일·주간 수급량과 완료 예상에 반영됩니다." : "재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다."}</small>
+        </>
+      )}
+    </article>
   );
 }
 function RecipeRows({

@@ -9,7 +9,12 @@ export interface Ship { id: string; name: string; hull: Hull; activeStage: Stage
 export type MaterialSortKey = 'name' | 'required' | 'owned' | 'shortage' | 'progress' | 'dailySupply' | 'weeklySupply' | 'estimatedDays' | 'crowCoinPrice' | 'crowCoinTotal' | 'recipes'
 export interface MaterialSort { key: MaterialSortKey; direction: 'asc' | 'desc' }
 export interface QuestRewardOption { id: string; label: string; rewards: Requirement[] }
-export interface DailyTask { id: string; name: string; period: 'daily' | 'weekly'; rewards: Requirement[]; otherRewards?: string[]; choices?: QuestRewardOption[]; note: string }
+export interface DailyTask { id: string; name: string; period: 'daily' | 'weekly'; rewards: Requirement[]; otherRewards?: string[]; choices?: QuestRewardOption[]; note: string; codexQuestId?: string; codexUrl?: string; startLocationId?: string; giverId?: string; objective?: string; incompatibleQuestIds?: string[] }
+export interface QuestRecord extends DailyTask { codexQuestId: string; codexUrl: string; startLocationId: string; objective: string }
+export interface NpcDefinition { id: string; name: string; codexNpcId?: string }
+export interface LocationDefinition { id: string; name: string }
+export interface QuestRouteOption { id: string; label: string; questIds: string[] }
+export interface QuestRoute { id: string; startLocationId: string; giverId?: string; name: string; description: string; options: QuestRouteOption[] }
 export interface SupplyPlan { enabled: boolean; choiceId?: string }
 export interface SupplyContribution { taskId: string; taskName: string; quantity: number; period: 'daily' | 'weekly' }
 export interface MaterialSupply { daily: number; weekly: number; dailySources: SupplyContribution[]; weeklySources: SupplyContribution[] }
