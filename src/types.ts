@@ -11,6 +11,7 @@ export interface MaterialSort { key: MaterialSortKey; direction: 'asc' | 'desc' 
 export type MaterialExchangeSortKey = 'priority' | 'name' | 'shortage' | 'outputQuantity' | 'afterExchangeShortage' | 'progressGain' | 'exchangeCrowValue' | 'crowCoinTotal'
 export interface MaterialExchangeSort { key: MaterialExchangeSortKey; direction: 'asc' | 'desc' }
 export interface BarterSession { costPerExchange: number; exchangeCounts: Record<string, number>; addToInventory: boolean }
+export interface CraftRecord { completedAt: string; consumedMaterials: Record<string, number> }
 export interface QuestRewardOption { id: string; label: string; rewards: Requirement[] }
 export interface DailyTask { id: string; name: string; period: 'daily' | 'weekly'; rewards: Requirement[]; otherRewards?: string[]; choices?: QuestRewardOption[]; note: string; codexQuestId?: string; startLocationId?: string; giverId?: string; objective?: string; incompatibleQuestIds?: string[] }
 export interface QuestRecord extends DailyTask { codexQuestId: string; startLocationId: string; objective: string }
@@ -21,5 +22,5 @@ export interface QuestRoute { id: string; startLocationId: string; giverId?: str
 export interface SupplyPlan { enabled: boolean; choiceId?: string }
 export interface SupplyContribution { taskId: string; taskName: string; quantity: number; period: 'daily' | 'weekly' }
 export interface MaterialSupply { daily: number; weekly: number; dailySources: SupplyContribution[]; weeklySources: SupplyContribution[] }
-export interface AppData { version: 2; updatedAt: string; inventory: Record<string, number>; ships: Ship[]; materialSort: MaterialSort; materialExchangeSort: MaterialExchangeSort; barterSession: BarterSession; completedTasks: Record<string, string>; supplyPlans: Record<string, SupplyPlan> }
+export interface AppData { version: 3; updatedAt: string; inventory: Record<string, number>; ships: Ship[]; materialSort: MaterialSort; materialExchangeSort: MaterialExchangeSort; barterSession: BarterSession; completedRecipes: Record<string, CraftRecord>; completedTasks: Record<string, string>; supplyPlans: Record<string, SupplyPlan> }
 export interface AggregateMaterial extends MaterialDefinition { required: number; owned: number; shortage: number; progress: number; dailySupply: number; weeklySupply: number; crowCoinTotal?: number; estimatedDays?: number; recipes: string[] }

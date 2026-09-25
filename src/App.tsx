@@ -27,6 +27,8 @@ import {
   recipeProgress,
   shipRecipes,
   stageProgress,
+  craftRecordKey,
+  isRecipeCompleted,
 } from "./utils";
 import { locationById, locations } from "./data/locations";
 import { npcById } from "./data/npcs";
@@ -126,6 +128,7 @@ export default function App() {
   const [notice, setNotice] = useState("");
   const [barterToast, setBarterToast] = useState<{ id: string; materialId: string; quantity: number } | null>(null);
   const [barterFlashId, setBarterFlashId] = useState<string | null>(null);
+  const [craftConfirm, setCraftConfirm] = useState<{ shipId: string; recipeId: string } | null>(null);
   const [source, setSource] = useState<string | null>(null);
   const [supplyDetail, setSupplyDetail] = useState<{
     materialId: string;
@@ -189,10 +192,39 @@ export default function App() {
           (b.slot ? currentShip.equipmentOrder.indexOf(b.slot) : 99),
       )
     : [];
+  const pendingRecipes = currentShip ? currentRecipes.filter((recipe) => !isRecipeCompleted(data, currentShip.id, recipe.id)) : [];
+  const completedCurrentRecipes = currentShip ? currentRecipes.filter((recipe) => isRecipeCompleted(data, currentShip.id, recipe.id)) : [];
   const totalCrow = totals.reduce((s, x) => s + (x.crowCoinTotal || 0), 0);
   const priced = totals.filter((x) => x.crowCoinPrice !== undefined).length;
   const setOwned = (materialId: string, value: number) =>
     update({ ...data, inventory: { ...data.inventory, [materialId]: value } });
+  const completeCraft = () => {
+    if (!craftConfirm) return;
+    const ship = data.ships.find((item) => item.id === craftConfirm.shipId);
+    const recipe = ship && shipRecipes(ship).find((item) => item.id === craftConfirm.recipeId);
+    if (!ship || !recipe || isRecipeCompleted(data, ship.id, recipe.id)) return setCraftConfirm(null);
+    if (recipe.requirements.some((requirement) => clamp(data.inventory[requirement.materialId]) < requirement.quantity)) {
+      setNotice("재료 보유량이 부족하여 제작을 완료할 수 없습니다.");
+      return setCraftConfirm(null);
+    }
+    const consumedMaterials = Object.fromEntries(recipe.requirements.map((requirement) => [requirement.materialId, requirement.quantity]));
+    const inventory = { ...data.inventory };
+    recipe.requirements.forEach((requirement) => { inventory[requirement.materialId] = clamp(inventory[requirement.materialId]) - requirement.quantity; });
+    update({ ...data, inventory, completedRecipes: { ...data.completedRecipes, [craftRecordKey(ship.id, recipe.id)]: { completedAt: new Date().toISOString(), consumedMaterials } } });
+    setCraftConfirm(null);
+    setNotice(`${recipe.name} 제작 완료 · 재료를 공유 재고에서 차감했습니다.`);
+  };
+  const undoCraft = (ship: Ship, recipeId: string) => {
+    const key = craftRecordKey(ship.id, recipeId);
+    const record = data.completedRecipes[key];
+    if (!record || !confirm("제작 완료를 취소하고 당시 차감한 재료를 재고에 복구할까요?")) return;
+    const inventory = { ...data.inventory };
+    Object.entries(record.consumedMaterials).forEach(([materialId, quantity]) => { inventory[materialId] = clamp(inventory[materialId]) + quantity; });
+    const completedRecipes = { ...data.completedRecipes };
+    delete completedRecipes[key];
+    update({ ...data, inventory, completedRecipes });
+    setNotice("제작 완료를 취소하고 재료를 공유 재고에 복구했습니다.");
+  };
   const setSupplyPlan = (
     task: DailyTask,
     patch: { enabled?: boolean; choiceId?: string },
@@ -509,7 +541,9 @@ export default function App() {
                 단계를 클릭하면 해당 단계의 고정 제작식만 봅니다. 재료 보유량은
                 함대 전체에서 공유됩니다.
               </p>
-              {currentRecipes.map((recipe, index) => (
+              {pendingRecipes.map((recipe, index) => {
+                const canCraft = recipe.requirements.every((requirement) => clamp(data.inventory[requirement.materialId]) >= requirement.quantity);
+                return (
                 <article className="recipe" key={recipe.id}>
                   <div>
                     <p>진행률 {recipeProgress(recipe, data.inventory)}%</p>
@@ -533,7 +567,7 @@ export default function App() {
                         ↑
                       </button>
                       <button
-                        disabled={index === currentRecipes.length - 1}
+                        disabled={index === pendingRecipes.length - 1}
                         onClick={() => {
                           const order = [...currentShip.equipmentOrder];
                           const position = order.indexOf(recipe.slot!);
@@ -549,6 +583,10 @@ export default function App() {
                     </span>
                   )}
                   <Progress value={recipeProgress(recipe, data.inventory)} />
+                  <div className="craft-action">
+                    <small>{canCraft ? "재료가 모두 준비되었습니다. 제작 완료 시 공유 재고에서 차감합니다." : "모든 재료를 보유하면 제작 완료 처리를 할 수 있습니다."}</small>
+                    <button className="primary" disabled={!canCraft} onClick={() => setCraftConfirm({ shipId: currentShip.id, recipeId: recipe.id })}>제작 완료</button>
+                  </div>
                   <RecipeRows
                     recipe={recipe}
                     inventory={data.inventory}
@@ -558,7 +596,21 @@ export default function App() {
                     showSupply={setSupplyDetail}
                   />
                 </article>
-              ))}
+                );
+              })}
+              {completedCurrentRecipes.length > 0 && (
+                <details className="completed-recipes" open>
+                  <summary>완료한 제작 · {number(completedCurrentRecipes.length)}개</summary>
+                  {completedCurrentRecipes.map((recipe) => {
+                    const record = data.completedRecipes[craftRecordKey(currentShip.id, recipe.id)];
+                    return <article className="recipe completed-recipe" key={recipe.id}>
+                      <div><p>제작 완료 · {new Date(record.completedAt).toLocaleDateString("ko-KR")}</p><h3>{recipe.name}</h3><small>{Object.entries(record.consumedMaterials).map(([materialId, quantity]) => `${materialById[materialId]?.name || materialId} ${number(quantity)}개`).join(" · ")}</small></div>
+                      <Progress value={100} />
+                      <button className="craft-undo" onClick={() => undoCraft(currentShip, recipe.id)}>제작 완료 취소 · 재료 복구</button>
+                    </article>;
+                  })}
+                </details>
+              )}
             </>
           ) : (
             <p className="empty">선박을 선택하거나 함대를 추가하세요.</p>
@@ -890,6 +942,18 @@ export default function App() {
           </div>
         </section>
       )}
+      {craftConfirm && (() => {
+        const ship = data.ships.find((item) => item.id === craftConfirm.shipId);
+        const recipe = ship && shipRecipes(ship).find((item) => item.id === craftConfirm.recipeId);
+        if (!ship || !recipe) return null;
+        return <div className="modal"><div className="craft-confirm">
+          <h2>{recipe.name} 제작 완료</h2>
+          <p>아래 재료가 함대 전체의 공유 재고에서 차감됩니다. 완료 후 전체 재료·물교 우선순위도 즉시 다시 계산됩니다.</p>
+          <ul>{recipe.requirements.map((requirement) => <li key={requirement.materialId}><b>{materialById[requirement.materialId].name}</b><span>{number(requirement.quantity)}개 차감 · 남음 {number(clamp(data.inventory[requirement.materialId]) - requirement.quantity)}개</span></li>)}</ul>
+          <button onClick={() => setCraftConfirm(null)}>취소</button>
+          <button className="primary" onClick={completeCraft}>재료 차감 후 완료</button>
+        </div></div>;
+      })()}
       {source && (
         <div className="modal">
           <div>

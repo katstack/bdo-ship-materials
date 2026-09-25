@@ -14,6 +14,12 @@ export function normalize(input: unknown): AppData {
   const sortKeys: MaterialSortKey[] = ['name','required','owned','shortage','progress','dailySupply','weeklySupply','estimatedDays','crowCoinPrice','crowCoinTotal','recipes']; const savedSort = raw.materialSort
   const exchangeSortKeys: MaterialExchangeSortKey[] = ['priority','name','shortage','outputQuantity','afterExchangeShortage','progressGain','exchangeCrowValue','crowCoinTotal']; const savedExchangeSort = raw.materialExchangeSort
   const completedTasks = Object.fromEntries(Object.entries(raw.completedTasks || {}).filter(([, value]) => typeof value === 'string')) as Record<string, string>
+  const completedRecipes = Object.fromEntries(Object.entries(raw.completedRecipes || {}).flatMap(([key, value]) => {
+    if (!value || typeof value !== 'object') return []
+    const record = value as { completedAt?: unknown; consumedMaterials?: unknown }
+    if (typeof record.completedAt !== 'string' || !record.consumedMaterials || typeof record.consumedMaterials !== 'object') return []
+    return [[key, { completedAt: record.completedAt, consumedMaterials: Object.fromEntries(Object.entries(record.consumedMaterials as Record<string, unknown>).map(([id, quantity]) => [id, clamp(Number(quantity))])) }]]
+  })) as AppData['completedRecipes']
   // 2025년 5월에 활기찬 일리야 섬 I~III가 하나의 의뢰로 통합되었다.
   // 이전 화면에서 이미 체크한 날에는 새 통합 의뢰를 다시 수령하지 않도록 한다.
   const legacyLivelyDates = ['lively-iliya-1', 'lively-iliya-2', 'lively-iliya-3']
@@ -30,7 +36,7 @@ export function normalize(input: unknown): AppData {
   }))
   const rawBarter = raw.barterSession as Partial<AppData['barterSession']> | undefined
   const barterSession = { costPerExchange: clamp(Number(rawBarter?.costPerExchange)), addToInventory: rawBarter?.addToInventory !== false, exchangeCounts: Object.fromEntries(Object.entries(rawBarter?.exchangeCounts || {}).map(([id, count]) => [id, clamp(Number(count))])) }
-  return { version: 2, updatedAt: typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : new Date().toISOString(), materialSort: savedSort && sortKeys.includes(savedSort.key) ? { key: savedSort.key, direction: savedSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'crowCoinTotal', direction: 'desc' }, materialExchangeSort: savedExchangeSort && exchangeSortKeys.includes(savedExchangeSort.key) ? { key: savedExchangeSort.key, direction: savedExchangeSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'priority', direction: 'desc' }, barterSession, completedTasks, supplyPlans, inventory: Object.fromEntries(Object.entries(raw.inventory || {}).map(([k, v]) => [k, clamp(Number(v))])), ships: raw.ships.map((ship, index) => {
+  return { version: 3, updatedAt: typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : new Date().toISOString(), materialSort: savedSort && sortKeys.includes(savedSort.key) ? { key: savedSort.key, direction: savedSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'crowCoinTotal', direction: 'desc' }, materialExchangeSort: savedExchangeSort && exchangeSortKeys.includes(savedExchangeSort.key) ? { key: savedExchangeSort.key, direction: savedExchangeSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'priority', direction: 'desc' }, barterSession, completedRecipes, completedTasks, supplyPlans, inventory: Object.fromEntries(Object.entries(raw.inventory || {}).map(([k, v]) => [k, clamp(Number(v))])), ships: raw.ships.map((ship, index) => {
     if (!ship || typeof ship !== 'object') throw new Error(`${index + 1}번 함선 형식이 올바르지 않습니다.`)
     const item = ship as Partial<AppData['ships'][number]>; const hull = hulls.includes(item.hull as Hull) ? item.hull as Hull : 'trade'; const stage = Math.max(1, Math.min(5, Number(item.activeStage) || 1)) as Stage
     const sourceHull = hull==='trade'||hull==='warship'?hull:null; const upgradeHull = sourceHull && upgradeTargets[sourceHull].includes(item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number]) ? item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number] : sourceHull ? defaultUpgradeHull[sourceHull] : undefined
