@@ -10,7 +10,7 @@ export type MaterialSortKey = 'name' | 'required' | 'owned' | 'shortage' | 'prog
 export interface MaterialSort { key: MaterialSortKey; direction: 'asc' | 'desc' }
 export type MaterialExchangeSortKey = 'priority' | 'name' | 'shortage' | 'outputQuantity' | 'afterExchangeShortage' | 'progressGain' | 'exchangeCrowValue' | 'crowCoinTotal'
 export interface MaterialExchangeSort { key: MaterialExchangeSortKey; direction: 'asc' | 'desc' }
-export interface BarterSession { remainingNegotiation: number; costPerExchange: number; exchangeCounts: Record<string, number>; addToInventory: boolean }
+export interface BarterSession { costPerExchange: number; exchangeCounts: Record<string, number>; addToInventory: boolean }
 export interface QuestRewardOption { id: string; label: string; rewards: Requirement[] }
 export interface DailyTask { id: string; name: string; period: 'daily' | 'weekly'; rewards: Requirement[]; otherRewards?: string[]; choices?: QuestRewardOption[]; note: string; codexQuestId?: string; startLocationId?: string; giverId?: string; objective?: string; incompatibleQuestIds?: string[] }
 export interface QuestRecord extends DailyTask { codexQuestId: string; startLocationId: string; objective: string }
