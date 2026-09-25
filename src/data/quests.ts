@@ -6,6 +6,12 @@ const choice = (id: string, label: string, ...rewards: ReturnType<typeof r>[]) =
 // BDO Codex 공개 의뢰 페이지에서 ID·반복·목표·보상·충돌 관계를 확인한 항목만 노출한다.
 export const quests: QuestRecord[] = [
   {
+    id: "lively-iliya", codexQuestId: "3736/12/", period: "daily",
+    name: "[물물교환][일일] 활기찬 일리야 섬", startLocationId: "iliya", giverId: "iliya-resident",
+    objective: "물물교환 15회 완료", rewards: [r("enhanced", 10), r("high", 1), r("pearl", 2), r("deep-glue", 8), r("reef", 8), r("crow-coin", 50)],
+    note: "기존 활기찬 일리야 섬 I~III의 통합 의뢰 · Codex 상세 보상 기준",
+  },
+  {
     id: "supply-iliya", codexQuestId: "3727/3/", period: "daily",
     name: "[일일] 보급물자 운송(일리야섬)", startLocationId: "velia", giverId: "ravinia",
     objective: "로비니아의 보급물자를 제한 시간 내 일리야 섬의 다리오에게 전달", rewards: [r("low", 1), r("crow-coin", 50)],
@@ -64,6 +70,53 @@ export const quests: QuestRecord[] = [
     objective: "오킬루아의 눈 먼 서쪽에서 검은무쇠이빨 1마리 처치", rewards: [r("oquilla-token", 1), r("crow-coin", 100)],
     choices: [choice("blackstone", "온기를 품은 블랙스톤", r("wave-blackstone", 14)), choice("adhesive", "파도의 흔적이 담긴 접착제", r("adhesive", 1))],
     incompatibleQuestIds: ["3707/23/"], note: "오킬루아의 눈 라비켈 · 어린 해왕류 루트와 배타",
+  },
+  {
+    id: "blocking-sea-route", codexQuestId: "3726/1/", period: "daily",
+    name: "[일일] 바닷길을 막고 있는 괴수들", startLocationId: "oquilla-eye", giverId: "haeran",
+    objective: "유르 해역의 바다 괴수 처치", rewards: [r("crow-coin", 200)],
+    choices: [choice("green", "오킬루아 녹빛담수", r("oquilla-green", 1)), choice("blue", "오킬루아 물빛담수", r("oquilla-blue", 1)), choice("gold", "오킬루아 금빛담수", r("oquilla-gold", 1))],
+    note: "해란에게 수령 · 레크라샨 사냥터 항해 의뢰",
+  },
+  {
+    id: "otter-traders", codexQuestId: "3707/25/", period: "weekly",
+    name: "[주간] 어린 해달 상인들을 위해", startLocationId: "oquilla-eye", giverId: "cario",
+    objective: "어린 해달 상인을 위한 산호 재료 조달", rewards: [r("oquilla-token", 15), r("seaweed", 45), r("rock", 15)],
+    note: "카리오에게 수령 · 매주 목요일 00시 이후 재수락 · Codex 상세 보상 기준",
+  },
+  {
+    id: "candidum-weekly", codexQuestId: "3707/19/", period: "weekly",
+    name: "[주간] 그믐달 길드의 칸디둠 사냥꾼", startLocationId: "oquilla-eye", giverId: "ravikel",
+    objective: "오킬루아의 눈 북쪽 먼 대양의 칸디둠 처치", rewards: [r("crow-coin", 500)],
+    choices: [choice("blackstone", "온기를 품은 블랙스톤", r("wave-blackstone", 60)), choice("rock", "홍조빛 해저단괴", r("rock", 4)), choice("violent", "난폭한 파도가 새겨진 합판", r("violent", 1))],
+    note: "라비켈에게 수령 · 매주 목요일 00시 이후 재수락",
+  },
+  {
+    id: "nineshark-weekly", codexQuestId: "3707/20/", period: "weekly",
+    name: "[주간] 그믐달 길드의 나인샤크 사냥꾼", startLocationId: "oquilla-eye", giverId: "ravikel",
+    objective: "오킬루아의 눈 북서쪽 먼 대양의 나인샤크 처치", rewards: [r("crow-coin", 500)],
+    choices: [choice("blackstone", "온기를 품은 블랙스톤", r("wave-blackstone", 60)), choice("tear", "심해의 눈물", r("tear", 2)), choice("support", "정교하게 다듬어진 지지대", r("support", 1))],
+    note: "라비켈에게 수령 · 매주 목요일 00시 이후 재수락",
+  },
+  {
+    id: "black-rust-weekly", codexQuestId: "3707/21/", period: "weekly",
+    name: "[주간] 그믐달 길드의 검은무쇠이빨 사냥꾼", startLocationId: "oquilla-eye", giverId: "ravikel",
+    objective: "오킬루아의 눈 서쪽 먼 대양의 검은무쇠이빨 처치", rewards: [r("crow-coin", 500)],
+    choices: [choice("blackstone", "온기를 품은 블랙스톤", r("wave-blackstone", 60)), choice("combat", "콕스해적단의 유물(전투)", r("combat", 6)), choice("adhesive", "파도의 흔적이 담긴 접착제", r("adhesive", 1))],
+    note: "라비켈에게 수령 · 매주 목요일 00시 이후 재수락",
+  },
+  {
+    id: "population-report", codexQuestId: "3707/22/", period: "weekly",
+    name: "[주간] 개체수 증가 보고", startLocationId: "oquilla-eye", giverId: "oquilla-soldier",
+    objective: "오킬루아의 눈 주변 어린 해왕류 처치", rewards: [r("combat", 2)],
+    note: "병사에게 수령 · 매주 목요일 00시 이후 재수락",
+  },
+  {
+    id: "ruthless-monsters", codexQuestId: "3726/2/", period: "weekly",
+    name: "[주간] 무자비한 괴수 무리", startLocationId: "oquilla-eye", giverId: "haeran",
+    objective: "해란의 요청에 따라 바다 괴수 처치", rewards: [r("crow-coin", 500)],
+    choices: [choice("green", "오킬루아 녹빛담수", r("oquilla-green", 3)), choice("blue", "오킬루아 물빛담수", r("oquilla-blue", 3)), choice("gold", "오킬루아 금빛담수", r("oquilla-gold", 3))],
+    note: "해란에게 수령 · 레크라샨 사냥터 항해 의뢰",
   },
 ];
 

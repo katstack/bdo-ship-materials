@@ -31,7 +31,7 @@ import {
 import { locationById, locations } from "./data/locations";
 import { npcById } from "./data/npcs";
 import { questRoutes } from "./data/questRoutes";
-import { codexQuestUrl } from "./data/codex";
+import { codexNpcUrl, codexQuestUrl } from "./data/codex";
 import type { QuestRoute } from "./types";
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
@@ -549,7 +549,20 @@ export default function App() {
                     );
                     return (
                       <div className="giver-group" key={giverId}>
-                        <h3>{npcById[giverId]?.name || "수령 NPC 확인 필요"}</h3>
+                        <h3>
+                          {npcById[giverId]?.codexNpcId ? (
+                            <a
+                              href={codexNpcUrl(npcById[giverId].codexNpcId!)}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {npcById[giverId].name}
+                            </a>
+                          ) : (
+                            npcById[giverId]?.name || "수령 NPC 확인 필요"
+                          )}
+                          <small> 의뢰 수령 NPC · BDO Codex</small>
+                        </h3>
                         {giverRoutes.map((route) => {
                           const selectedOption = route.options.find((option) =>
                             option.questIds.some(

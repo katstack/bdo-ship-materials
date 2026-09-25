@@ -13,7 +13,7 @@ const raw = await readFile(file, "utf8");
 const rows = JSON.parse(raw.replace(/^\uFEFF/, "")).aaData;
 const text = (value) => String(value ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 const matches = rows
-  .filter((row) => text(row[2]).includes(query))
+  .filter((row) => text(row[2]) === query)
   .map((row) => {
     const id = kind === "quest" ? row[0].display : String(row[0]);
     return {
