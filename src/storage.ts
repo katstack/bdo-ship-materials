@@ -2,7 +2,7 @@ import { sampleData } from './sampleData'
 import type { AppData, MaterialSortKey } from './types'
 import { clamp } from './utils'
 import type { Hull, Stage } from './types'
-import { defaultEquipmentOrder } from './catalog'
+import { defaultEquipmentOrder, defaultUpgradeHull, upgradeTargets } from './catalog'
 
 const STORAGE_KEY = 'bdo-ship-materials:v1'
 export const freshSample = (): AppData => ({ ...structuredClone(sampleData), updatedAt: new Date().toISOString() })
@@ -15,7 +15,8 @@ export function normalize(input: unknown): AppData {
   return { version: 2, updatedAt: typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : new Date().toISOString(), materialSort: savedSort && sortKeys.includes(savedSort.key) ? { key: savedSort.key, direction: savedSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'crowCoinTotal', direction: 'desc' }, completedTasks: Object.fromEntries(Object.entries(raw.completedTasks || {}).filter(([, value]) => typeof value === 'string')), inventory: Object.fromEntries(Object.entries(raw.inventory || {}).map(([k, v]) => [k, clamp(Number(v))])), ships: raw.ships.map((ship, index) => {
     if (!ship || typeof ship !== 'object') throw new Error(`${index + 1}번 함선 형식이 올바르지 않습니다.`)
     const item = ship as Partial<AppData['ships'][number]>; const hull = hulls.includes(item.hull as Hull) ? item.hull as Hull : 'trade'; const stage = Math.max(1, Math.min(5, Number(item.activeStage) || 1)) as Stage
-    return { id: String(item.id || crypto.randomUUID()), name: String(item.name || hull).trim(), hull, activeStage: stage, equipmentOrder: Array.isArray(item.equipmentOrder) && item.equipmentOrder.length === 4 ? item.equipmentOrder as AppData['ships'][number]['equipmentOrder'] : [...defaultEquipmentOrder[hull]] }
+    const sourceHull = hull==='trade'||hull==='warship'?hull:null; const upgradeHull = sourceHull && upgradeTargets[sourceHull].includes(item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number]) ? item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number] : sourceHull ? defaultUpgradeHull[sourceHull] : undefined
+    return { id: String(item.id || crypto.randomUUID()), name: String(item.name || hull).trim(), hull, activeStage: stage, upgradeHull, equipmentOrder: Array.isArray(item.equipmentOrder) && item.equipmentOrder.length === 4 ? item.equipmentOrder as AppData['ships'][number]['equipmentOrder'] : [...defaultEquipmentOrder[hull]] }
   }).filter(ship => ship.name) }
 }
 export function loadData(): AppData { try { const stored = localStorage.getItem(STORAGE_KEY); return stored ? normalize(JSON.parse(stored)) : freshSample() } catch (error) { console.warn('저장 데이터를 불러오지 못했습니다.', error); return freshSample() } }
