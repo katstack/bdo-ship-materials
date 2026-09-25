@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   dailyTasks,
   defaultEquipmentOrder,
@@ -35,6 +35,11 @@ import { codexNpcUrl, codexQuestUrl } from "./data/codex";
 import type { QuestRoute } from "./types";
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
+const tabs: Tab[] = ["dashboard", "ship", "materials", "daily", "guide", "settings"];
+const tabFromUrl = (): Tab => {
+  const tab = new URLSearchParams(window.location.search).get("tab");
+  return tabs.includes(tab as Tab) ? (tab as Tab) : "dashboard";
+};
 const id = () => crypto.randomUUID();
 const Progress = ({ value }: { value: number }) => (
   <div className="progress">
@@ -90,8 +95,11 @@ const sortMaterials = (
 
 export default function App() {
   const [data, setData] = useState<AppData>(loadData);
-  const [tab, setTab] = useState<Tab>("dashboard");
-  const [selected, setSelected] = useState(data.ships[0]?.id || "");
+  const [tab, setTab] = useState<Tab>(tabFromUrl);
+  const [selected, setSelected] = useState(() => {
+    const shipId = new URLSearchParams(window.location.search).get("ship");
+    return data.ships.some((ship) => ship.id === shipId) ? shipId! : (data.ships[0]?.id || "");
+  });
   const [scope, setScope] = useState<"current" | "all">("all");
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
@@ -102,6 +110,23 @@ export default function App() {
   } | null>(null);
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({});
   const importRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (tab === "dashboard") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", tab);
+    if (selected) url.searchParams.set("ship", selected);
+    else url.searchParams.delete("ship");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }, [tab, selected]);
+  useEffect(() => {
+    const restoreUrlState = () => {
+      setTab(tabFromUrl());
+      const shipId = new URLSearchParams(window.location.search).get("ship");
+      setSelected(data.ships.some((ship) => ship.id === shipId) ? shipId! : (data.ships[0]?.id || ""));
+    };
+    window.addEventListener("popstate", restoreUrlState);
+    return () => window.removeEventListener("popstate", restoreUrlState);
+  }, [data.ships]);
   const update = (next: AppData) => {
     const stamped = { ...next, updatedAt: new Date().toISOString() };
     setData(stamped);
