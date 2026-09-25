@@ -1,5 +1,5 @@
 import { sampleData } from './sampleData'
-import type { AppData, MaterialSortKey } from './types'
+import type { AppData, MaterialExchangeSortKey, MaterialSortKey } from './types'
 import { clamp } from './utils'
 import type { Hull, Stage } from './types'
 import { defaultEquipmentOrder, defaultUpgradeHull, upgradeTargets } from './catalog'
@@ -12,6 +12,7 @@ export function normalize(input: unknown): AppData {
   if (!Array.isArray(raw.ships)) throw new Error('함대 목록을 찾을 수 없습니다.')
   const hulls: Hull[] = ['trade','warship','balance','advance','volante','valor']
   const sortKeys: MaterialSortKey[] = ['name','required','owned','shortage','progress','dailySupply','weeklySupply','estimatedDays','crowCoinPrice','crowCoinTotal','recipes']; const savedSort = raw.materialSort
+  const exchangeSortKeys: MaterialExchangeSortKey[] = ['priority','name','shortage','outputQuantity','afterExchangeShortage','progressGain','exchangeCrowValue','crowCoinTotal']; const savedExchangeSort = raw.materialExchangeSort
   const completedTasks = Object.fromEntries(Object.entries(raw.completedTasks || {}).filter(([, value]) => typeof value === 'string')) as Record<string, string>
   // 2025년 5월에 활기찬 일리야 섬 I~III가 하나의 의뢰로 통합되었다.
   // 이전 화면에서 이미 체크한 날에는 새 통합 의뢰를 다시 수령하지 않도록 한다.
@@ -27,7 +28,7 @@ export function normalize(input: unknown): AppData {
     const plan = value as { enabled?: unknown; choiceId?: unknown }
     return [[id, { enabled: plan.enabled === true, ...(typeof plan.choiceId === 'string' ? { choiceId: plan.choiceId } : {}) }]]
   }))
-  return { version: 2, updatedAt: typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : new Date().toISOString(), materialSort: savedSort && sortKeys.includes(savedSort.key) ? { key: savedSort.key, direction: savedSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'crowCoinTotal', direction: 'desc' }, completedTasks, supplyPlans, inventory: Object.fromEntries(Object.entries(raw.inventory || {}).map(([k, v]) => [k, clamp(Number(v))])), ships: raw.ships.map((ship, index) => {
+  return { version: 2, updatedAt: typeof raw.updatedAt === 'string' && !Number.isNaN(Date.parse(raw.updatedAt)) ? raw.updatedAt : new Date().toISOString(), materialSort: savedSort && sortKeys.includes(savedSort.key) ? { key: savedSort.key, direction: savedSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'crowCoinTotal', direction: 'desc' }, materialExchangeSort: savedExchangeSort && exchangeSortKeys.includes(savedExchangeSort.key) ? { key: savedExchangeSort.key, direction: savedExchangeSort.direction === 'asc' ? 'asc' : 'desc' } : { key: 'priority', direction: 'desc' }, completedTasks, supplyPlans, inventory: Object.fromEntries(Object.entries(raw.inventory || {}).map(([k, v]) => [k, clamp(Number(v))])), ships: raw.ships.map((ship, index) => {
     if (!ship || typeof ship !== 'object') throw new Error(`${index + 1}번 함선 형식이 올바르지 않습니다.`)
     const item = ship as Partial<AppData['ships'][number]>; const hull = hulls.includes(item.hull as Hull) ? item.hull as Hull : 'trade'; const stage = Math.max(1, Math.min(5, Number(item.activeStage) || 1)) as Stage
     const sourceHull = hull==='trade'||hull==='warship'?hull:null; const upgradeHull = sourceHull && upgradeTargets[sourceHull].includes(item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number]) ? item.upgradeHull as typeof upgradeTargets[typeof sourceHull][number] : sourceHull ? defaultUpgradeHull[sourceHull] : undefined

@@ -18,7 +18,7 @@ import {
   saveData,
 } from "./storage";
 import { useDriveSync } from "./useDriveSync";
-import type { AppData, DailyTask, Hull, MaterialSortKey, Ship, Stage, SupplyPlan } from "./types";
+import type { AggregateMaterial, AppData, DailyTask, Hull, MaterialExchangeSortKey, MaterialSortKey, Ship, Stage, SupplyPlan } from "./types";
 import {
   aggregate,
   clamp,
@@ -33,13 +33,31 @@ import { npcById } from "./data/npcs";
 import { questRoutes } from "./data/questRoutes";
 import { codexNpcUrl, codexQuestUrl } from "./data/codex";
 import type { QuestRoute } from "./types";
+import { materialExchangeOutput } from "./data/materialExchanges";
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
+type MaterialsView = "inventory" | "barter";
+type BarterRow = AggregateMaterial & { outputQuantity: number; afterExchangeShortage: number; progressGain: number; exchangeCrowValue?: number; priority: number };
 const tabs: Tab[] = ["dashboard", "ship", "materials", "daily", "guide", "settings"];
 const tabFromUrl = (): Tab => {
   const tab = new URLSearchParams(window.location.search).get("tab");
   return tabs.includes(tab as Tab) ? (tab as Tab) : "dashboard";
 };
+const toBarterRows = (rows: AggregateMaterial[]): BarterRow[] => rows.filter((row) => row.shortage > 0).map((row) => {
+  const outputQuantity = materialExchangeOutput(row.id);
+  const gained = Math.min(outputQuantity, row.shortage);
+  const afterExchangeShortage = row.shortage - gained;
+  const afterProgress = row.required ? Math.min(100, Math.round(((row.owned + gained) / row.required) * 100)) : 100;
+  const exchangeCrowValue = row.crowCoinPrice === undefined ? undefined : gained * row.crowCoinPrice;
+  return { ...row, outputQuantity, afterExchangeShortage, progressGain: afterProgress - row.progress, exchangeCrowValue, priority: exchangeCrowValue ?? -1 };
+});
+const sortBarterRows = (rows: BarterRow[], key: MaterialExchangeSortKey, direction: "asc" | "desc") => [...rows].sort((a, b) => {
+  const av = key === "name" ? a.name : a[key]; const bv = key === "name" ? b.name : b[key];
+  if (av === undefined) return 1;
+  if (bv === undefined) return -1;
+  const base = typeof av === "string" && typeof bv === "string" ? av.localeCompare(bv, "ko") : Number(av) - Number(bv);
+  return direction === "asc" ? base : -base;
+});
 const id = () => crypto.randomUUID();
 const Progress = ({ value }: { value: number }) => (
   <div className="progress">
@@ -101,6 +119,7 @@ export default function App() {
     return data.ships.some((ship) => ship.id === shipId) ? shipId! : (data.ships[0]?.id || "");
   });
   const [scope, setScope] = useState<"current" | "all">("all");
+  const [materialsView, setMaterialsView] = useState<MaterialsView>("inventory");
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [source, setSource] = useState<string | null>(null);
@@ -150,6 +169,8 @@ export default function App() {
     data.materialSort.key,
     data.materialSort.direction,
   );
+  const barterRows = useMemo(() => toBarterRows(totals), [totals]);
+  const orderedBarterRows = sortBarterRows(barterRows, data.materialExchangeSort.key, data.materialExchangeSort.direction);
   const currentShip = data.ships.find((s) => s.id === selected);
   const currentRecipes = currentShip
     ? [...shipRecipes(currentShip)].sort(
@@ -211,6 +232,8 @@ export default function App() {
             : "desc",
       },
     });
+  const setMaterialExchangeSort = (key: MaterialExchangeSortKey) =>
+    update({ ...data, materialExchangeSort: { key, direction: data.materialExchangeSort.key === key && data.materialExchangeSort.direction === "desc" ? "asc" : "desc" } });
   const editShip = (ship: Ship) =>
     update({
       ...data,
@@ -364,6 +387,14 @@ export default function App() {
                 </div>
               ))}
           </div>
+          <div className="section-title barter-summary-title">
+            <div><p>물교 1회로 까주 구매를 가장 많이 대체하는 부족 재료</p><h2>이번 물교 추천</h2></div>
+            <button onClick={() => { setMaterialsView("barter"); setTab("materials"); }}>전체 보기</button>
+          </div>
+          <div className="top-list barter-top-list">
+            {sortBarterRows(barterRows, "priority", "desc").slice(0, 3).map((row) => <div key={row.id}><b>{row.name} <small>1 : {number(row.outputQuantity)}</small></b><span>{row.exchangeCrowValue === undefined ? "까주 단가 미확인" : `물교 1회 = ${number(row.exchangeCrowValue)} 주화 상당`} · 부족 {number(row.shortage)}</span></div>)}
+            {!barterRows.length && <p className="empty">현재 범위에 부족한 재료가 없습니다.</p>}
+          </div>
         </section>
       )}
       {tab === "ship" && (
@@ -497,6 +528,7 @@ export default function App() {
       )}
       {tab === "materials" && (
         <section>
+          <div className="materials-view-tabs"><button className={materialsView === "inventory" ? "active" : ""} onClick={() => setMaterialsView("inventory")}>재료 현황</button><button className={materialsView === "barter" ? "active" : ""} onClick={() => setMaterialsView("barter")}>물교 우선순위</button></div>
           <div className="toolbar">
             <button
               className={scope === "all" ? "primary" : ""}
@@ -510,25 +542,24 @@ export default function App() {
             >
               현재 단계만
             </button>
-            <input
+            {materialsView === "inventory" && <input
               placeholder="재료명 검색"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-            />
+            />}
             <span className="save">
-              정렬: {data.materialSort.key}{" "}
-              {data.materialSort.direction === "asc" ? "↑" : "↓"} · 단가 확인{" "}
+              {materialsView === "inventory" ? `정렬: ${data.materialSort.key} ${data.materialSort.direction === "asc" ? "↑" : "↓"}` : "물교 1회 절감 까주 우선"} · 단가 확인{" "}
               {priced}/{totals.length}종 · 부족분 {number(totalCrow)} 주화
             </span>
           </div>
-          <MaterialTable
+          {materialsView === "inventory" ? <MaterialTable
             rows={orderedTotals.filter((x) => x.name.includes(query))}
             setOwned={setOwned}
             showSource={setSource}
             showSupply={setSupplyDetail}
             sort={data.materialSort}
             onSort={setMaterialSort}
-          />
+          /> : <BarterPriorityTable rows={orderedBarterRows} sort={data.materialExchangeSort} onSort={setMaterialExchangeSort} showSource={setSource} />}
         </section>
       )}
       {tab === "daily" && (
@@ -1086,4 +1117,11 @@ function MaterialTable({
       </table>
     </div>
   );
+}
+function BarterPriorityTable({ rows, sort, onSort, showSource }: { rows: BarterRow[]; sort: AppData["materialExchangeSort"]; onSort: (key: MaterialExchangeSortKey) => void; showSource: (id: string) => void }) {
+  const header = (label: string, key: MaterialExchangeSortKey) => <th><button className="sort-button" onClick={() => onSort(key)}>{label}{sort.key === key ? (sort.direction === "asc" ? " ↑" : " ↓") : ""}</button></th>;
+  return <div className="table-wrap"><table className="barter-table"><thead><tr>{header("추천", "priority")}{header("재료", "name")}{header("부족", "shortage")}{header("물교 비율", "outputQuantity")}{header("교환 후 부족", "afterExchangeShortage")}{header("진행률 증가", "progressGain")}{header("이번 물교 절감", "exchangeCrowValue")}{header("전량 구매 까주", "crowCoinTotal")}</tr></thead><tbody>
+    {rows.map((row, index) => <tr key={row.id}><td><b className={index < 3 ? "barter-rank top" : "barter-rank"}>{index + 1}</b></td><td><button className="link-button" onClick={() => showSource(row.id)}>{row.name}</button></td><td className="shortage">{number(row.shortage)}</td><td>1 : {number(row.outputQuantity)}{row.outputQuantity === 1 ? <small className="default-rate"> 기본</small> : ""}</td><td>{number(row.afterExchangeShortage)}</td><td>+{row.progressGain}%</td><td className={row.exchangeCrowValue === undefined ? "no-plan" : "barter-value"}>{row.exchangeCrowValue === undefined ? "단가 미확인" : `${number(row.exchangeCrowValue)} 주화`}</td><td>{row.crowCoinTotal === undefined ? "—" : `${number(row.crowCoinTotal)} 주화`}</td></tr>)}
+    {!rows.length && <tr><td colSpan={8} className="empty">현재 범위에 부족한 재료가 없습니다.</td></tr>}
+  </tbody></table></div>;
 }
