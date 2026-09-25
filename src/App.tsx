@@ -43,6 +43,8 @@ const tabFromUrl = (): Tab => {
   const tab = new URLSearchParams(window.location.search).get("tab");
   return tabs.includes(tab as Tab) ? (tab as Tab) : "dashboard";
 };
+const materialsViewFromUrl = (): MaterialsView =>
+  new URLSearchParams(window.location.search).get("view") === "barter" ? "barter" : "inventory";
 const toBarterRows = (rows: AggregateMaterial[], exchangeCounts: Record<string, number> = {}): BarterRow[] => rows.filter((row) => row.shortage > 0 || (exchangeCounts[row.id] || 0) > 0).map((row) => {
   const outputQuantity = materialExchangeOutput(row.id);
   const gained = Math.min(outputQuantity, row.shortage);
@@ -119,7 +121,7 @@ export default function App() {
     return data.ships.some((ship) => ship.id === shipId) ? shipId! : (data.ships[0]?.id || "");
   });
   const [scope, setScope] = useState<"current" | "all">("all");
-  const [materialsView, setMaterialsView] = useState<MaterialsView>("inventory");
+  const [materialsView, setMaterialsView] = useState<MaterialsView>(materialsViewFromUrl);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [barterToast, setBarterToast] = useState<{ id: string; materialId: string; quantity: number } | null>(null);
@@ -137,11 +139,14 @@ export default function App() {
     else url.searchParams.set("tab", tab);
     if (selected) url.searchParams.set("ship", selected);
     else url.searchParams.delete("ship");
+    if (materialsView === "barter") url.searchParams.set("view", "barter");
+    else url.searchParams.delete("view");
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [tab, selected]);
+  }, [tab, selected, materialsView]);
   useEffect(() => {
     const restoreUrlState = () => {
       setTab(tabFromUrl());
+      setMaterialsView(materialsViewFromUrl());
       const shipId = new URLSearchParams(window.location.search).get("ship");
       setSelected(data.ships.some((ship) => ship.id === shipId) ? shipId! : (data.ships[0]?.id || ""));
     };
