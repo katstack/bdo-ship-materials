@@ -43,7 +43,7 @@ const tabFromUrl = (): Tab => {
   const tab = new URLSearchParams(window.location.search).get("tab");
   return tabs.includes(tab as Tab) ? (tab as Tab) : "dashboard";
 };
-const toBarterRows = (rows: AggregateMaterial[]): BarterRow[] => rows.filter((row) => row.shortage > 0).map((row) => {
+const toBarterRows = (rows: AggregateMaterial[], exchangeCounts: Record<string, number> = {}): BarterRow[] => rows.filter((row) => row.shortage > 0 || (exchangeCounts[row.id] || 0) > 0).map((row) => {
   const outputQuantity = materialExchangeOutput(row.id);
   const gained = Math.min(outputQuantity, row.shortage);
   const afterExchangeShortage = row.shortage - gained;
@@ -123,6 +123,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [barterToast, setBarterToast] = useState<{ id: string; materialId: string; quantity: number } | null>(null);
+  const [barterFlashId, setBarterFlashId] = useState<string | null>(null);
   const [source, setSource] = useState<string | null>(null);
   const [supplyDetail, setSupplyDetail] = useState<{
     materialId: string;
@@ -170,7 +171,10 @@ export default function App() {
     data.materialSort.key,
     data.materialSort.direction,
   );
-  const barterRows = useMemo(() => toBarterRows(totals), [totals]);
+  const barterRows = useMemo(
+    () => toBarterRows(totals, data.barterSession.exchangeCounts),
+    [totals, data.barterSession.exchangeCounts],
+  );
   const orderedBarterRows = sortBarterRows(barterRows, data.materialExchangeSort.key, data.materialExchangeSort.direction);
   const currentShip = data.ships.find((s) => s.id === selected);
   const currentRecipes = currentShip
@@ -247,12 +251,14 @@ export default function App() {
     const session = data.barterSession;
     const exchangeCounts = { ...session.exchangeCounts, [row.id]: (session.exchangeCounts[row.id] || 0) + 1 };
     update({ ...data, barterSession: { ...session, exchangeCounts } });
+    setBarterFlashId(row.id); window.setTimeout(() => setBarterFlashId((current) => current === row.id ? null : current), 420);
   };
   const removeBarterListing = (row: BarterRow) => {
     const session = data.barterSession; const count = session.exchangeCounts[row.id] || 0;
     if (!count) return;
     const exchangeCounts = { ...session.exchangeCounts, [row.id]: count - 1 };
     update({ ...data, barterSession: { ...session, exchangeCounts } });
+    setBarterFlashId(row.id); window.setTimeout(() => setBarterFlashId((current) => current === row.id ? null : current), 420);
   };
   const completeBarter = (row: BarterRow) => {
     const session = data.barterSession; const count = session.exchangeCounts[row.id] || 0;
@@ -587,7 +593,7 @@ export default function App() {
             showSupply={setSupplyDetail}
             sort={data.materialSort}
             onSort={setMaterialSort}
-          /> : <><BarterSessionControls session={data.barterSession} onChange={updateBarterSession} onReset={() => { if (confirm("이번 갱신 목록을 초기화할까요? 재고는 바뀌지 않습니다.")) updateBarterSession({ exchangeCounts: {} }); }} /><BarterPriorityTable rows={orderedBarterRows} sort={data.materialExchangeSort} onSort={setMaterialExchangeSort} showSource={setSource} session={data.barterSession} onAdd={addBarterListing} onRemove={removeBarterListing} onComplete={completeBarter} /></>}
+          /> : <><BarterSessionControls session={data.barterSession} onChange={updateBarterSession} onReset={() => { if (confirm("이번 갱신 목록을 초기화할까요? 재고는 바뀌지 않습니다.")) updateBarterSession({ exchangeCounts: {} }); }} /><BarterPriorityTable rows={orderedBarterRows} sort={data.materialExchangeSort} onSort={setMaterialExchangeSort} showSource={setSource} session={data.barterSession} flashId={barterFlashId} onAdd={addBarterListing} onRemove={removeBarterListing} onComplete={completeBarter} /></>}
         </section>
       )}
       {tab === "daily" && (
@@ -1151,10 +1157,10 @@ function BarterSessionControls({ session, onChange, onReset }: { session: AppDat
   const totalExchanges = Object.values(session.exchangeCounts).reduce((sum, count) => sum + count, 0); const needed = totalExchanges * session.costPerExchange;
   return <div className="barter-session"><div><b>현재 재료 갱신</b><small>좌클릭 +1 · 우클릭 -1 · 실제 교환 후 우측 완료 버튼을 누르세요.</small></div><label>회당 필요 교섭력<Num value={session.costPerExchange} onChange={(costPerExchange) => onChange({ costPerExchange })} /></label><div className="barter-total"><small>총 필요 교섭력 · {number(totalExchanges)}회</small><b>{number(needed)}</b></div><label className="barter-check"><input type="checkbox" checked={session.addToInventory} onChange={(event) => onChange({ addToInventory: event.target.checked })} />완료 시 재고 반영</label><button onClick={onReset}>목록 초기화</button></div>;
 }
-function BarterPriorityTable({ rows, sort, onSort, showSource, session, onAdd, onRemove, onComplete }: { rows: BarterRow[]; sort: AppData["materialExchangeSort"]; onSort: (key: MaterialExchangeSortKey) => void; showSource: (id: string) => void; session: AppData["barterSession"]; onAdd: (row: BarterRow) => void; onRemove: (row: BarterRow) => void; onComplete: (row: BarterRow) => void }) {
+function BarterPriorityTable({ rows, sort, onSort, showSource, session, flashId, onAdd, onRemove, onComplete }: { rows: BarterRow[]; sort: AppData["materialExchangeSort"]; onSort: (key: MaterialExchangeSortKey) => void; showSource: (id: string) => void; session: AppData["barterSession"]; flashId: string | null; onAdd: (row: BarterRow) => void; onRemove: (row: BarterRow) => void; onComplete: (row: BarterRow) => void }) {
   const header = (label: string, key: MaterialExchangeSortKey) => <th><button className="sort-button" onClick={() => onSort(key)}>{label}{sort.key === key ? (sort.direction === "asc" ? " ↑" : " ↓") : ""}</button></th>;
   return <div className="table-wrap"><table className="barter-table"><thead><tr>{header("추천", "priority")}{header("재료", "name")}{header("부족", "shortage")}{header("물교 비율", "outputQuantity")}{header("교환 후 부족", "afterExchangeShortage")}{header("진행률 증가", "progressGain")}{header("이번 물교 절감", "exchangeCrowValue")}{header("전량 구매 까주", "crowCoinTotal")}<th>이번 갱신</th></tr></thead><tbody>
-    {rows.map((row, index) => { const count = session.exchangeCounts[row.id] || 0; return <tr key={row.id} className={count ? "barter-listed" : ""} onClick={() => onAdd(row)} onContextMenu={(event) => { event.preventDefault(); onRemove(row); }}><td><b className={index < 3 ? "barter-rank top" : "barter-rank"}>{index + 1}</b></td><td><button className="link-button" onClick={(event) => { event.stopPropagation(); showSource(row.id); }}>{row.name}</button><small className="barter-count">이번 갱신: {number(count)}회 교환 · 1회당 {number(row.outputQuantity)}개</small></td><td className="shortage">{number(row.shortage)}</td><td>1 : {number(row.outputQuantity)}{row.outputQuantity === 1 ? <small className="default-rate"> 기본</small> : ""}</td><td>{number(row.afterExchangeShortage)}</td><td>+{row.progressGain}%</td><td className={row.exchangeCrowValue === undefined ? "no-plan" : "barter-value"}>{row.exchangeCrowValue === undefined ? "단가 미확인" : `${number(row.exchangeCrowValue)} 주화`}</td><td>{row.crowCoinTotal === undefined ? "—" : `${number(row.crowCoinTotal)} 주화`}</td><td><button className="primary barter-complete" disabled={!count} onClick={(event) => { event.stopPropagation(); onComplete(row); }}>1회 거래 완료</button></td></tr>; })}
+    {rows.map((row, index) => { const count = session.exchangeCounts[row.id] || 0; return <tr key={row.id} className={`${count ? "barter-listed" : ""} ${flashId === row.id ? "barter-flash" : ""}`} onClick={() => onAdd(row)} onContextMenu={(event) => { event.preventDefault(); onRemove(row); }}><td><b className={index < 3 ? "barter-rank top" : "barter-rank"}>{index + 1}</b></td><td><button className="link-button" onClick={(event) => { event.stopPropagation(); showSource(row.id); }}>{row.name}</button><small className="barter-count">이번 갱신: {number(count)}회 교환 · 1회당 {number(row.outputQuantity)}개</small></td><td className="shortage">{number(row.shortage)}</td><td>1 : {number(row.outputQuantity)}{row.outputQuantity === 1 ? <small className="default-rate"> 기본</small> : ""}</td><td>{number(row.afterExchangeShortage)}</td><td>+{row.progressGain}%</td><td className={row.exchangeCrowValue === undefined ? "no-plan" : "barter-value"}>{row.exchangeCrowValue === undefined ? "단가 미확인" : `${number(row.exchangeCrowValue)} 주화`}</td><td>{row.crowCoinTotal === undefined ? "—" : `${number(row.crowCoinTotal)} 주화`}</td><td>{count ? <button className="primary barter-complete" onClick={(event) => { event.stopPropagation(); onComplete(row); }}>1회 거래 완료</button> : <small className="barter-pending">거래 지정 필요</small>}</td></tr>; })}
     {!rows.length && <tr><td colSpan={9} className="empty">현재 범위에 부족한 재료가 없습니다.</td></tr>}
   </tbody></table></div>;
 }
