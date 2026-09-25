@@ -23,6 +23,7 @@ import {
   aggregate,
   clamp,
   number,
+  materialSupply,
   recipeProgress,
   shipRecipes,
   stageProgress,
@@ -30,21 +31,6 @@ import {
 
 type Tab = "dashboard" | "ship" | "materials" | "daily" | "guide" | "settings";
 const id = () => crypto.randomUUID();
-const koreaDay = () =>
-  new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Seoul" }).format(
-    new Date(),
-  );
-const taskAvailable = (
-  last: string | undefined,
-  period: "daily" | "weekly",
-) => {
-  if (!last) return true;
-  const elapsed = Math.floor(
-    (Date.parse(`${koreaDay()}T00:00:00Z`) - Date.parse(`${last}T00:00:00Z`)) /
-      86400000,
-  );
-  return period === "daily" ? last !== koreaDay() : elapsed >= 7;
-};
 const Progress = ({ value }: { value: number }) => (
   <div className="progress">
     <i
@@ -105,8 +91,11 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [source, setSource] = useState<string | null>(null);
+  const [supplyDetail, setSupplyDetail] = useState<{
+    materialId: string;
+    period: "daily" | "weekly";
+  } | null>(null);
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({});
-  const [questChoices, setQuestChoices] = useState<Record<string, string>>({});
   const importRef = useRef<HTMLInputElement>(null);
   const update = (next: AppData) => {
     const stamped = { ...next, updatedAt: new Date().toISOString() };
@@ -143,27 +132,17 @@ export default function App() {
   const priced = totals.filter((x) => x.crowCoinPrice !== undefined).length;
   const setOwned = (materialId: string, value: number) =>
     update({ ...data, inventory: { ...data.inventory, [materialId]: value } });
-  const claimTask = (task: (typeof dailyTasks)[number]) => {
-    if (!taskAvailable(data.completedTasks[task.id], task.period)) return;
-    const selectedChoice = task.choices?.find(
-      (choice) => choice.id === questChoices[task.id],
-    );
-    if (task.choices && !selectedChoice) {
-      setNotice("선택 보상을 고른 뒤 수령 처리하세요.");
-      return;
-    }
-    const inventory = { ...data.inventory };
-    [...task.rewards, ...(selectedChoice?.rewards || [])].forEach((reward) => {
-      inventory[reward.materialId] =
-        clamp(inventory[reward.materialId]) + reward.quantity;
-    });
+  const setSupplyPlan = (
+    task: (typeof dailyTasks)[number],
+    patch: { enabled?: boolean; choiceId?: string },
+  ) =>
     update({
       ...data,
-      inventory,
-      completedTasks: { ...data.completedTasks, [task.id]: koreaDay() },
+      supplyPlans: {
+        ...data.supplyPlans,
+        [task.id]: { ...data.supplyPlans[task.id], ...patch },
+      },
     });
-    setNotice(`${task.name} 보상을 공유 재고에 추가했습니다.`);
-  };
   const addManual = (materialId: string) => {
     const amount = clamp(Number(manualAdds[materialId]));
     if (!amount) {
@@ -461,6 +440,8 @@ export default function App() {
                     inventory={data.inventory}
                     setOwned={setOwned}
                     showSource={setSource}
+                    data={data}
+                    showSupply={setSupplyDetail}
                   />
                 </article>
               ))}
@@ -500,6 +481,7 @@ export default function App() {
             rows={orderedTotals.filter((x) => x.name.includes(query))}
             setOwned={setOwned}
             showSource={setSource}
+            showSupply={setSupplyDetail}
             sort={data.materialSort}
             onSort={setMaterialSort}
           />
@@ -509,25 +491,21 @@ export default function App() {
         <section>
           <div className="section-title">
             <div>
-              <p>체크한 보상은 공유 재고에 즉시 누적됩니다</p>
-              <h2>일일·주간 수급</h2>
+              <p>활성화한 의뢰만 재료별 수급 예상에 반영합니다</p>
+              <h2>내 일일·주간 수급 계획</h2>
             </div>
             <span className="save">
-              한국 시간 기준 · 예상 일수는 모든 등록 수급처를 매번 완료한다고
-              가정
+              재고는 변경하지 않습니다 · 선택 보상은 계획한 보상만 계산합니다
             </span>
           </div>
           <div className="task-grid">
             {dailyTasks.map((task) => {
-              const available = taskAvailable(
-                data.completedTasks[task.id],
-                task.period,
-              );
-              const selectedChoice = task.choices?.find(
-                (choice) => choice.id === questChoices[task.id],
-              );
+              const plan = data.supplyPlans[task.id];
               return (
-                <article className="task-card" key={task.id}>
+                <article
+                  className={`task-card ${plan?.enabled ? "planned" : ""}`}
+                  key={task.id}
+                >
                   <span className={`period ${task.period}`}>
                     {task.period === "daily" ? "일일" : "주간"}
                   </span>
@@ -550,12 +528,9 @@ export default function App() {
                     <label className="quest-choice">
                       선택 보상
                       <select
-                        value={questChoices[task.id] || ""}
+                        value={plan?.choiceId || ""}
                         onChange={(event) =>
-                          setQuestChoices({
-                            ...questChoices,
-                            [task.id]: event.target.value,
-                          })
+                          setSupplyPlan(task, { choiceId: event.target.value })
                         }
                       >
                         <option value="">선택하세요</option>
@@ -573,20 +548,19 @@ export default function App() {
                     </label>
                   )}
                   <button
-                    className={available ? "primary" : ""}
-                    disabled={!available || (!!task.choices && !selectedChoice)}
-                    onClick={() => claimTask(task)}
+                    className={plan?.enabled ? "planned-button" : "primary"}
+                    onClick={() =>
+                      setSupplyPlan(task, { enabled: !plan?.enabled })
+                    }
                   >
-                    {available
-                      ? `${task.period === "daily" ? "오늘" : "이번 주"} 수령 처리`
-                      : "처리 완료"}
+                    {plan?.enabled ? "수급 계획에 포함됨" : "이 의뢰를 수행할 예정"}
                   </button>
                   <small>
-                    {available
-                      ? task.choices && !selectedChoice
-                        ? "선택 보상을 고르면 수령 처리할 수 있습니다."
-                        : "체크하면 재료가 자동으로 더해집니다."
-                      : `${data.completedTasks[task.id]}에 처리됨`}
+                    {plan?.enabled
+                      ? task.choices && !plan?.choiceId
+                        ? "기본 보상만 계산 중입니다. 선택 보상도 지정하세요."
+                        : "재료별 일일·주간 수급량과 완료 예상에 반영됩니다."
+                      : "재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다."}
                   </small>
                 </article>
               );
@@ -793,6 +767,35 @@ export default function App() {
           </div>
         </div>
       )}
+      {supplyDetail && (() => {
+        const material = materialById[supplyDetail.materialId];
+        const supply = materialSupply(data, material.id);
+        const sources = supplyDetail.period === "daily" ? supply.dailySources : supply.weeklySources;
+        const total = supplyDetail.period === "daily" ? supply.daily : supply.weekly;
+        return (
+          <div className="modal">
+            <div>
+              <h2>{material.name} · {supplyDetail.period === "daily" ? "일일" : "주간"} 수급</h2>
+              <p>
+                현재 수급 계획 합계: <b>{number(total)}개 / {supplyDetail.period === "daily" ? "일" : "주"}</b>
+              </p>
+              {sources.length ? (
+                <ul className="supply-source-list">
+                  {sources.map((entry) => (
+                    <li key={entry.taskId}>
+                      <b>{entry.taskName}</b>
+                      <span>+{number(entry.quantity)}개 / {entry.period === "daily" ? "일" : "주"}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>수급 예정으로 설정한 {supplyDetail.period === "daily" ? "일일" : "주간"} 의뢰가 없습니다.</p>
+              )}
+              <button onClick={() => setSupplyDetail(null)}>닫기</button>
+            </div>
+          </div>
+        );
+      })()}
       {drive.conflict && (
         <div className="modal">
           <div>
@@ -819,18 +822,27 @@ function RecipeRows({
   inventory,
   setOwned,
   showSource,
+  data,
+  showSupply,
 }: {
   recipe: (typeof recipes)[number];
   inventory: Record<string, number>;
   setOwned: (id: string, n: number) => void;
   showSource: (id: string) => void;
+  data: AppData;
+  showSupply: (detail: { materialId: string; period: "daily" | "weekly" }) => void;
 }) {
   return (
     <div className="recipe-rows">
+      <div className="recipe-row-head">
+        <span>재료</span><span>필요</span><span>보유</span><span>부족</span><span>진행률</span><span>일일 수급</span><span>주간 수급</span><span>완료까지</span><span>부족분 주화</span>
+      </div>
       {recipe.requirements.map((req) => {
         const m = materialById[req.materialId];
         const owned = clamp(inventory[req.materialId]);
         const short = Math.max(0, req.quantity - owned);
+        const supply = materialSupply(data, m.id);
+        const days = short === 0 ? 0 : supply.daily + supply.weekly / 7 > 0 ? Math.ceil(short / (supply.daily + supply.weekly / 7)) : undefined;
         return (
           <div key={req.materialId}>
             <button className="link-button" onClick={() => showSource(m.id)}>
@@ -842,6 +854,15 @@ function RecipeRows({
             <Progress
               value={Math.min(100, Math.round((owned / req.quantity) * 100))}
             />
+            <button className="supply-cell" onClick={() => showSupply({ materialId: m.id, period: "daily" })}>
+              일 {number(supply.daily)}
+            </button>
+            <button className="supply-cell" onClick={() => showSupply({ materialId: m.id, period: "weekly" })}>
+              주 {number(supply.weekly)}
+            </button>
+            <b className={days === undefined && short > 0 ? "no-plan" : ""}>
+              {short === 0 ? "완료" : days === undefined ? "계획 없음" : `약 ${number(days)}일`}
+            </b>
             <b>
               {m.crowCoinPrice === undefined
                 ? "—"
@@ -857,12 +878,14 @@ function MaterialTable({
   rows,
   setOwned,
   showSource,
+  showSupply,
   sort,
   onSort,
 }: {
   rows: ReturnType<typeof aggregate>;
   setOwned: (id: string, n: number) => void;
   showSource: (id: string) => void;
+  showSupply: (detail: { materialId: string; period: "daily" | "weekly" }) => void;
   sort: { key: MaterialSortKey; direction: "asc" | "desc" };
   onSort: (key: MaterialSortKey) => void;
 }) {
@@ -884,7 +907,9 @@ function MaterialTable({
             {header("보유", "owned")}
             {header("부족", "shortage")}
             {header("진행률", "progress")}
-            {header("예상 일수", "estimatedDays")}
+            {header("일일 수급", "dailySupply")}
+            {header("주간 수급", "weeklySupply")}
+            {header("수급 완료까지", "estimatedDays")}
             {header("까마귀 주화/개", "crowCoinPrice")}
             {header("부족분 주화", "crowCoinTotal")}
             {header("사용처", "recipes")}
@@ -912,9 +937,19 @@ function MaterialTable({
                 <Progress value={x.progress} />
               </td>
               <td>
+                <button className="supply-cell" onClick={() => showSupply({ materialId: x.id, period: "daily" })}>
+                  {number(x.dailySupply)}
+                </button>
+              </td>
+              <td>
+                <button className="supply-cell" onClick={() => showSupply({ materialId: x.id, period: "weekly" })}>
+                  {number(x.weeklySupply)}
+                </button>
+              </td>
+              <td className={x.estimatedDays === undefined && x.shortage ? "no-plan" : ""}>
                 {x.estimatedDays === undefined
-                  ? "—"
-                  : `${number(x.estimatedDays)}일`}
+                  ? x.shortage ? "계획 없음" : "완료"
+                  : `약 ${number(x.estimatedDays)}일`}
               </td>
               <td>
                 {x.crowCoinPrice === undefined ? "—" : number(x.crowCoinPrice)}

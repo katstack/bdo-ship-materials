@@ -6,9 +6,12 @@ export interface MaterialDefinition { id: string; name: string; crowCoinPrice?: 
 export interface Requirement { materialId: string; quantity: number }
 export interface Recipe { id: string; name: string; stage: Stage; hulls: Hull[]; requirements: Requirement[]; description: string; slot?: EquipmentSlot }
 export interface Ship { id: string; name: string; hull: Hull; activeStage: Stage; upgradeHull?: CarrackHull; equipmentOrder: EquipmentSlot[] }
-export type MaterialSortKey = 'name' | 'required' | 'owned' | 'shortage' | 'progress' | 'estimatedDays' | 'crowCoinPrice' | 'crowCoinTotal' | 'recipes'
+export type MaterialSortKey = 'name' | 'required' | 'owned' | 'shortage' | 'progress' | 'dailySupply' | 'weeklySupply' | 'estimatedDays' | 'crowCoinPrice' | 'crowCoinTotal' | 'recipes'
 export interface MaterialSort { key: MaterialSortKey; direction: 'asc' | 'desc' }
 export interface QuestRewardOption { id: string; label: string; rewards: Requirement[] }
 export interface DailyTask { id: string; name: string; period: 'daily' | 'weekly'; rewards: Requirement[]; otherRewards?: string[]; choices?: QuestRewardOption[]; note: string }
-export interface AppData { version: 2; updatedAt: string; inventory: Record<string, number>; ships: Ship[]; materialSort: MaterialSort; completedTasks: Record<string, string> }
-export interface AggregateMaterial extends MaterialDefinition { required: number; owned: number; shortage: number; progress: number; crowCoinTotal?: number; estimatedDays?: number; recipes: string[] }
+export interface SupplyPlan { enabled: boolean; choiceId?: string }
+export interface SupplyContribution { taskId: string; taskName: string; quantity: number; period: 'daily' | 'weekly' }
+export interface MaterialSupply { daily: number; weekly: number; dailySources: SupplyContribution[]; weeklySources: SupplyContribution[] }
+export interface AppData { version: 2; updatedAt: string; inventory: Record<string, number>; ships: Ship[]; materialSort: MaterialSort; completedTasks: Record<string, string>; supplyPlans: Record<string, SupplyPlan> }
+export interface AggregateMaterial extends MaterialDefinition { required: number; owned: number; shortage: number; progress: number; dailySupply: number; weeklySupply: number; crowCoinTotal?: number; estimatedDays?: number; recipes: string[] }

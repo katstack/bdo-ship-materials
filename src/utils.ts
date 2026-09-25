@@ -1,11 +1,63 @@
 import { dailyTasks, materialById, recipes } from './catalog'
-import type { AggregateMaterial, AppData, Recipe, Ship, Stage } from './types'
-export const number=(n:number)=>new Intl.NumberFormat('ko-KR').format(n)
-export const clamp=(n:number)=>Math.max(0,Math.floor(Number(n)||0))
-export const progress=(owned:number,required:number)=>required?Math.min(100,Math.round(owned/required*100)):100
-const recipeHull=(ship:Ship,stage:Stage)=>stage>=3&&ship.upgradeHull?ship.upgradeHull:ship.hull
-export const shipRecipes=(ship:Ship)=>recipes.filter(recipe=>recipe.hulls.includes(recipeHull(ship,recipe.stage))&&recipe.stage===ship.activeStage)
-export const recipeProgress=(recipe:Recipe,inventory:Record<string,number>)=>recipe.requirements.length?Math.round(recipe.requirements.reduce((sum,x)=>sum+progress(clamp(inventory[x.materialId]),x.quantity),0)/recipe.requirements.length):0
-const dailyRate=(materialId:string)=>dailyTasks.reduce((sum,task)=>{const rewards=[...task.rewards,...(task.choices||[]).flatMap(choice=>choice.rewards)];return sum+rewards.filter(reward=>reward.materialId===materialId).reduce((amount,reward)=>amount+reward.quantity,0)/(task.period==='daily'?1:7)},0)
-export function aggregate(data:AppData,scope:'current'|'all'='all'):AggregateMaterial[]{const map=new Map<string,AggregateMaterial>();data.ships.forEach(ship=>recipes.filter(x=>x.hulls.includes(recipeHull(ship,x.stage))&&(scope==='all'?x.stage>=ship.activeStage:x.stage===ship.activeStage)).forEach(recipe=>recipe.requirements.forEach(req=>{const base=materialById[req.materialId];if(!base)return;const old=map.get(req.materialId);if(old){old.required+=req.quantity;old.recipes.push(`${ship.name} · ${recipe.name}`)}else map.set(req.materialId,{...base,required:req.quantity,owned:clamp(data.inventory[req.materialId]),shortage:0,progress:0,crowCoinTotal:undefined,recipes:[`${ship.name} · ${recipe.name}`]})})));return[...map.values()].map(x=>{const shortage=Math.max(0,x.required-x.owned);const rate=dailyRate(x.id);return {...x,shortage,progress:progress(x.owned,x.required),estimatedDays:shortage&&rate>0?Math.ceil(shortage/rate):undefined,crowCoinTotal:x.crowCoinPrice===undefined?undefined:shortage*x.crowCoinPrice}})}
-export const stageProgress=(data:AppData,ship:Ship)=>{const list=shipRecipes(ship);return list.length?Math.round(list.reduce((sum,x)=>sum+recipeProgress(x,data.inventory),0)/list.length):0}
+import type { AggregateMaterial, AppData, MaterialSupply, Recipe, Ship, Stage, SupplyContribution } from './types'
+
+export const number = (n: number) => new Intl.NumberFormat('ko-KR').format(n)
+export const clamp = (n: number) => Math.max(0, Math.floor(Number(n) || 0))
+export const progress = (owned: number, required: number) => required ? Math.min(100, Math.round(owned / required * 100)) : 100
+
+const recipeHull = (ship: Ship, stage: Stage) => stage >= 3 && ship.upgradeHull ? ship.upgradeHull : ship.hull
+export const shipRecipes = (ship: Ship) => recipes.filter(recipe => recipe.hulls.includes(recipeHull(ship, recipe.stage)) && recipe.stage === ship.activeStage)
+export const recipeProgress = (recipe: Recipe, inventory: Record<string, number>) => recipe.requirements.length ? Math.round(recipe.requirements.reduce((sum, x) => sum + progress(clamp(inventory[x.materialId]), x.quantity), 0) / recipe.requirements.length) : 0
+
+export function materialSupply(data: AppData, materialId: string): MaterialSupply {
+  const result: MaterialSupply = { daily: 0, weekly: 0, dailySources: [], weeklySources: [] }
+  dailyTasks.forEach(task => {
+    const plan = data.supplyPlans[task.id]
+    if (!plan?.enabled) return
+    const selectedChoice = task.choices?.find(choice => choice.id === plan.choiceId)
+    const rewards = [...task.rewards, ...(selectedChoice?.rewards || [])]
+    const quantity = rewards.filter(reward => reward.materialId === materialId).reduce((sum, reward) => sum + reward.quantity, 0)
+    if (!quantity) return
+    const contribution: SupplyContribution = { taskId: task.id, taskName: task.name, quantity, period: task.period }
+    if (task.period === 'daily') {
+      result.daily += quantity
+      result.dailySources.push(contribution)
+    } else {
+      result.weekly += quantity
+      result.weeklySources.push(contribution)
+    }
+  })
+  return result
+}
+
+export const estimatedSupplyDays = (shortage: number, daily: number, weekly: number) => {
+  const averageDaily = daily + weekly / 7
+  return shortage > 0 && averageDaily > 0 ? Math.ceil(shortage / averageDaily) : undefined
+}
+
+export function aggregate(data: AppData, scope: 'current' | 'all' = 'all'): AggregateMaterial[] {
+  const map = new Map<string, AggregateMaterial>()
+  data.ships.forEach(ship => recipes
+    .filter(recipe => recipe.hulls.includes(recipeHull(ship, recipe.stage)) && (scope === 'all' ? recipe.stage >= ship.activeStage : recipe.stage === ship.activeStage))
+    .forEach(recipe => recipe.requirements.forEach(req => {
+      const base = materialById[req.materialId]
+      if (!base) return
+      const old = map.get(req.materialId)
+      if (old) {
+        old.required += req.quantity
+        old.recipes.push(`${ship.name} · ${recipe.name}`)
+      } else {
+        map.set(req.materialId, { ...base, required: req.quantity, owned: clamp(data.inventory[req.materialId]), shortage: 0, progress: 0, dailySupply: 0, weeklySupply: 0, crowCoinTotal: undefined, recipes: [`${ship.name} · ${recipe.name}`] })
+      }
+    })))
+  return [...map.values()].map(item => {
+    const shortage = Math.max(0, item.required - item.owned)
+    const supply = materialSupply(data, item.id)
+    return { ...item, shortage, progress: progress(item.owned, item.required), dailySupply: supply.daily, weeklySupply: supply.weekly, estimatedDays: estimatedSupplyDays(shortage, supply.daily, supply.weekly), crowCoinTotal: item.crowCoinPrice === undefined ? undefined : shortage * item.crowCoinPrice }
+  })
+}
+
+export const stageProgress = (data: AppData, ship: Ship) => {
+  const list = shipRecipes(ship)
+  return list.length ? Math.round(list.reduce((sum, recipe) => sum + recipeProgress(recipe, data.inventory), 0) / list.length) : 0
+}
