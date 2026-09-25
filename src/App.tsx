@@ -540,6 +540,11 @@ export default function App() {
                         {materialById[reward.materialId].name}
                       </span>
                     ))}
+                    {task.otherRewards?.map((reward) => (
+                      <span className="info-reward" key={reward}>
+                        {reward}
+                      </span>
+                    ))}
                   </div>
                   {task.choices && (
                     <label className="quest-choice">
