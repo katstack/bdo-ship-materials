@@ -45,6 +45,7 @@ import { codexNpcUrl, codexQuestUrl } from './data/codex'
 import type { QuestRoute } from './types'
 import { materialExchangeOutput } from './data/materialExchanges'
 import { GuidePage } from './features/GuidePage'
+import { SettingsPage } from './features/SettingsPage'
 
 type Tab = 'dashboard' | 'ship' | 'materials' | 'daily' | 'guide' | 'settings'
 type MaterialsView = 'inventory' | 'barter'
@@ -996,6 +997,29 @@ export default function App() {
         <GuidePage materials={materials} query={query} onQueryChange={setQuery} />
       )}
       {tab === 'settings' && (
+        <SettingsPage
+          data={data}
+          drive={drive}
+          importRef={importRef}
+          onEditShip={editShip}
+          onRemoveShip={removeShip}
+          onAddShip={(hull) => {
+            const ship = newShip(hull)
+            update({ ...data, ships: [...data.ships, ship] })
+            setSelected(ship.id)
+          }}
+          onExport={exportData}
+          onImport={importData}
+          onRestoreSample={() => update(freshSample())}
+          onClear={() => {
+            if (confirm('현재 브라우저 진행 데이터를 초기화할까요?')) {
+              clearData()
+              update(freshSample())
+            }
+          }}
+        />
+      )}
+      {new URLSearchParams(window.location.search).get('legacySettings') === '1' && (
         <section className="settings">
           <div className="panel">
             <h2>내 함대</h2>
