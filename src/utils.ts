@@ -1,4 +1,4 @@
-import { recipes } from './catalog'
+import { recipes } from './data/recipes'
 import type { AppData, Recipe, Ship, Stage } from './types'
 import { isRecipeCompleted } from './domain/crafting'
 export { estimatedSupplyDays, materialSupply } from './domain/supply'

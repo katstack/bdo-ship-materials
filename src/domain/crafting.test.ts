@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { recipes } from '../catalog'
+import { recipes } from '../data/recipes'
 import { freshSample } from '../storage'
 import { aggregateMaterialDemand, fleetDemandScope, shipDemandScope } from './materialDemand'
 import {

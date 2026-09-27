@@ -1,4 +1,5 @@
-import { materialById, recipes } from '../catalog'
+import { materialById } from '../catalog'
+import { recipes } from '../data/recipes'
 import type { AggregateMaterial, AppData, Ship, Stage } from '../types'
 import { isRecipeCompleted } from './crafting'
 import { estimatedSupplyDays, materialSupply } from './supply'

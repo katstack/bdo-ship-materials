@@ -1,0 +1,176 @@
+import type { EquipmentSlot, Hull, Recipe, Stage } from '../types'
+
+const r = (materialId: string, quantity: number) => ({ materialId, quantity })
+
+const blue = (hull: Hull): Recipe[] => [
+  {
+    id: `blue-figure-${hull}`,
+    name: '파템 선수상',
+    slot: 'figurehead',
+    stage: 2,
+    hulls: [hull],
+    description: '선박 부품 공방 4단계 제작',
+    requirements: [r('rock', 50), r('enhanced', 300), r('seaweed', 125), r('steel', 150)],
+  },
+  {
+    id: `blue-plating-${hull}`,
+    name: '파템 장갑',
+    slot: 'plating',
+    stage: 2,
+    hulls: [hull],
+    description: '선박 부품 공방 4단계 제작',
+    requirements: [
+      r('pearl', 45),
+      r('low', 60),
+      r('combat', hull === 'warship' ? 125 : 60),
+      r('moon', hull === 'warship' ? 300 : 200),
+    ],
+  },
+  {
+    id: `blue-cannon-${hull}`,
+    name: '파템 함포',
+    slot: 'cannon',
+    stage: 2,
+    hulls: [hull],
+    description: '선박 부품 공방 4단계 제작',
+    requirements: [
+      r('wave', 180),
+      r('combat', hull === 'warship' ? 125 : 60),
+      r('moon', hull === 'warship' ? 300 : 200),
+      r('reef', 180),
+    ],
+  },
+  {
+    id: `blue-sail-${hull}`,
+    name: '파템 돛',
+    slot: 'sail',
+    stage: 2,
+    hulls: [hull],
+    description: '선박 부품 공방 4단계 제작',
+    requirements: [r('rock', 40), r('high', 30), r('seaweed', 80), r('cobalt', 30)],
+  },
+]
+const gear = (
+  stage: Stage,
+  name: string,
+  slot: EquipmentSlot,
+  reqs: ReturnType<typeof r>[],
+): Recipe => ({
+  id: `${stage}-${name}`,
+  name,
+  slot,
+  stage,
+  hulls: ['balance', 'advance', 'volante', 'valor'],
+  description: stage === 4 ? '중범선 파템(치로 장비) 제작' : '중범선 노템(팔라시 장비) 제작',
+  requirements: reqs,
+})
+const bluePlus = [r('blue-figure', 1), r('blue-plating', 1), r('blue-cannon', 1), r('blue-sail', 1)]
+export const recipes: Recipe[] = [
+  {
+    id: 'expand-trade',
+    name: '무역선 증축',
+    stage: 1,
+    hulls: ['trade'],
+    description: '개량형 경범선 → 무역선',
+    requirements: [
+      r('graphite', 100),
+      r('timber', 100),
+      r('glue', 100),
+      r('island', 100),
+      r('salt', 100),
+      r('deep-glue', 4),
+      r('seaweed', 4),
+    ],
+  },
+  {
+    id: 'expand-warship',
+    name: '구축함 증축',
+    stage: 1,
+    hulls: ['warship'],
+    description: '개량형 호위함 → 구축함',
+    requirements: [
+      r('graphite', 100),
+      r('timber', 100),
+      r('glue', 100),
+      r('island', 100),
+      r('wave', 3),
+      r('moon', 10),
+    ],
+  },
+  ...blue('trade'),
+  ...blue('warship'),
+  {
+    id: 'balance',
+    name: '중범선 균형 증축',
+    stage: 3,
+    hulls: ['balance'],
+    description: '무역선 파템 +10 4종 필요',
+    requirements: [
+      ...bluePlus,
+      r('flax', 180),
+      r('deep-tide', 144),
+      r('brilliant-salt', 30),
+      r('brilliant-pearl', 30),
+      r('tear', 50),
+    ],
+  },
+  {
+    id: 'advance',
+    name: '중범선 점진 증축',
+    stage: 3,
+    hulls: ['advance'],
+    description: '무역선 파템 +10 4종 필요',
+    requirements: [
+      ...bluePlus,
+      r('flax', 180),
+      r('deep-tide', 144),
+      r('brilliant-salt', 35),
+      r('brilliant-pearl', 35),
+      r('tear', 42),
+    ],
+  },
+  {
+    id: 'volante',
+    name: '중범선 비상 증축',
+    stage: 3,
+    hulls: ['volante'],
+    description: '구축함 파템 +10 4종 필요',
+    requirements: [
+      ...bluePlus,
+      r('flax', 210),
+      r('deep-tide', 144),
+      r('brilliant-salt', 30),
+      r('brilliant-pearl', 30),
+      r('tear', 42),
+    ],
+  },
+  {
+    id: 'valor',
+    name: '중범선 용맹 증축',
+    stage: 3,
+    hulls: ['valor'],
+    description: '구축함 파템 +10 4종 필요',
+    requirements: [
+      ...bluePlus,
+      r('flax', 180),
+      r('deep-tide', 170),
+      r('brilliant-salt', 30),
+      r('brilliant-pearl', 30),
+      r('tear', 42),
+    ],
+  },
+  ...(['선수상', '장갑', '함포', '돛'] as const).map((n, i) =>
+    gear(4, `치로의 ${n}`, ['figurehead', 'plating', 'cannon', 'sail'][i] as EquipmentSlot, [
+      r('violent', 100),
+      r('support', 100),
+      r('adhesive', 100),
+    ]),
+  ),
+  ...(['선수상', '장갑', '함포', '돛'] as const).map((n, i) =>
+    gear(5, `팔라시의 ${n}`, ['figurehead', 'plating', 'cannon', 'sail'][i] as EquipmentSlot, [
+      r('rough', 75),
+      r('coral', 125),
+      r('crimson', 50),
+    ]),
+  ),
+]
