@@ -24,7 +24,13 @@ import type {
   SupplyPlan,
 } from './types'
 import { clamp, number, materialSupply, recipeProgress, shipRecipes, stageProgress } from './utils'
-import { aggregateMaterialDemand as aggregate } from './domain/materialDemand'
+import {
+  aggregateMaterialDemand as aggregate,
+  demandScopeLabel,
+  fleetDemandScope,
+  shipDemandScope,
+  type DemandScope,
+} from './domain/materialDemand'
 import {
   canCompleteRecipe,
   completeRecipe,
@@ -146,7 +152,7 @@ export default function App() {
     const shipId = new URLSearchParams(window.location.search).get('ship')
     return data.ships.some((ship) => ship.id === shipId) ? shipId! : data.ships[0]?.id || ''
   })
-  const [scope, setScope] = useState<'current' | 'all'>('all')
+  const [scope, setScope] = useState<DemandScope>(fleetDemandScope('all'))
   const [materialsView, setMaterialsView] = useState<MaterialsView>(materialsViewFromUrl)
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
@@ -203,7 +209,7 @@ export default function App() {
   }
   const drive = useDriveSync(data, replaceLocal)
   const totals = useMemo(() => aggregate(data, scope), [data, scope])
-  const allTotals = useMemo(() => aggregate(data, 'all'), [data])
+  const allTotals = useMemo(() => aggregate(data, fleetDemandScope('all')), [data])
   const orderedTotals = sortMaterials(totals, data.materialSort.key, data.materialSort.direction)
   const barterRows = useMemo(
     () => toBarterRows(totals, data.barterSession.exchangeCounts),
@@ -498,7 +504,7 @@ export default function App() {
           </div>
           <h2>가장 부족한 재료</h2>
           <div className="top-list">
-            {aggregate(data, 'current')
+            {aggregate(data, fleetDemandScope('current'))
               .filter((x) => x.shortage)
               .sort((a, b) => b.shortage - a.shortage)
               .slice(0, 5)
@@ -740,15 +746,46 @@ export default function App() {
             </button>
           </div>
           <div className="toolbar">
-            <button className={scope === 'all' ? 'primary' : ''} onClick={() => setScope('all')}>
-              남은 전체 목표
+            <button
+              className={scope.target === 'fleet' && scope.range === 'all' ? 'primary' : ''}
+              onClick={() => setScope(fleetDemandScope('all'))}
+            >
+              함대 전체 목표
             </button>
             <button
-              className={scope === 'current' ? 'primary' : ''}
-              onClick={() => setScope('current')}
+              className={scope.target === 'fleet' && scope.range === 'current' ? 'primary' : ''}
+              onClick={() => setScope(fleetDemandScope('current'))}
             >
-              현재 단계만
+              함대 현재 단계
             </button>
+            {currentShip && (
+              <>
+                <button
+                  className={
+                    scope.target === 'ship' &&
+                    scope.shipId === currentShip.id &&
+                    scope.range === 'all'
+                      ? 'primary'
+                      : ''
+                  }
+                  onClick={() => setScope(shipDemandScope(currentShip.id, 'all'))}
+                >
+                  {currentShip.name} 전체 목표
+                </button>
+                <button
+                  className={
+                    scope.target === 'ship' &&
+                    scope.shipId === currentShip.id &&
+                    scope.range === 'current'
+                      ? 'primary'
+                      : ''
+                  }
+                  onClick={() => setScope(shipDemandScope(currentShip.id, 'current'))}
+                >
+                  {currentShip.name} 현재 단계
+                </button>
+              </>
+            )}
             {materialsView === 'inventory' && (
               <input
                 placeholder="재료명 검색"
@@ -757,6 +794,7 @@ export default function App() {
               />
             )}
             <span className="save">
+              대상: {demandScopeLabel(data, scope)} ·{' '}
               {materialsView === 'inventory'
                 ? `정렬: ${data.materialSort.key} ${data.materialSort.direction === 'asc' ? '↑' : '↓'}`
                 : '물교 1회 절감 까주 우선'}{' '}

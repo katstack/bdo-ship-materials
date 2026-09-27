@@ -3,7 +3,26 @@ import type { AggregateMaterial, AppData, Ship, Stage } from '../types'
 import { isRecipeCompleted } from './crafting'
 import { estimatedSupplyDays, materialSupply } from './supply'
 
-export type FleetDemandScope = 'current' | 'all'
+export type DemandScope =
+  | { target: 'fleet'; range: 'current' | 'all' }
+  | { target: 'ship'; shipId: string; range: 'current' | 'all' }
+
+export const fleetDemandScope = (range: 'current' | 'all'): DemandScope => ({
+  target: 'fleet',
+  range,
+})
+
+export const shipDemandScope = (shipId: string, range: 'current' | 'all'): DemandScope => ({
+  target: 'ship',
+  shipId,
+  range,
+})
+
+export const demandScopeLabel = (data: AppData, scope: DemandScope) => {
+  const range = scope.range === 'current' ? '현재 단계' : '전체 목표'
+  if (scope.target === 'fleet') return `함대 · ${range}`
+  return `${data.ships.find((ship) => ship.id === scope.shipId)?.name || '선택 선박'} · ${range}`
+}
 
 const quantity = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
 const progress = (owned: number, required: number) =>
@@ -11,18 +30,20 @@ const progress = (owned: number, required: number) =>
 const recipeHull = (ship: Ship, stage: Stage) =>
   stage >= 3 && ship.upgradeHull ? ship.upgradeHull : ship.hull
 
-/** Shared inventory requirements for one fleet projection. Completed recipes are excluded. */
+/** Shared inventory requirements for one fleet or ship projection. Completed recipes are excluded. */
 export function aggregateMaterialDemand(
   data: AppData,
-  scope: FleetDemandScope = 'all',
+  scope: DemandScope = fleetDemandScope('all'),
 ): AggregateMaterial[] {
   const map = new Map<string, AggregateMaterial>()
-  data.ships.forEach((ship) =>
+  const ships =
+    scope.target === 'fleet' ? data.ships : data.ships.filter((ship) => ship.id === scope.shipId)
+  ships.forEach((ship) =>
     recipes
       .filter(
         (recipe) =>
           recipe.hulls.includes(recipeHull(ship, recipe.stage)) &&
-          (scope === 'all'
+          (scope.range === 'all'
             ? recipe.stage >= ship.activeStage
             : recipe.stage === ship.activeStage) &&
           !isRecipeCompleted(data, ship.id, recipe.id),
