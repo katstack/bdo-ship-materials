@@ -23,15 +23,8 @@ import type {
   Stage,
   SupplyPlan,
 } from './types'
-import {
-  aggregate,
-  clamp,
-  number,
-  materialSupply,
-  recipeProgress,
-  shipRecipes,
-  stageProgress,
-} from './utils'
+import { clamp, number, materialSupply, recipeProgress, shipRecipes, stageProgress } from './utils'
+import { aggregateMaterialDemand as aggregate } from './domain/materialDemand'
 import {
   canCompleteRecipe,
   completeRecipe,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { recipes } from '../catalog'
 import { freshSample } from '../storage'
-import { aggregate } from '../utils'
+import { aggregateMaterialDemand } from './materialDemand'
 import {
   canCompleteRecipe,
   completeRecipe,
@@ -53,13 +53,17 @@ describe('crafting domain', () => {
     const data = dataReadyToCraft()
     const completed = completeRecipe(data, shipId, recipe, '2026-01-01T00:00:00.000Z')
 
-    expect(aggregate(completed, 'current').find((item) => item.id === 'low')).toBeUndefined()
+    expect(
+      aggregateMaterialDemand(completed, 'current').find((item) => item.id === 'low'),
+    ).toBeUndefined()
 
     const restored = undoRecipeCompletion(completed, shipId, recipe.id)
     expect(isRecipeCompleted(restored, shipId, recipe.id)).toBe(false)
     recipe.requirements.forEach((requirement) => {
       expect(restored.inventory[requirement.materialId]).toBe(requirement.quantity)
     })
-    expect(aggregate(restored, 'current').find((item) => item.id === 'low')?.required).toBe(60)
+    expect(
+      aggregateMaterialDemand(restored, 'current').find((item) => item.id === 'low')?.required,
+    ).toBe(60)
   })
 })
