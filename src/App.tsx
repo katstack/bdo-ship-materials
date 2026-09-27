@@ -6,7 +6,6 @@ import {
   hullLabel,
   materials,
   materialById,
-  recipes,
   stageLabel,
   upgradeTargets,
 } from './catalog'
@@ -48,6 +47,7 @@ import { BarterSessionControls } from './features/BarterSessionControls'
 import { BarterPriorityTable, type BarterRow } from './features/BarterPriorityTable'
 import { MaterialTable } from './features/MaterialTable'
 import { QuestPlanCard } from './features/QuestPlanCard'
+import { RecipeRows } from './features/RecipeRows'
 import { SettingsPage } from './features/SettingsPage'
 import {
   hashForRoute,
@@ -106,15 +106,6 @@ const Progress = ({ value }: { value: number }) => (
     />
     <span>{value}%</span>
   </div>
-)
-const Num = ({ value, onChange }: { value: number; onChange: (x: number) => void }) => (
-  <input
-    className="num"
-    type="number"
-    min="0"
-    value={value}
-    onChange={(e) => onChange(clamp(e.target.valueAsNumber))}
-  />
 )
 const newShip = (hull: Hull): Ship => ({
   id: id(),
@@ -1133,75 +1124,5 @@ export default function App() {
         </div>
       )}
     </main>
-  )
-}
-function RecipeRows({
-  recipe,
-  inventory,
-  setOwned,
-  showSource,
-  data,
-  showSupply,
-}: {
-  recipe: (typeof recipes)[number]
-  inventory: Record<string, number>
-  setOwned: (id: string, n: number) => void
-  showSource: (id: string) => void
-  data: AppData
-  showSupply: (detail: { materialId: string; period: 'daily' | 'weekly' }) => void
-}) {
-  return (
-    <div className="recipe-rows">
-      <div className="recipe-row-head">
-        <span>재료</span>
-        <span>필요</span>
-        <span>보유</span>
-        <span>부족</span>
-        <span>진행률</span>
-        <span>일일 수급</span>
-        <span>주간 수급</span>
-        <span>완료까지</span>
-        <span>부족분 주화</span>
-      </div>
-      {recipe.requirements.map((req) => {
-        const m = materialById[req.materialId]
-        const owned = clamp(inventory[req.materialId])
-        const short = Math.max(0, req.quantity - owned)
-        const supply = materialSupply(data, m.id)
-        const days =
-          short === 0
-            ? 0
-            : supply.daily + supply.weekly / 7 > 0
-              ? Math.ceil(short / (supply.daily + supply.weekly / 7))
-              : undefined
-        return (
-          <div key={req.materialId}>
-            <button className="link-button" onClick={() => showSource(m.id)}>
-              {m.name}
-            </button>
-            <span>필요 {number(req.quantity)}</span>
-            <Num value={owned} onChange={(v) => setOwned(m.id, v)} />
-            <em>{short ? `부족 ${number(short)}` : '완료'}</em>
-            <Progress value={Math.min(100, Math.round((owned / req.quantity) * 100))} />
-            <button
-              className="supply-cell"
-              onClick={() => showSupply({ materialId: m.id, period: 'daily' })}
-            >
-              일 {number(supply.daily)}
-            </button>
-            <button
-              className="supply-cell"
-              onClick={() => showSupply({ materialId: m.id, period: 'weekly' })}
-            >
-              주 {number(supply.weekly)}
-            </button>
-            <b className={days === undefined && short > 0 ? 'no-plan' : ''}>
-              {short === 0 ? '완료' : days === undefined ? '계획 없음' : `약 ${number(days)}일`}
-            </b>
-            <b>{m.crowCoinPrice === undefined ? '—' : `${number(short * m.crowCoinPrice)} 주화`}</b>
-          </div>
-        )
-      })}
-    </div>
   )
 }
