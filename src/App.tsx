@@ -46,9 +46,16 @@ import { materialExchangeOutput } from './data/materialExchanges'
 import { GuidePage } from './features/GuidePage'
 import { BarterSessionControls } from './features/BarterSessionControls'
 import { BarterPriorityTable, type BarterRow } from './features/BarterPriorityTable'
+import { MaterialTable } from './features/MaterialTable'
 import { QuestPlanCard } from './features/QuestPlanCard'
 import { SettingsPage } from './features/SettingsPage'
-import { hashForRoute, routeFromHash, type AppTab, type MaterialsView } from './routing'
+import {
+  hashForRoute,
+  normalizeRouteForShips,
+  routeFromHash,
+  type AppTab,
+  type MaterialsView,
+} from './routing'
 
 const toBarterRows = (
   rows: AggregateMaterial[],
@@ -136,7 +143,7 @@ const sortMaterials = (
 
 export default function App() {
   const [data, setData] = useState<AppData>(loadData)
-  const initialRoute = routeFromHash(window.location.hash)
+  const initialRoute = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
   const [tab, setTab] = useState<AppTab>(initialRoute.tab)
   const [selected, setSelected] = useState(() => {
     const shipId =
@@ -172,7 +179,7 @@ export default function App() {
   }, [tab, selected, scope, materialsView])
   useEffect(() => {
     const restoreRouteState = () => {
-      const route = routeFromHash(window.location.hash)
+      const route = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
       setTab(route.tab)
       setMaterialsView(route.materialsView ?? 'inventory')
       if (route.scope) setScope(route.scope)
@@ -1195,101 +1202,6 @@ function RecipeRows({
           </div>
         )
       })}
-    </div>
-  )
-}
-function MaterialTable({
-  rows,
-  setOwned,
-  showSource,
-  showSupply,
-  sort,
-  onSort,
-}: {
-  rows: ReturnType<typeof aggregate>
-  setOwned: (id: string, n: number) => void
-  showSource: (id: string) => void
-  showSupply: (detail: { materialId: string; period: 'daily' | 'weekly' }) => void
-  sort: { key: MaterialSortKey; direction: 'asc' | 'desc' }
-  onSort: (key: MaterialSortKey) => void
-}) {
-  const header = (label: string, key: MaterialSortKey) => (
-    <th>
-      <button className="sort-button" onClick={() => onSort(key)}>
-        {label}
-        {sort.key === key ? (sort.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-      </button>
-    </th>
-  )
-  return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            {header('재료', 'name')}
-            {header('필요', 'required')}
-            {header('보유', 'owned')}
-            {header('부족', 'shortage')}
-            {header('진행률', 'progress')}
-            {header('일일 수급', 'dailySupply')}
-            {header('주간 수급', 'weeklySupply')}
-            {header('수급 완료까지', 'estimatedDays')}
-            {header('까마귀 주화/개', 'crowCoinPrice')}
-            {header('부족분 주화', 'crowCoinTotal')}
-            {header('사용처', 'recipes')}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((x) => (
-            <tr key={x.id}>
-              <td>
-                <button className="link-button" onClick={() => showSource(x.id)}>
-                  {x.name}
-                </button>
-              </td>
-              <td>{number(x.required)}</td>
-              <td>
-                <Num value={x.owned} onChange={(v) => setOwned(x.id, v)} />
-              </td>
-              <td className={x.shortage ? 'shortage' : ''}>{number(x.shortage)}</td>
-              <td>
-                <Progress value={x.progress} />
-              </td>
-              <td>
-                <button
-                  className="supply-cell"
-                  onClick={() => showSupply({ materialId: x.id, period: 'daily' })}
-                >
-                  {number(x.dailySupply)}
-                </button>
-              </td>
-              <td>
-                <button
-                  className="supply-cell"
-                  onClick={() => showSupply({ materialId: x.id, period: 'weekly' })}
-                >
-                  {number(x.weeklySupply)}
-                </button>
-              </td>
-              <td className={x.estimatedDays === undefined && x.shortage ? 'no-plan' : ''}>
-                {x.estimatedDays === undefined
-                  ? x.shortage
-                    ? '계획 없음'
-                    : '완료'
-                  : `약 ${number(x.estimatedDays)}일`}
-              </td>
-              <td>{x.crowCoinPrice === undefined ? '—' : number(x.crowCoinPrice)}</td>
-              <td>{x.crowCoinTotal === undefined ? '—' : number(x.crowCoinTotal)}</td>
-              <td>
-                <small>
-                  {x.recipes.slice(0, 2).join(', ')}
-                  {x.recipes.length > 2 ? ' 외' : ''}
-                </small>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   )
 }

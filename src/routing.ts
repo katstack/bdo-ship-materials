@@ -1,4 +1,5 @@
 import type { DemandScope } from './domain/materialDemand'
+import type { Ship } from './types'
 
 export type AppTab = 'dashboard' | 'ship' | 'materials' | 'daily' | 'guide' | 'settings'
 export type MaterialsView = 'inventory' | 'barter'
@@ -51,4 +52,22 @@ export function hashForRoute({ tab, shipId, scope, materialsView }: AppRoute): s
   }
   if (tab === 'daily') return '#/supply'
   return `#/${tab}`
+}
+
+/** Removes stale ship references from a bookmark after a ship was deleted locally. */
+export function normalizeRouteForShips(route: AppRoute, ships: Ship[]): AppRoute {
+  const fallbackShipId = ships[0]?.id
+  const requestedShipId =
+    route.shipId ?? (route.scope?.target === 'ship' ? route.scope.shipId : undefined)
+  const shipId = ships.some((ship) => ship.id === requestedShipId)
+    ? requestedShipId
+    : fallbackShipId
+
+  if (route.tab === 'ship') return { ...route, shipId }
+  if (route.scope?.target === 'ship') {
+    return shipId
+      ? { ...route, scope: { ...route.scope, shipId } }
+      : { ...route, scope: { target: 'fleet', range: route.scope.range } }
+  }
+  return route
 }
