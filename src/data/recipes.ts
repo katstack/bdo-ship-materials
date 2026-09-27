@@ -2,10 +2,12 @@ import type { EquipmentSlot, Hull, Recipe, Stage } from '../types'
 
 const r = (materialId: string, quantity: number) => ({ materialId, quantity })
 
+const shipName = (hull: Hull) => (hull === 'trade' ? '에페리아 무역선' : '에페리아 구축함')
+
 const blue = (hull: Hull): Recipe[] => [
   {
     id: `blue-figure-${hull}`,
-    name: '파템 선수상',
+    name: `${shipName(hull)}: 흑룡 선수상`,
     slot: 'figurehead',
     stage: 2,
     hulls: [hull],
@@ -14,7 +16,7 @@ const blue = (hull: Hull): Recipe[] => [
   },
   {
     id: `blue-plating-${hull}`,
-    name: '파템 장갑',
+    name: `${shipName(hull)}: 개량형 장갑`,
     slot: 'plating',
     stage: 2,
     hulls: [hull],
@@ -28,7 +30,7 @@ const blue = (hull: Hull): Recipe[] => [
   },
   {
     id: `blue-cannon-${hull}`,
-    name: '파템 함포',
+    name: `${shipName(hull)}: 메이나 함포`,
     slot: 'cannon',
     stage: 2,
     hulls: [hull],
@@ -42,7 +44,7 @@ const blue = (hull: Hull): Recipe[] => [
   },
   {
     id: `blue-sail-${hull}`,
-    name: '파템 돛',
+    name: `${shipName(hull)}: 비층 바람 돛`,
     slot: 'sail',
     stage: 2,
     hulls: [hull],
@@ -104,7 +106,7 @@ export const recipes: Recipe[] = [
     name: '중범선 균형 증축',
     stage: 3,
     hulls: ['balance'],
-    description: '무역선 파템 +10 4종 필요',
+    description: '에페리아 무역선 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
       r('flax', 180),
@@ -119,7 +121,7 @@ export const recipes: Recipe[] = [
     name: '중범선 점진 증축',
     stage: 3,
     hulls: ['advance'],
-    description: '무역선 파템 +10 4종 필요',
+    description: '에페리아 무역선 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
       r('flax', 180),
@@ -134,7 +136,7 @@ export const recipes: Recipe[] = [
     name: '중범선 비상 증축',
     stage: 3,
     hulls: ['volante'],
-    description: '구축함 파템 +10 4종 필요',
+    description: '에페리아 구축함 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
       r('flax', 210),
@@ -149,7 +151,7 @@ export const recipes: Recipe[] = [
     name: '중범선 용맹 증축',
     stage: 3,
     hulls: ['valor'],
-    description: '구축함 파템 +10 4종 필요',
+    description: '에페리아 구축함 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
       r('flax', 180),
