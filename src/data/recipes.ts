@@ -1,4 +1,4 @@
-import type { EquipmentSlot, Hull, Recipe, Stage } from '../types'
+import type { CarrackHull, EquipmentSlot, Hull, Recipe, Stage } from '../types'
 
 const r = (materialId: string, quantity: number) => ({ materialId, quantity })
 
@@ -52,20 +52,37 @@ const blue = (hull: Hull): Recipe[] => [
     requirements: [r('rock', 40), r('high', 30), r('seaweed', 80), r('cobalt', 30)],
   },
 ]
-const gear = (
+const carrackHulls: CarrackHull[] = ['balance', 'advance', 'volante', 'valor']
+const carrackName: Record<CarrackHull, string> = {
+  balance: '에페리아 중범선 균형',
+  advance: '에페리아 중범선 점진',
+  volante: '에페리아 중범선 비상',
+  valor: '에페리아 중범선 용맹',
+}
+const carrackSlots: { slot: EquipmentSlot; name: string }[] = [
+  { slot: 'figurehead', name: '선수상' },
+  { slot: 'plating', name: '장갑' },
+  { slot: 'cannon', name: '함포' },
+  { slot: 'sail', name: '돛' },
+]
+const carrackGear = (
   stage: Stage,
-  name: string,
-  slot: EquipmentSlot,
+  maker: '치로' | '팔라시',
   reqs: ReturnType<typeof r>[],
-): Recipe => ({
-  id: `${stage}-${name}`,
-  name,
-  slot,
-  stage,
-  hulls: ['balance', 'advance', 'volante', 'valor'],
-  description: stage === 4 ? '중범선 파템(치로 장비) 제작' : '중범선 노템(팔라시 장비) 제작',
-  requirements: reqs,
-})
+): Recipe[] =>
+  carrackHulls.flatMap((hull) =>
+    carrackSlots.map(({ slot, name }) => ({
+      // 제작 완료 기록은 선박 ID와 조합한다. 기존 저장 데이터의 레시피 ID도 유지한다.
+      id: `${stage}-${maker}의 ${name}`,
+      name: `${carrackName[hull]}: ${maker}의 ${maker === '치로' && slot === 'plating' ? '흑장갑' : name}`,
+      slot,
+      stage,
+      hulls: [hull],
+      description:
+        stage === 4 ? '중범선 파란색 등급 치로 장비 제작' : '중범선 노란색 등급 팔라시 장비 제작',
+      requirements: reqs,
+    })),
+  )
 const bluePlus = [r('blue-figure', 1), r('blue-plating', 1), r('blue-cannon', 1), r('blue-sail', 1)]
 export const recipes: Recipe[] = [
   {
@@ -161,18 +178,6 @@ export const recipes: Recipe[] = [
       r('tear', 42),
     ],
   },
-  ...(['선수상', '장갑', '함포', '돛'] as const).map((n, i) =>
-    gear(4, `치로의 ${n}`, ['figurehead', 'plating', 'cannon', 'sail'][i] as EquipmentSlot, [
-      r('violent', 100),
-      r('support', 100),
-      r('adhesive', 100),
-    ]),
-  ),
-  ...(['선수상', '장갑', '함포', '돛'] as const).map((n, i) =>
-    gear(5, `팔라시의 ${n}`, ['figurehead', 'plating', 'cannon', 'sail'][i] as EquipmentSlot, [
-      r('rough', 75),
-      r('coral', 125),
-      r('crimson', 50),
-    ]),
-  ),
+  ...carrackGear(4, '치로', [r('violent', 100), r('support', 100), r('adhesive', 100)]),
+  ...carrackGear(5, '팔라시', [r('rough', 75), r('coral', 125), r('crimson', 50)]),
 ]
