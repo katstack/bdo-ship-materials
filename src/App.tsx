@@ -44,6 +44,7 @@ import { questRoutes } from './data/questRoutes'
 import { codexNpcUrl, codexQuestUrl } from './data/codex'
 import type { QuestRoute } from './types'
 import { materialExchangeOutput } from './data/materialExchanges'
+import { GuidePage } from './features/GuidePage'
 
 type Tab = 'dashboard' | 'ship' | 'materials' | 'daily' | 'guide' | 'settings'
 type MaterialsView = 'inventory' | 'barter'
@@ -992,35 +993,7 @@ export default function App() {
         </section>
       )}
       {tab === 'guide' && (
-        <section>
-          <div className="toolbar">
-            <input
-              placeholder="재료명 검색"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <span className="save">고정 게임 데이터 · 편집 불가</span>
-          </div>
-          <div className="guide-grid">
-            {materials
-              .filter((x) => x.name.includes(query))
-              .map((x) => (
-                <article className="guide-card" key={x.id}>
-                  <h3>{x.name}</h3>
-                  <b>
-                    {x.crowCoinPrice === undefined
-                      ? '까마귀 주화 단가 미확인'
-                      : `${number(x.crowCoinPrice)} 까마귀 주화 / 개`}
-                  </b>
-                  <ul>
-                    {x.sources.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-          </div>
-        </section>
+        <GuidePage materials={materials} query={query} onQueryChange={setQuery} />
       )}
       {tab === 'settings' && (
         <section className="settings">
