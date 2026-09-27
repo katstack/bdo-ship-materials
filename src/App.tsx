@@ -21,7 +21,6 @@ import type {
   MaterialSortKey,
   Ship,
   Stage,
-  SupplyPlan,
 } from './types'
 import { clamp, number, materialSupply, recipeProgress, shipRecipes, stageProgress } from './utils'
 import {
@@ -41,14 +40,14 @@ import {
 import { locationById, locations } from './data/locations'
 import { npcById } from './data/npcs'
 import { questRoutes } from './data/questRoutes'
-import { codexNpcUrl, codexQuestUrl } from './data/codex'
+import { codexNpcUrl } from './data/codex'
 import type { QuestRoute } from './types'
 import { materialExchangeOutput } from './data/materialExchanges'
 import { GuidePage } from './features/GuidePage'
+import { QuestPlanCard } from './features/QuestPlanCard'
 import { SettingsPage } from './features/SettingsPage'
+import { hashForRoute, routeFromHash, type AppTab, type MaterialsView } from './routing'
 
-type Tab = 'dashboard' | 'ship' | 'materials' | 'daily' | 'guide' | 'settings'
-type MaterialsView = 'inventory' | 'barter'
 type BarterRow = AggregateMaterial & {
   outputQuantity: number
   afterExchangeShortage: number
@@ -56,13 +55,6 @@ type BarterRow = AggregateMaterial & {
   exchangeCrowValue?: number
   priority: number
 }
-const tabs: Tab[] = ['dashboard', 'ship', 'materials', 'daily', 'guide', 'settings']
-const tabFromUrl = (): Tab => {
-  const tab = new URLSearchParams(window.location.search).get('tab')
-  return tabs.includes(tab as Tab) ? (tab as Tab) : 'dashboard'
-}
-const materialsViewFromUrl = (): MaterialsView =>
-  new URLSearchParams(window.location.search).get('view') === 'barter' ? 'barter' : 'inventory'
 const toBarterRows = (
   rows: AggregateMaterial[],
   exchangeCounts: Record<string, number> = {},
@@ -149,13 +141,18 @@ const sortMaterials = (
 
 export default function App() {
   const [data, setData] = useState<AppData>(loadData)
-  const [tab, setTab] = useState<Tab>(tabFromUrl)
+  const initialRoute = routeFromHash(window.location.hash)
+  const [tab, setTab] = useState<AppTab>(initialRoute.tab)
   const [selected, setSelected] = useState(() => {
-    const shipId = new URLSearchParams(window.location.search).get('ship')
+    const shipId =
+      initialRoute.shipId ??
+      (initialRoute.scope?.target === 'ship' ? initialRoute.scope.shipId : undefined)
     return data.ships.some((ship) => ship.id === shipId) ? shipId! : data.ships[0]?.id || ''
   })
-  const [scope, setScope] = useState<DemandScope>(fleetDemandScope('all'))
-  const [materialsView, setMaterialsView] = useState<MaterialsView>(materialsViewFromUrl)
+  const [scope, setScope] = useState<DemandScope>(initialRoute.scope ?? fleetDemandScope('all'))
+  const [materialsView, setMaterialsView] = useState<MaterialsView>(
+    initialRoute.materialsView ?? 'inventory',
+  )
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
   const [barterToast, setBarterToast] = useState<{
@@ -175,24 +172,25 @@ export default function App() {
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({})
   const importRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    const url = new URL(window.location.href)
-    if (tab === 'dashboard') url.searchParams.delete('tab')
-    else url.searchParams.set('tab', tab)
-    if (selected) url.searchParams.set('ship', selected)
-    else url.searchParams.delete('ship')
-    if (materialsView === 'barter') url.searchParams.set('view', 'barter')
-    else url.searchParams.delete('view')
-    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
-  }, [tab, selected, materialsView])
+    const hash = hashForRoute({ tab, shipId: selected, scope, materialsView })
+    if (window.location.hash !== hash) window.history.replaceState(null, '', hash)
+  }, [tab, selected, scope, materialsView])
   useEffect(() => {
-    const restoreUrlState = () => {
-      setTab(tabFromUrl())
-      setMaterialsView(materialsViewFromUrl())
-      const shipId = new URLSearchParams(window.location.search).get('ship')
+    const restoreRouteState = () => {
+      const route = routeFromHash(window.location.hash)
+      setTab(route.tab)
+      setMaterialsView(route.materialsView ?? 'inventory')
+      if (route.scope) setScope(route.scope)
+      const shipId =
+        route.shipId ?? (route.scope?.target === 'ship' ? route.scope.shipId : undefined)
       setSelected(data.ships.some((ship) => ship.id === shipId) ? shipId! : data.ships[0]?.id || '')
     }
-    window.addEventListener('popstate', restoreUrlState)
-    return () => window.removeEventListener('popstate', restoreUrlState)
+    window.addEventListener('hashchange', restoreRouteState)
+    window.addEventListener('popstate', restoreRouteState)
+    return () => {
+      window.removeEventListener('hashchange', restoreRouteState)
+      window.removeEventListener('popstate', restoreRouteState)
+    }
   }, [data.ships])
   const update = (next: AppData) => {
     const stamped = { ...next, updatedAt: new Date().toISOString() }
@@ -456,7 +454,7 @@ export default function App() {
             ['daily', '일일 수급'],
             ['guide', '수급 도감'],
             ['settings', '함대·백업'],
-          ] as [Tab, string][]
+          ] as [AppTab, string][]
         ).map(([k, l]) => (
           <button className={tab === k ? 'active' : ''} onClick={() => setTab(k)} key={k}>
             {l}
@@ -1019,105 +1017,6 @@ export default function App() {
           }}
         />
       )}
-      {new URLSearchParams(window.location.search).get('legacySettings') === '1' && (
-        <section className="settings">
-          <div className="panel">
-            <h2>내 함대</h2>
-            <p>
-              게임 제작식은 고정입니다. 선박 이름, 종류, 현재 진행 단계와 보유 수량만 관리합니다.
-            </p>
-            {data.ships.map((ship) => (
-              <div className="ship-edit" key={ship.id}>
-                <input
-                  value={ship.name}
-                  onChange={(e) => editShip({ ...ship, name: e.target.value })}
-                />
-                <select
-                  value={ship.hull}
-                  onChange={(e) => {
-                    const hull = e.target.value as Hull
-                    editShip({
-                      ...ship,
-                      hull,
-                      activeStage: hull === 'trade' || hull === 'warship' ? 1 : 3,
-                      upgradeHull:
-                        hull === 'trade' || hull === 'warship'
-                          ? defaultUpgradeHull[hull]
-                          : undefined,
-                      equipmentOrder: [...defaultEquipmentOrder[hull]],
-                    })
-                  }}
-                >
-                  {(Object.keys(hullLabel) as Hull[]).map((h) => (
-                    <option value={h} key={h}>
-                      {hullLabel[h]}
-                    </option>
-                  ))}
-                </select>
-                <button className="danger" onClick={() => removeShip(ship)}>
-                  제거
-                </button>
-              </div>
-            ))}
-            <div className="add-ships">
-              {(['trade', 'warship', 'balance', 'advance', 'volante', 'valor'] as Hull[]).map(
-                (h) => (
-                  <button
-                    key={h}
-                    onClick={() => {
-                      const ship = newShip(h)
-                      update({ ...data, ships: [...data.ships, ship] })
-                      setSelected(ship.id)
-                    }}
-                  >
-                    + {hullLabel[h]}
-                  </button>
-                ),
-              )}
-            </div>
-          </div>
-          <div className="panel manage">
-            <h2>Google Drive 동기화</h2>
-            <p>
-              제공된 OAuth Client ID로만 연결합니다. 진행 데이터만 앱 전용 Drive 저장소에
-              동기화합니다.
-            </p>
-            {drive.status === 'disconnected' ? (
-              <button className="primary" onClick={drive.authorize}>
-                Google Drive 연결
-              </button>
-            ) : (
-              <button onClick={drive.disconnect}>Drive 연결 해제</button>
-            )}
-            {drive.error && <p className="sync-error">{drive.error}</p>}
-          </div>
-          <div className="panel manage">
-            <h2>진행 데이터 백업</h2>
-            <p>함대 구성과 공유 재고만 백업합니다. 게임 레시피는 앱에 고정되어 있습니다.</p>
-            <button onClick={exportData}>JSON 내보내기</button>
-            <button onClick={() => importRef.current?.click()}>JSON 가져오기</button>
-            <input
-              hidden
-              ref={importRef}
-              type="file"
-              accept="application/json"
-              onChange={importData}
-            />
-            <button onClick={() => update(freshSample())}>샘플 진행 복원</button>
-            <button
-              className="danger"
-              onClick={() => {
-                if (confirm('현재 브라우저 진행 데이터를 초기화할까요?')) {
-                  clearData()
-                  update(freshSample())
-                }
-              }}
-            >
-              로컬 데이터 초기화
-            </button>
-          </div>
-        </section>
-      )}
       {craftConfirm &&
         (() => {
           const ship = data.ships.find((item) => item.id === craftConfirm.shipId)
@@ -1232,83 +1131,6 @@ export default function App() {
         </div>
       )}
     </main>
-  )
-}
-function QuestPlanCard({
-  task,
-  plan,
-  onPlan,
-  routeManaged = false,
-}: {
-  task: DailyTask
-  plan?: SupplyPlan
-  onPlan: (task: DailyTask, patch: { enabled?: boolean; choiceId?: string }) => void
-  routeManaged?: boolean
-}) {
-  return (
-    <article
-      className={`task-card ${plan?.enabled ? 'planned' : ''}`}
-      data-quest-id={task.codexQuestId}
-    >
-      <span className={`period ${task.period}`}>{task.period === 'daily' ? '일일' : '주간'}</span>
-      <h3>{task.name}</h3>
-      <p>{task.objective || task.note}</p>
-      <small className="quest-meta">
-        {task.codexQuestId} ·{' '}
-        <a
-          href={task.codexQuestId ? codexQuestUrl(task.codexQuestId) : undefined}
-          target="_blank"
-          rel="noreferrer"
-        >
-          BDO Codex
-        </a>
-      </small>
-      <div className="rewards">
-        {task.rewards.map((reward) => (
-          <span key={reward.materialId}>
-            +{number(reward.quantity)} {materialById[reward.materialId].name}
-          </span>
-        ))}
-      </div>
-      {task.choices && (
-        <label className="quest-choice">
-          선택 보상
-          <select
-            value={plan?.choiceId || ''}
-            onChange={(event) => onPlan(task, { choiceId: event.target.value })}
-          >
-            <option value="">선택하세요</option>
-            {task.choices.map((choice) => (
-              <option key={choice.id} value={choice.id}>
-                {choice.label} ·{' '}
-                {choice.rewards
-                  .map(
-                    (reward) =>
-                      `${number(reward.quantity)} ${materialById[reward.materialId].name}`,
-                  )
-                  .join(', ')}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-      {routeManaged && (
-        <small>위에서 수행 루트를 고른 뒤, 이 의뢰를 수급 계획에 따로 포함할 수 있습니다.</small>
-      )}
-      <button
-        className={plan?.enabled ? 'planned-button' : 'primary'}
-        onClick={() => onPlan(task, { enabled: !plan?.enabled })}
-      >
-        {plan?.enabled ? '수급 계획에서 제외' : '수급 계획에 포함'}
-      </button>
-      <small>
-        {plan?.enabled
-          ? task.choices && !plan?.choiceId
-            ? '기본 보상만 계산 중입니다. 선택 보상도 지정하세요.'
-            : '재료별 일일·주간 수급량과 완료 예상에 반영됩니다.'
-          : '재고에는 영향을 주지 않으며, 수급 예상에도 포함되지 않습니다.'}
-      </small>
-    </article>
   )
 }
 function RecipeRows({
