@@ -386,9 +386,8 @@ export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
 }
 export const stageLabel: Record<Stage, string> = {
   1: '무역선/구축함 증축',
-  2: '파템 제작',
-  3: '중범선 증축',
-  4: '중범선 파템 제작',
-  5: '중범선 노템 제작',
+  2: '파템 제작 · 중범선 증축',
+  3: '중범선 치로 장비 제작',
+  4: '중범선 팔라시 장비 제작',
 }
 export const materialById = Object.fromEntries(materials.map((x) => [x.id, x]))

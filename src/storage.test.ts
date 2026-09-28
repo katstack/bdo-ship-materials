@@ -26,4 +26,14 @@ describe('stored progress normalization', () => {
     expect(restored.completedRecipes).toEqual({})
     expect(restored.ships).toHaveLength(sampleData.ships.length)
   })
+
+  it('moves a legacy trade ship carrack-upgrade stage into the combined second step', () => {
+    const saved = structuredClone(sampleData)
+    saved.ships[0].activeStage = 3
+
+    const restored = normalize(saved)
+
+    expect(restored.ships[0].activeStage).toBe(2)
+    expect(restored.ships[1].activeStage).toBe(3)
+  })
 })

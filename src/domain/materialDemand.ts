@@ -1,6 +1,6 @@
 import { materialById } from '../catalog'
 import { recipes } from '../data/recipes'
-import type { AggregateMaterial, AppData, Ship, Stage } from '../types'
+import type { AggregateMaterial, AppData, Ship } from '../types'
 import { isRecipeCompleted } from './crafting'
 import { estimatedSupplyDays, materialSupply } from './supply'
 
@@ -28,8 +28,8 @@ export const demandScopeLabel = (data: AppData, scope: DemandScope) => {
 const quantity = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
 const progress = (owned: number, required: number) =>
   required ? Math.min(100, Math.round((owned / required) * 100)) : 100
-const recipeHull = (ship: Ship, stage: Stage) =>
-  stage >= 3 && ship.upgradeHull ? ship.upgradeHull : ship.hull
+const recipeHull = (ship: Ship, recipe: (typeof recipes)[number]) =>
+  recipe.usesUpgradeHull && ship.upgradeHull ? ship.upgradeHull : ship.hull
 
 /** Shared inventory requirements for one fleet or ship projection. Completed recipes are excluded. */
 export function aggregateMaterialDemand(
@@ -43,7 +43,7 @@ export function aggregateMaterialDemand(
     recipes
       .filter(
         (recipe) =>
-          recipe.hulls.includes(recipeHull(ship, recipe.stage)) &&
+          recipe.hulls.includes(recipeHull(ship, recipe)) &&
           (scope.range === 'all'
             ? recipe.stage >= ship.activeStage
             : recipe.stage === ship.activeStage) &&

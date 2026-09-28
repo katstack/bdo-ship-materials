@@ -79,7 +79,7 @@ const carrackGear = (
       stage,
       hulls: [hull],
       description:
-        stage === 4 ? '중범선 파란색 등급 치로 장비 제작' : '중범선 노란색 등급 팔라시 장비 제작',
+        stage === 3 ? '중범선 파란색 등급 치로 장비 제작' : '중범선 노란색 등급 팔라시 장비 제작',
       requirements: reqs,
     })),
   )
@@ -121,8 +121,9 @@ export const recipes: Recipe[] = [
   {
     id: 'balance',
     name: '중범선 균형 증축',
-    stage: 3,
+    stage: 2,
     hulls: ['balance'],
+    usesUpgradeHull: true,
     description: '에페리아 무역선 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
@@ -136,8 +137,9 @@ export const recipes: Recipe[] = [
   {
     id: 'advance',
     name: '중범선 점진 증축',
-    stage: 3,
+    stage: 2,
     hulls: ['advance'],
+    usesUpgradeHull: true,
     description: '에페리아 무역선 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
@@ -151,8 +153,9 @@ export const recipes: Recipe[] = [
   {
     id: 'volante',
     name: '중범선 비상 증축',
-    stage: 3,
+    stage: 2,
     hulls: ['volante'],
+    usesUpgradeHull: true,
     description: '에페리아 구축함 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
@@ -166,8 +169,9 @@ export const recipes: Recipe[] = [
   {
     id: 'valor',
     name: '중범선 용맹 증축',
-    stage: 3,
+    stage: 2,
     hulls: ['valor'],
+    usesUpgradeHull: true,
     description: '에페리아 구축함 +10 장비 4종 필요',
     requirements: [
       ...bluePlus,
@@ -178,6 +182,6 @@ export const recipes: Recipe[] = [
       r('tear', 42),
     ],
   },
-  ...carrackGear(4, '치로', [r('violent', 100), r('support', 100), r('adhesive', 100)]),
-  ...carrackGear(5, '팔라시', [r('rough', 75), r('coral', 125), r('crimson', 50)]),
+  ...carrackGear(3, '치로', [r('violent', 100), r('support', 100), r('adhesive', 100)]),
+  ...carrackGear(4, '팔라시', [r('rough', 75), r('coral', 125), r('crimson', 50)]),
 ]

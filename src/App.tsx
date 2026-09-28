@@ -572,7 +572,7 @@ export default function App() {
                 <Progress value={stageProgress(data, currentShip)} />
               </div>
               <div className="stepper">
-                {([1, 2, 3, 4, 5] as Stage[]).map((s) => (
+                {([1, 2, 3, 4] as Stage[]).map((s) => (
                   <button
                     key={s}
                     className={
@@ -607,7 +607,7 @@ export default function App() {
                       </option>
                     ))}
                   </select>
-                  <small>3단계 증축을 누르면 선택한 목표의 재료를 집계합니다.</small>
+                  <small>2단계에서 파템과 선택한 중범선 증축 재료를 함께 집계합니다.</small>
                 </label>
               )}
               <p className="muted">

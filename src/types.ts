@@ -1,6 +1,6 @@
 export type Hull = 'trade' | 'warship' | 'balance' | 'advance' | 'volante' | 'valor'
 export type CarrackHull = 'balance' | 'advance' | 'volante' | 'valor'
-export type Stage = 1 | 2 | 3 | 4 | 5
+export type Stage = 1 | 2 | 3 | 4
 export type EquipmentSlot = 'figurehead' | 'plating' | 'cannon' | 'sail'
 export interface MaterialDefinition {
   id: string
@@ -21,6 +21,7 @@ export interface Recipe {
   requirements: Requirement[]
   description: string
   slot?: EquipmentSlot
+  usesUpgradeHull?: boolean
 }
 export interface Ship {
   id: string
