@@ -1,21 +1,29 @@
 import type { DemandScope } from './domain/materialDemand'
 import type { Ship } from './types'
 
-export type AppTab = 'dashboard' | 'ship' | 'materials' | 'daily' | 'guide' | 'settings'
-export type MaterialsView = 'inventory' | 'barter'
+export type AppTab = 'dashboard' | 'ship' | 'materials' | 'barter' | 'daily' | 'guide' | 'settings'
 
 export type AppRoute = {
   tab: AppTab
   shipId?: string
   scope?: DemandScope
-  materialsView?: MaterialsView
 }
 
-const tabs: AppTab[] = ['dashboard', 'ship', 'materials', 'daily', 'guide', 'settings']
+const tabs: AppTab[] = ['dashboard', 'ship', 'materials', 'barter', 'daily', 'guide', 'settings']
 
 const asRange = (value?: string): 'current' | 'all' => (value === 'current' ? 'current' : 'all')
-const asMaterialsView = (value?: string): MaterialsView =>
-  value === 'barter' ? 'barter' : 'inventory'
+
+function routeForMaterialScope(
+  tab: 'materials' | 'barter',
+  target?: string,
+  third?: string,
+  fourth?: string,
+): AppRoute {
+  if (target === 'ship' && third) {
+    return { tab, scope: { target: 'ship', shipId: third, range: asRange(fourth) } }
+  }
+  return { tab, scope: { target: 'fleet', range: asRange(third) } }
+}
 
 export function routeFromHash(hash: string): AppRoute {
   const segments = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent)
@@ -23,32 +31,24 @@ export function routeFromHash(hash: string): AppRoute {
 
   if (screen === 'fleet') return { tab: 'ship', shipId: target }
   if (screen === 'materials') {
-    if (target === 'ship' && third) {
-      return {
-        tab: 'materials',
-        scope: { target: 'ship', shipId: third, range: asRange(fourth) },
-        materialsView: asMaterialsView(fifth),
-      }
-    }
-    return {
-      tab: 'materials',
-      scope: { target: 'fleet', range: asRange(third) },
-      materialsView: asMaterialsView(fourth),
-    }
+    // 기존 하위 탭 URL도 새 물물교환 화면으로 자연스럽게 연결한다.
+    const legacyBarter = target === 'ship' ? fifth === 'barter' : fourth === 'barter'
+    return routeForMaterialScope(legacyBarter ? 'barter' : 'materials', target, third, fourth)
   }
+  if (screen === 'barter') return routeForMaterialScope('barter', target, third, fourth)
   if (screen === 'supply' || screen === 'daily') return { tab: 'daily' }
   if (tabs.includes(screen as AppTab)) return { tab: screen as AppTab }
   return { tab: 'dashboard' }
 }
 
-export function hashForRoute({ tab, shipId, scope, materialsView }: AppRoute): string {
+export function hashForRoute({ tab, shipId, scope }: AppRoute): string {
   if (tab === 'ship') return shipId ? `#/fleet/${encodeURIComponent(shipId)}` : '#/fleet'
-  if (tab === 'materials') {
-    const view = materialsView === 'barter' ? 'barter' : 'inventory'
+  if (tab === 'materials' || tab === 'barter') {
+    const screen = tab
     if (scope?.target === 'ship') {
-      return `#/materials/ship/${encodeURIComponent(scope.shipId)}/${scope.range}/${view}`
+      return `#/${screen}/ship/${encodeURIComponent(scope.shipId)}/${scope.range}`
     }
-    return `#/materials/fleet/${scope?.range ?? 'all'}/${view}`
+    return `#/${screen}/fleet/${scope?.range ?? 'all'}`
   }
   if (tab === 'daily') return '#/supply'
   return `#/${tab}`

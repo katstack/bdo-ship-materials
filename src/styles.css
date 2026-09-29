@@ -997,22 +997,11 @@ tr:last-child td {
 .task-card .quest-meta + .rewards {
   margin-bottom: 8px;
 }
-.materials-view-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-  border-bottom: 1px solid #34434c;
+.material-page-title {
+  margin: 0 0 14px;
 }
-.materials-view-tabs button {
-  border: 0;
-  border-radius: 7px 7px 0 0;
-  background: transparent;
-  color: #9fafb7;
-}
-.materials-view-tabs button.active {
-  color: #d9f3ef;
-  background: #243a3d;
-  box-shadow: inset 0 -2px #59c5b4;
+.material-page-title h2 {
+  margin-bottom: 0;
 }
 .barter-summary-title {
   margin-top: 26px;

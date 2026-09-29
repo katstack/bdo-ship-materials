@@ -50,13 +50,7 @@ import { MaterialTable } from './features/MaterialTable'
 import { QuestPlanCard } from './features/QuestPlanCard'
 import { RecipeRows } from './features/RecipeRows'
 import { SettingsPage } from './features/SettingsPage'
-import {
-  hashForRoute,
-  normalizeRouteForShips,
-  routeFromHash,
-  type AppTab,
-  type MaterialsView,
-} from './routing'
+import { hashForRoute, normalizeRouteForShips, routeFromHash, type AppTab } from './routing'
 
 const toBarterRows = (
   rows: AggregateMaterial[],
@@ -145,9 +139,6 @@ export default function App() {
     return data.ships.some((ship) => ship.id === shipId) ? shipId! : data.ships[0]?.id || ''
   })
   const [scope, setScope] = useState<DemandScope>(initialRoute.scope ?? fleetDemandScope('all'))
-  const [materialsView, setMaterialsView] = useState<MaterialsView>(
-    initialRoute.materialsView ?? 'inventory',
-  )
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
   const [barterToast, setBarterToast] = useState<{
@@ -167,14 +158,13 @@ export default function App() {
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({})
   const importRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    const hash = hashForRoute({ tab, shipId: selected, scope, materialsView })
+    const hash = hashForRoute({ tab, shipId: selected, scope })
     if (window.location.hash !== hash) window.history.replaceState(null, '', hash)
-  }, [tab, selected, scope, materialsView])
+  }, [tab, selected, scope])
   useEffect(() => {
     const restoreRouteState = () => {
       const route = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
       setTab(route.tab)
-      setMaterialsView(route.materialsView ?? 'inventory')
       if (route.scope) setScope(route.scope)
       const shipId =
         route.shipId ?? (route.scope?.target === 'ship' ? route.scope.shipId : undefined)
@@ -456,6 +446,7 @@ export default function App() {
             ['dashboard', '함대 현황'],
             ['ship', '선박 단계'],
             ['materials', '전체 재료'],
+            ['barter', '물물교환'],
             ['daily', '일일 수급'],
             ['guide', '수급 도감'],
             ['settings', '함대·백업'],
@@ -530,8 +521,7 @@ export default function App() {
             </div>
             <button
               onClick={() => {
-                setMaterialsView('barter')
-                setTab('materials')
+                setTab('barter')
               }}
             >
               전체 보기
@@ -749,21 +739,17 @@ export default function App() {
           )}
         </section>
       )}
-      {tab === 'materials' && (
+      {(tab === 'materials' || tab === 'barter') && (
         <section>
-          <div className="materials-view-tabs">
-            <button
-              className={materialsView === 'inventory' ? 'active' : ''}
-              onClick={() => setMaterialsView('inventory')}
-            >
-              재료 현황
-            </button>
-            <button
-              className={materialsView === 'barter' ? 'active' : ''}
-              onClick={() => setMaterialsView('barter')}
-            >
-              물교 우선순위
-            </button>
+          <div className="section-title material-page-title">
+            <div>
+              <p>
+                {tab === 'materials'
+                  ? '함대 목표에 필요한 공유 재고와 부족분을 관리합니다.'
+                  : '이번 재료 갱신에서 거래할 부족 재료를 정합니다.'}
+              </p>
+              <h2>{tab === 'materials' ? '전체 재료 현황' : '물교 우선순위'}</h2>
+            </div>
           </div>
           <div className="toolbar">
             <button
@@ -806,7 +792,7 @@ export default function App() {
                 </button>
               </>
             )}
-            {materialsView === 'inventory' && (
+            {tab === 'materials' && (
               <input
                 placeholder="재료명 검색"
                 value={query}
@@ -815,13 +801,13 @@ export default function App() {
             )}
             <span className="save">
               대상: {demandScopeLabel(data, scope)} ·{' '}
-              {materialsView === 'inventory'
+              {tab === 'materials'
                 ? `정렬: ${data.materialSort.key} ${data.materialSort.direction === 'asc' ? '↑' : '↓'}`
                 : '물교 1회 절감 까주 우선'}{' '}
               · 단가 확인 {priced}/{totals.length}종 · 부족분 {number(totalCrow)} 주화
             </span>
           </div>
-          {materialsView === 'inventory' ? (
+          {tab === 'materials' ? (
             <MaterialTable
               rows={orderedTotals.filter((x) => x.name.includes(query))}
               setOwned={setOwned}

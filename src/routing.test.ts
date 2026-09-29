@@ -2,14 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { hashForRoute, normalizeRouteForShips, routeFromHash } from './routing'
 
 describe('semantic hash routes', () => {
-  it('round-trips a selected ship material view', () => {
+  it('round-trips a selected ship barter view', () => {
     const route = {
-      tab: 'materials' as const,
+      tab: 'barter' as const,
       scope: { target: 'ship' as const, shipId: 'trade-a', range: 'current' as const },
-      materialsView: 'barter' as const,
     }
 
-    expect(hashForRoute(route)).toBe('#/materials/ship/trade-a/current/barter')
+    expect(hashForRoute(route)).toBe('#/barter/ship/trade-a/current')
     expect(routeFromHash(hashForRoute(route))).toEqual(route)
   })
 
@@ -18,11 +17,10 @@ describe('semantic hash routes', () => {
     expect(routeFromHash('#/materials/fleet')).toEqual({
       tab: 'materials',
       scope: { target: 'fleet', range: 'all' },
-      materialsView: 'inventory',
     })
   })
 
-  it('replaces a deleted ship in a bookmarked route', () => {
+  it('keeps legacy material barter links and replaces deleted ships', () => {
     expect(
       normalizeRouteForShips(routeFromHash('#/materials/ship/removed/current/barter'), [
         {
@@ -35,9 +33,8 @@ describe('semantic hash routes', () => {
         },
       ]),
     ).toEqual({
-      tab: 'materials',
+      tab: 'barter',
       scope: { target: 'ship', shipId: 'trade-a', range: 'current' },
-      materialsView: 'barter',
     })
   })
 })
