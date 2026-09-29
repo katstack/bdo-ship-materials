@@ -1192,6 +1192,19 @@ tr:last-child td {
   color: #91d9cd;
   font-size: 10px;
 }
+.barter-remove {
+  margin-left: 5px;
+  padding: 1px 5px;
+  border-color: #58727a;
+  border-radius: 4px;
+  background: #24373d;
+  color: #c5d8d8;
+  font-size: 10px;
+  line-height: 1.3;
+}
+.barter-remove:hover {
+  background: #3d4f54;
+}
 .variable-rate {
   margin-left: 4px;
   color: #d8b56b;

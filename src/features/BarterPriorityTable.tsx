@@ -86,7 +86,20 @@ export function BarterPriorityTable({
                     {row.name}
                   </button>
                   <small className="barter-count">
-                    이번 갱신: {number(count)}회 교환 · 1회당 {number(row.outputQuantity)}개
+                    이번 갱신: {number(count)}회 교환
+                    {count > 0 && (
+                      <button
+                        className="barter-remove"
+                        aria-label={`${row.name} 거래 지정 1회 제거`}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onRemove(row)
+                        }}
+                      >
+                        −1
+                      </button>
+                    )}{' '}
+                    · 1회당 {number(row.outputQuantity)}개
                   </small>
                 </td>
                 <td className="shortage">{number(row.shortage)}</td>
