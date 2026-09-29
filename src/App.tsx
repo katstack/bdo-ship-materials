@@ -232,16 +232,12 @@ export default function App() {
     if (!ship || !recipe || isRecipeCompleted(data, ship.id, recipe.id))
       return setCraftConfirm(null)
     if (!canCompleteRecipeForShip(data, ship.id, recipe)) {
-      setNotice(
-        canCompleteRecipe(data.inventory, recipe)
-          ? '선행 파템 제작을 모두 완료해야 증축할 수 있습니다.'
-          : '재료 보유량이 부족하여 제작을 완료할 수 없습니다.',
-      )
+      setNotice('선행 파템 제작을 모두 완료해야 증축할 수 있습니다.')
       return setCraftConfirm(null)
     }
     update(completeRecipe(data, ship.id, recipe))
     setCraftConfirm(null)
-    setNotice(`${recipe.name} 제작 완료 · 재료를 공유 재고에서 차감했습니다.`)
+    setNotice(`${recipe.name} 제작 완료 · 요구 재료를 공유 재고에서 차감 처리했습니다.`)
   }
   const undoCraft = (ship: Ship, recipeId: string) => {
     const key = craftRecordKey(ship.id, recipeId)
@@ -671,11 +667,11 @@ export default function App() {
                     <Progress value={recipeProgress(recipe, data.inventory)} />
                     <div className="craft-action">
                       <small>
-                        {canCraft
-                          ? '재료가 모두 준비되었습니다. 제작 완료 시 공유 재고에서 차감합니다.'
-                          : !materialsReady
-                            ? '모든 재료를 보유하면 제작 완료 처리를 할 수 있습니다.'
-                            : '선행 파템 제작을 모두 완료하면 증축할 수 있습니다.'}
+                        {!canCraft
+                          ? '선행 파템 제작을 모두 완료하면 증축할 수 있습니다.'
+                          : materialsReady
+                            ? '재료가 모두 준비되었습니다. 제작 완료 시 공유 재고에서 차감합니다.'
+                            : '부족해도 완료 처리할 수 있으며, 요구 수량만큼 차감 처리합니다. 재고는 최소 0개입니다.'}
                       </small>
                       <button
                         className="primary"
@@ -1033,17 +1029,22 @@ export default function App() {
               <div className="craft-confirm">
                 <h2>{recipe.name} 제작 완료</h2>
                 <p>
-                  아래 재료가 함대 전체의 공유 재고에서 차감됩니다. 완료 후 전체 재료·물교
-                  우선순위도 즉시 다시 계산됩니다.
+                  요구 수량 전체를 함대 공유 재고에서 차감 처리합니다. 재고는 0개 아래로 내려가지
+                  않으며, 완료 후 전체 재료·물교 우선순위도 즉시 다시 계산됩니다.
                 </p>
                 <ul>
                   {recipe.requirements.map((requirement) => (
                     <li key={requirement.materialId}>
                       <b>{materialById[requirement.materialId].name}</b>
                       <span>
-                        {number(requirement.quantity)}개 차감 · 남음{' '}
+                        필요 {number(requirement.quantity)}개 · 보유{' '}
+                        {number(clamp(data.inventory[requirement.materialId]))}개 → {''}
+                        {number(requirement.quantity)}개 차감 처리 · 남음{' '}
                         {number(
-                          clamp(data.inventory[requirement.materialId]) - requirement.quantity,
+                          Math.max(
+                            clamp(data.inventory[requirement.materialId]) - requirement.quantity,
+                            0,
+                          ),
                         )}
                         개
                       </span>
@@ -1052,7 +1053,7 @@ export default function App() {
                 </ul>
                 <button onClick={() => setCraftConfirm(null)}>취소</button>
                 <button className="primary" onClick={completeCraft}>
-                  재료 차감 후 완료
+                  요구 재료 차감 후 완료
                 </button>
               </div>
             </div>

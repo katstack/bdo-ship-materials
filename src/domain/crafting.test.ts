@@ -23,15 +23,18 @@ const dataReadyToCraft = () => {
 }
 
 describe('crafting domain', () => {
-  it('requires every material before a recipe can be completed', () => {
+  it('allows completion with insufficient materials and clamps inventory at zero', () => {
     const data = dataReadyToCraft()
     data.inventory[recipe.requirements[0].materialId] -= 1
 
     expect(canCompleteRecipe(data.inventory, recipe)).toBe(false)
-    expect(() => completeRecipe(data, shipId, recipe, '2026-01-01T00:00:00.000Z')).toThrow(
-      '재료 보유량이 부족합니다.',
+    const completed = completeRecipe(data, shipId, recipe, '2026-01-01T00:00:00.000Z')
+    expect(completed.inventory[recipe.requirements[0].materialId]).toBe(0)
+    expect(completed.completedRecipes[craftRecordKey(shipId, recipe.id)].consumedMaterials).toEqual(
+      Object.fromEntries(
+        recipe.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+      ),
     )
-    expect(data.completedRecipes).toEqual({})
   })
 
   it('consumes shared inventory and records the completed recipe', () => {
