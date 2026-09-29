@@ -1,5 +1,5 @@
 import type { AppData } from './types'
-import { defaultEquipmentOrder } from './catalog'
+import { defaultEquipmentOrder, materials } from './catalog'
 
 export const sampleData: AppData = {
   version: 3,
@@ -10,24 +10,7 @@ export const sampleData: AppData = {
   completedRecipes: {},
   completedTasks: {},
   supplyPlans: {},
-  inventory: {
-    enhanced: 70,
-    seaweed: 90,
-    steel: 12,
-    low: 35,
-    reef: 44,
-    pearl: 14,
-    moon: 1160,
-    wave: 37,
-    high: 9,
-    cobalt: 0,
-    rock: 49,
-    combat: 60,
-    flax: 60,
-    'deep-tide': 77,
-    'brilliant-salt': 2,
-    tear: 19,
-  },
+  inventory: Object.fromEntries(materials.map((material) => [material.id, 0])),
   ships: [
     {
       id: 'trade-a',

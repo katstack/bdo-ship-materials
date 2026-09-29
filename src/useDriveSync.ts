@@ -19,7 +19,16 @@ export interface SyncConflict {
   newer: 'local' | 'drive'
 }
 
-export function useDriveSync(data: AppData, replaceLocal: (data: AppData) => void) {
+export const shouldRestoreDriveOnFirstConnection = (
+  hasLocalProgress: boolean,
+  hasDriveFile: boolean,
+) => !hasLocalProgress && hasDriveFile
+
+export function useDriveSync(
+  data: AppData,
+  replaceLocal: (data: AppData) => void,
+  hasLocalProgress: boolean,
+) {
   const cachedToken = getCachedDriveToken()
   const [status, setStatus] = useState<DriveStatus>(cachedToken ? 'connecting' : 'disconnected')
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
@@ -29,9 +38,17 @@ export function useDriveSync(data: AppData, replaceLocal: (data: AppData) => voi
   const fileId = useRef<string | undefined>(undefined)
   const dataRef = useRef(data)
   const timer = useRef<number | undefined>(undefined)
+  const hasLocalProgressRef = useRef(hasLocalProgress)
+  const replaceLocalRef = useRef(replaceLocal)
   useEffect(() => {
     dataRef.current = data
   }, [data])
+  useEffect(() => {
+    hasLocalProgressRef.current = hasLocalProgress
+  }, [hasLocalProgress])
+  useEffect(() => {
+    replaceLocalRef.current = replaceLocal
+  }, [replaceLocal])
   const write = useCallback(async (next = dataRef.current) => {
     if (!token.current) return
     try {
@@ -53,6 +70,12 @@ export function useDriveSync(data: AppData, replaceLocal: (data: AppData) => voi
     }
     fileId.current = remote.id
     const local = dataRef.current
+    if (shouldRestoreDriveOnFirstConnection(hasLocalProgressRef.current, true)) {
+      replaceLocalRef.current(remote.data)
+      setStatus('synced')
+      setLastSavedAt(remote.data.updatedAt)
+      return
+    }
     if (remote.data.updatedAt === local.updatedAt) {
       setStatus('synced')
       setLastSavedAt(local.updatedAt)
@@ -126,7 +149,7 @@ export function useDriveSync(data: AppData, replaceLocal: (data: AppData) => voi
     setConflict(null)
     fileId.current = current.driveFileId
     if (choice === 'drive') {
-      replaceLocal(current.drive)
+      replaceLocalRef.current(current.drive)
       setStatus('synced')
       setLastSavedAt(current.drive.updatedAt)
     } else await write(current.local)

@@ -5,6 +5,19 @@ import type { Hull, Stage } from './types'
 import { defaultEquipmentOrder, defaultUpgradeHull, upgradeTargets } from './catalog'
 
 const STORAGE_KEY = 'bdo-ship-materials:v1'
+
+/** True only when this browser already holds a readable, user-owned progress payload. */
+export function hasStoredData() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (!stored) return false
+    normalize(JSON.parse(stored))
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const freshSample = (): AppData => ({
   ...structuredClone(sampleData),
   updatedAt: new Date().toISOString(),

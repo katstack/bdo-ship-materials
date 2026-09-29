@@ -9,7 +9,7 @@ import {
   stageLabel,
   upgradeTargets,
 } from './catalog'
-import { clearData, freshSample, loadData, normalize, saveData } from './storage'
+import { clearData, freshSample, hasStoredData, loadData, normalize, saveData } from './storage'
 import { useDriveSync } from './useDriveSync'
 import type {
   AggregateMaterial,
@@ -134,6 +134,7 @@ const sortMaterials = (
 
 export default function App() {
   const [data, setData] = useState<AppData>(loadData)
+  const [hasLocalProgress, setHasLocalProgress] = useState(hasStoredData)
   const initialRoute = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
   const [tab, setTab] = useState<AppTab>(initialRoute.tab)
   const [selected, setSelected] = useState(() => {
@@ -188,6 +189,7 @@ export default function App() {
   const update = (next: AppData) => {
     const stamped = { ...next, updatedAt: new Date().toISOString() }
     setData(stamped)
+    setHasLocalProgress(true)
     try {
       saveData(stamped)
       setNotice('로컬 저장됨')
@@ -197,10 +199,11 @@ export default function App() {
   }
   const replaceLocal = (next: AppData) => {
     setData(next)
+    setHasLocalProgress(true)
     saveData(next)
     setNotice('Drive 데이터를 불러왔습니다.')
   }
-  const drive = useDriveSync(data, replaceLocal)
+  const drive = useDriveSync(data, replaceLocal, hasLocalProgress)
   const totals = useMemo(() => aggregate(data, scope), [data, scope])
   const allTotals = useMemo(() => aggregate(data, fleetDemandScope('all')), [data])
   const orderedTotals = sortMaterials(totals, data.materialSort.key, data.materialSort.direction)
