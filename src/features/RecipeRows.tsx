@@ -31,7 +31,6 @@ export function RecipeRows({
 }: RecipeRowsProps) {
   return (
     <div className="recipe-rows">
-      <p className="recipe-scroll-hint">← 표를 좌우로 밀어 모든 열 보기 →</p>
       <div className="recipe-row-scroll">
         <div className="recipe-row-head">
           <span>재료</span>

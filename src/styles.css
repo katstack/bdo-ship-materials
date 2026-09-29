@@ -574,9 +574,6 @@ tr:last-child td {
   border-bottom: 1px solid #293840;
   font-size: 13px;
 }
-.recipe-scroll-hint {
-  display: none;
-}
 .recipe-rows em {
   font-style: normal;
   color: #f0a178;
@@ -925,15 +922,6 @@ tr:last-child td {
   grid-template-columns: 1.4fr 0.55fr 92px 0.7fr 130px 0.55fr 0.55fr 0.8fr 0.9fr;
   min-width: 1020px;
 }
-@media (max-width: 760px) {
-  .recipe-scroll-hint {
-    display: block;
-    margin: 8px 0 6px;
-    color: #8ca7af;
-    font-size: 11px;
-    text-align: right;
-  }
-}
 .location-quest-list {
   display: grid;
   gap: 14px;
@@ -1052,10 +1040,44 @@ tr:last-child td {
   color: #d4fff5;
 }
 .barter-table {
-  min-width: 900px;
+  min-width: 1150px;
+  table-layout: auto;
+}
+.barter-table th {
+  white-space: nowrap;
 }
 .barter-table td {
   white-space: nowrap;
+}
+.barter-table th:nth-child(1),
+.barter-table td:nth-child(1) {
+  min-width: 54px;
+}
+.barter-table th:nth-child(2),
+.barter-table td:nth-child(2) {
+  min-width: 280px;
+}
+.barter-table th:nth-child(3),
+.barter-table td:nth-child(3) {
+  min-width: 72px;
+}
+.barter-table th:nth-child(4),
+.barter-table td:nth-child(4) {
+  min-width: 112px;
+}
+.barter-table th:nth-child(5),
+.barter-table td:nth-child(5) {
+  min-width: 108px;
+}
+.barter-table th:nth-child(6),
+.barter-table td:nth-child(6) {
+  min-width: 104px;
+}
+.barter-table th:nth-child(7),
+.barter-table td:nth-child(7),
+.barter-table th:nth-child(8),
+.barter-table td:nth-child(8) {
+  min-width: 132px;
 }
 .barter-session {
   display: flex;
