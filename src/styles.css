@@ -1079,6 +1079,54 @@ tr:last-child td {
 .barter-table td:nth-child(8) {
   min-width: 132px;
 }
+.material-table {
+  min-width: 1410px;
+  table-layout: auto;
+}
+.material-table th,
+.material-table td {
+  white-space: nowrap;
+}
+.material-table th:nth-child(1),
+.material-table td:nth-child(1) {
+  min-width: 280px;
+}
+.material-table th:nth-child(2),
+.material-table td:nth-child(2),
+.material-table th:nth-child(4),
+.material-table td:nth-child(4) {
+  min-width: 72px;
+}
+.material-table th:nth-child(3),
+.material-table td:nth-child(3) {
+  min-width: 110px;
+}
+.material-table th:nth-child(5),
+.material-table td:nth-child(5) {
+  min-width: 130px;
+}
+.material-table th:nth-child(6),
+.material-table td:nth-child(6),
+.material-table th:nth-child(7),
+.material-table td:nth-child(7) {
+  min-width: 78px;
+}
+.material-table th:nth-child(8),
+.material-table td:nth-child(8) {
+  min-width: 112px;
+}
+.material-table th:nth-child(9),
+.material-table td:nth-child(9) {
+  min-width: 110px;
+}
+.material-table th:nth-child(10),
+.material-table td:nth-child(10) {
+  min-width: 136px;
+}
+.material-table th:nth-child(11),
+.material-table td:nth-child(11) {
+  min-width: 220px;
+}
 .barter-session {
   display: flex;
   align-items: end;

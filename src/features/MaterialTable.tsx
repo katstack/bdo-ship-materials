@@ -39,7 +39,7 @@ export function MaterialTable({
 
   return (
     <div className="table-wrap">
-      <table>
+      <table className="material-table">
         <thead>
           <tr>
             {header('재료', 'name')}
