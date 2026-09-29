@@ -8,6 +8,15 @@
 
 ## 로컬 실행
 
+이 프로젝트는 Node.js 24 LTS를 사용합니다. nvm이 설치되어 있다면 저장소에서 아래 명령으로 맞춥니다.
+
+```bash
+nvm install
+nvm use
+```
+
+그다음 의존성을 설치하고 개발 서버를 실행합니다.
+
 ```bash
 npm install
 npm run dev
