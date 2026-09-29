@@ -5,7 +5,14 @@ import type { DriveStatus } from '../useDriveSync'
 
 interface SettingsPageProps {
   data: AppData
-  drive: { status: DriveStatus; error: string; authorize: () => void; disconnect: () => void }
+  drive: {
+    status: DriveStatus
+    error: string
+    authorize: () => void
+    reauthorize: () => void
+    disconnect: () => void
+    hasRememberedConnection: boolean
+  }
   importRef: RefObject<HTMLInputElement | null>
   onEditShip: (ship: Ship) => void
   onRemoveShip: (ship: Ship) => void
@@ -79,9 +86,12 @@ export function SettingsPage({
         <p>
           제공된 OAuth Client ID로만 연결합니다. 진행 데이터만 앱 전용 Drive 저장소에 동기화합니다.
         </p>
-        {drive.status === 'disconnected' ? (
-          <button className="primary" onClick={drive.authorize}>
-            Google Drive 연결
+        {drive.status === 'disconnected' || drive.status === 'failed' ? (
+          <button
+            className="primary"
+            onClick={drive.hasRememberedConnection ? drive.reauthorize : drive.authorize}
+          >
+            {drive.hasRememberedConnection ? 'Google Drive 동기화 재개' : 'Google Drive 연결'}
           </button>
         ) : (
           <button onClick={drive.disconnect}>Drive 연결 해제</button>

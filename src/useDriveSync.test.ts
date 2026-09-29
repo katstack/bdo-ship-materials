@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { shouldRestoreDriveOnFirstConnection } from './useDriveSync'
+import { shouldAttemptSilentResume, shouldRestoreDriveOnFirstConnection } from './useDriveSync'
 
 describe('first Drive connection', () => {
   it('restores Drive when the browser only has an unsaved sample', () => {
@@ -9,5 +9,12 @@ describe('first Drive connection', () => {
   it('keeps the conflict choice for existing local progress or an empty Drive folder', () => {
     expect(shouldRestoreDriveOnFirstConnection(true, true)).toBe(false)
     expect(shouldRestoreDriveOnFirstConnection(false, false)).toBe(false)
+  })
+
+  it('uses the next normal user action to silently resume a remembered connection', () => {
+    expect(shouldAttemptSilentResume(true, false, false, false)).toBe(true)
+    expect(shouldAttemptSilentResume(false, false, false, false)).toBe(false)
+    expect(shouldAttemptSilentResume(true, true, false, false)).toBe(false)
+    expect(shouldAttemptSilentResume(true, false, false, true)).toBe(false)
   })
 })

@@ -427,12 +427,16 @@ export default function App() {
             className={`drive-status ${drive.status}`}
             onClick={
               drive.status === 'disconnected' || drive.status === 'failed'
-                ? drive.authorize
+                ? drive.hasRememberedConnection
+                  ? drive.reauthorize
+                  : drive.authorize
                 : undefined
             }
           >
             {drive.status === 'disconnected'
-              ? 'Google Drive 연결'
+              ? drive.hasRememberedConnection
+                ? '● 동기화 대기'
+                : 'Google Drive 연결'
               : drive.status === 'connecting'
                 ? 'Drive 연결 중…'
                 : drive.status === 'synced'
