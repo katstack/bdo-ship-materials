@@ -126,10 +126,30 @@ export const materials: MaterialDefinition[] = [
   m('oquilla-green', '오킬루아 녹빛 담수', undefined, '레크라샨 사냥터 항해 의뢰 선택 보상'),
   m('oquilla-blue', '오킬루아 물빛 담수', undefined, '레크라샨 사냥터 항해 의뢰 선택 보상'),
   m('oquilla-gold', '오킬루아 금빛 담수', undefined, '레크라샨 사냥터 항해 의뢰 선택 보상'),
-  m('blue-figure', '+10 파템 선수상', undefined, '선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
-  m('blue-plating', '+10 파템 장갑', undefined, '선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
-  m('blue-cannon', '+10 파템 함포', undefined, '선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
-  m('blue-sail', '+10 파템 돛', undefined, '선박 부품 공방 제작 후 파도의 블랙스톤 강화'),
+  m(
+    'blue-figure',
+    '에페리아 무역선/구축함: 흑룡 선수상 (+10)',
+    undefined,
+    '선박 부품 공방 제작 후 파도의 블랙스톤 강화',
+  ),
+  m(
+    'blue-plating',
+    '에페리아 무역선/구축함: 개량형 장갑 (+10)',
+    undefined,
+    '선박 부품 공방 제작 후 파도의 블랙스톤 강화',
+  ),
+  m(
+    'blue-cannon',
+    '에페리아 무역선/구축함: 메이나 함포 (+10)',
+    undefined,
+    '선박 부품 공방 제작 후 파도의 블랙스톤 강화',
+  ),
+  m(
+    'blue-sail',
+    '에페리아 무역선/구축함: 비층 바람 돛 (+10)',
+    undefined,
+    '선박 부품 공방 제작 후 파도의 블랙스톤 강화',
+  ),
   m(
     'violent',
     '난폭한 파도가 새겨진 합판',
@@ -220,7 +240,7 @@ export const unverifiedLegacyQuestData: DailyTask[] = [
       choice('wave', '파도빛이 감도는 규격 각목', r('wave', 5)),
       choice('violent', '난폭한 파도가 새겨진 합판', r('violent', 1)),
     ],
-    note: '오킬루아 기념 주화 기본 보상 + 파템 재료 선택',
+    note: '오킬루아 기념 주화 기본 보상 + 에페리아 함선 장비 재료 선택',
   },
   {
     id: 'self-defense',
@@ -231,7 +251,7 @@ export const unverifiedLegacyQuestData: DailyTask[] = [
       choice('combat', '콕스해적단의 유물 (전투)', r('combat', 3)),
       choice('support', '정교하게 다듬어진 지지대', r('support', 1)),
     ],
-    note: '오킬루아 기념 주화 기본 보상 + 파템 재료 선택',
+    note: '오킬루아 기념 주화 기본 보상 + 에페리아 함선 장비 재료 선택',
   },
   {
     id: 'both-good',
@@ -242,7 +262,7 @@ export const unverifiedLegacyQuestData: DailyTask[] = [
       choice('deep-tide', '짙은 파도빛이 감도는 규격 각목', r('deep-tide', 4)),
       choice('adhesive', '파도의 흔적이 담긴 접착제', r('adhesive', 1)),
     ],
-    note: '오킬루아 기념 주화 기본 보상 + 파템 재료 선택',
+    note: '오킬루아 기념 주화 기본 보상 + 에페리아 함선 장비 재료 선택',
   },
   {
     id: 'moon-young-sea-hunter',
@@ -386,7 +406,7 @@ export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
 }
 export const stageLabel: Record<Stage, string> = {
   1: '무역선/구축함 증축',
-  2: '파템 제작 · 중범선 증축',
+  2: '에페리아 함선 장비 제작 · 중범선 증축',
   3: '중범선 치로 장비 제작',
   4: '중범선 팔라시 장비 제작',
 }

@@ -232,7 +232,7 @@ export default function App() {
     if (!ship || !recipe || isRecipeCompleted(data, ship.id, recipe.id))
       return setCraftConfirm(null)
     if (!canCompleteRecipeForShip(data, ship.id, recipe)) {
-      setNotice('선행 파템 제작을 모두 완료해야 증축할 수 있습니다.')
+      setNotice('선행 에페리아 함선 장비 제작을 모두 완료해야 증축할 수 있습니다.')
       return setCraftConfirm(null)
     }
     update(completeRecipe(data, ship.id, recipe))
@@ -605,7 +605,9 @@ export default function App() {
                       </option>
                     ))}
                   </select>
-                  <small>2단계에서 파템과 선택한 중범선 증축 재료를 함께 집계합니다.</small>
+                  <small>
+                    2단계에서 에페리아 함선 장비와 선택한 중범선 증축 재료를 함께 집계합니다.
+                  </small>
                 </label>
               )}
               <p className="muted">
@@ -628,7 +630,8 @@ export default function App() {
                       <small>{recipe.description}</small>
                       {prerequisiteCount > 0 && (
                         <small className="recipe-prerequisite">
-                          선행 제작 · 파템 {completedPrerequisiteCount}/{prerequisiteCount}종 완료
+                          선행 제작 · 에페리아 함선 장비 {completedPrerequisiteCount}/
+                          {prerequisiteCount}종 완료
                         </small>
                       )}
                     </div>
@@ -668,7 +671,7 @@ export default function App() {
                     <div className="craft-action">
                       <small>
                         {!canCraft
-                          ? '선행 파템 제작을 모두 완료하면 증축할 수 있습니다.'
+                          ? '선행 에페리아 함선 장비 제작을 모두 완료하면 증축할 수 있습니다.'
                           : materialsReady
                             ? '재료가 모두 준비되었습니다. 제작 완료 시 공유 재고에서 차감합니다.'
                             : '부족해도 완료 처리할 수 있으며, 요구 수량만큼 차감 처리합니다. 재고는 최소 0개입니다.'}
@@ -1051,10 +1054,12 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => setCraftConfirm(null)}>취소</button>
-                <button className="primary" onClick={completeCraft}>
-                  요구 재료 차감 후 완료
-                </button>
+                <div className="modal-actions">
+                  <button onClick={() => setCraftConfirm(null)}>취소</button>
+                  <button className="primary" onClick={completeCraft}>
+                    요구 재료 차감 후 완료
+                  </button>
+                </div>
               </div>
             </div>
           )
@@ -1074,7 +1079,9 @@ export default function App() {
                 <li key={x}>{x}</li>
               ))}
             </ul>
-            <button onClick={() => setSource(null)}>닫기</button>
+            <div className="modal-actions">
+              <button onClick={() => setSource(null)}>닫기</button>
+            </div>
           </div>
         </div>
       )}
@@ -1114,7 +1121,9 @@ export default function App() {
                     없습니다.
                   </p>
                 )}
-                <button onClick={() => setSupplyDetail(null)}>닫기</button>
+                <div className="modal-actions">
+                  <button onClick={() => setSupplyDetail(null)}>닫기</button>
+                </div>
               </div>
             </div>
           )
@@ -1127,8 +1136,12 @@ export default function App() {
               더 최신인 쪽: <b>{drive.conflict.newer === 'drive' ? 'Drive' : '로컬'}</b>. 선택한
               데이터가 반대쪽을 덮어씁니다.
             </p>
-            <button onClick={() => drive.resolveConflict('drive')}>Drive 사용</button>
-            <button onClick={() => drive.resolveConflict('local')}>로컬 사용</button>
+            <div className="modal-actions">
+              <button onClick={() => drive.resolveConflict('drive')}>Drive 사용</button>
+              <button className="primary" onClick={() => drive.resolveConflict('local')}>
+                로컬 사용
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -253,6 +253,8 @@ th,
 td {
   padding: 11px 13px;
   border-bottom: 1px solid #2b3941;
+  vertical-align: middle;
+  line-height: 1.45;
 }
 tr:last-child td {
   border: 0;
@@ -348,6 +350,7 @@ tr:last-child td {
   z-index: 10;
 }
 .modal > div {
+  width: min(440px, 100%);
   max-width: 440px;
   background: #1d282e;
   border: 1px solid #597079;
@@ -362,9 +365,16 @@ tr:last-child td {
   font-size: 14px;
   line-height: 1.65;
 }
-.modal button {
-  float: right;
-  margin-left: 8px;
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.modal-actions button {
+  margin: 0;
 }
 @media (max-width: 760px) {
   main {

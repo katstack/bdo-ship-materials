@@ -147,7 +147,7 @@ export function normalize(input: unknown): AppData {
         const hull = hulls.includes(item.hull as Hull) ? (item.hull as Hull) : 'trade'
         const sourceHull = hull === 'trade' || hull === 'warship' ? hull : null
         const savedStage = Math.max(1, Math.min(5, Number(item.activeStage) || 1))
-        // 이전 3단계는 무역선/구축함의 중범선 증축 단계였다. 이제 파템 제작과 같은 2단계다.
+        // 이전 3단계는 무역선/구축함의 중범선 증축 단계였다. 이제 에페리아 함선 장비 제작과 같은 2단계다.
         const stage = (sourceHull && savedStage >= 3 ? 2 : Math.min(4, savedStage)) as Stage
         const upgradeHull =
           sourceHull &&
