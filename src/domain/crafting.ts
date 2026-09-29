@@ -12,6 +12,13 @@ export const canCompleteRecipe = (inventory: Record<string, number>, recipe: Rec
     (requirement) => quantity(inventory[requirement.materialId]) >= requirement.quantity,
   )
 
+export const areRecipePrerequisitesComplete = (data: AppData, shipId: string, recipe: Recipe) =>
+  recipe.prerequisiteRecipeIds?.every((recipeId) => isRecipeCompleted(data, shipId, recipeId)) ??
+  true
+
+export const canCompleteRecipeForShip = (data: AppData, shipId: string, recipe: Recipe) =>
+  canCompleteRecipe(data.inventory, recipe) && areRecipePrerequisitesComplete(data, shipId, recipe)
+
 export function completeRecipe(
   data: AppData,
   shipId: string,
@@ -21,6 +28,8 @@ export function completeRecipe(
   const key = craftRecordKey(shipId, recipe.id)
   if (data.completedRecipes[key]) throw new Error('이미 완료한 제작입니다.')
   if (!canCompleteRecipe(data.inventory, recipe)) throw new Error('재료 보유량이 부족합니다.')
+  if (!areRecipePrerequisitesComplete(data, shipId, recipe))
+    throw new Error('선행 제작이 완료되지 않았습니다.')
 
   const inventory = { ...data.inventory }
   const consumedMaterials: Record<string, number> = {}

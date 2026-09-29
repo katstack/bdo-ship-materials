@@ -83,7 +83,12 @@ const carrackGear = (
       requirements: reqs,
     })),
   )
-const bluePlus = [r('blue-figure', 1), r('blue-plating', 1), r('blue-cannon', 1), r('blue-sail', 1)]
+const blueRecipeIds = (hull: 'trade' | 'warship') => [
+  `blue-figure-${hull}`,
+  `blue-plating-${hull}`,
+  `blue-cannon-${hull}`,
+  `blue-sail-${hull}`,
+]
 export const recipes: Recipe[] = [
   {
     id: 'expand-trade',
@@ -124,9 +129,9 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['balance'],
     usesUpgradeHull: true,
-    description: '에페리아 무역선 +10 장비 4종 필요',
+    description: '에페리아 무역선 → 에페리아 중범선 균형',
+    prerequisiteRecipeIds: blueRecipeIds('trade'),
     requirements: [
-      ...bluePlus,
       r('flax', 180),
       r('deep-tide', 144),
       r('brilliant-salt', 30),
@@ -140,9 +145,9 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['advance'],
     usesUpgradeHull: true,
-    description: '에페리아 무역선 +10 장비 4종 필요',
+    description: '에페리아 무역선 → 에페리아 중범선 점진',
+    prerequisiteRecipeIds: blueRecipeIds('trade'),
     requirements: [
-      ...bluePlus,
       r('flax', 180),
       r('deep-tide', 144),
       r('brilliant-salt', 35),
@@ -156,9 +161,9 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['volante'],
     usesUpgradeHull: true,
-    description: '에페리아 구축함 +10 장비 4종 필요',
+    description: '에페리아 구축함 → 에페리아 중범선 비상',
+    prerequisiteRecipeIds: blueRecipeIds('warship'),
     requirements: [
-      ...bluePlus,
       r('flax', 210),
       r('deep-tide', 144),
       r('brilliant-salt', 30),
@@ -172,9 +177,9 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['valor'],
     usesUpgradeHull: true,
-    description: '에페리아 구축함 +10 장비 4종 필요',
+    description: '에페리아 구축함 → 에페리아 중범선 용맹',
+    prerequisiteRecipeIds: blueRecipeIds('warship'),
     requirements: [
-      ...bluePlus,
       r('flax', 180),
       r('deep-tide', 170),
       r('brilliant-salt', 30),

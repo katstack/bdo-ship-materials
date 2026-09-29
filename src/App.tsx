@@ -31,6 +31,7 @@ import {
 } from './domain/materialDemand'
 import {
   canCompleteRecipe,
+  canCompleteRecipeForShip,
   completeRecipe,
   craftRecordKey,
   isRecipeCompleted,
@@ -240,8 +241,12 @@ export default function App() {
     const recipe = ship && shipRecipes(ship).find((item) => item.id === craftConfirm.recipeId)
     if (!ship || !recipe || isRecipeCompleted(data, ship.id, recipe.id))
       return setCraftConfirm(null)
-    if (!canCompleteRecipe(data.inventory, recipe)) {
-      setNotice('재료 보유량이 부족하여 제작을 완료할 수 없습니다.')
+    if (!canCompleteRecipeForShip(data, ship.id, recipe)) {
+      setNotice(
+        canCompleteRecipe(data.inventory, recipe)
+          ? '선행 파템 제작을 모두 완료해야 증축할 수 있습니다.'
+          : '재료 보유량이 부족하여 제작을 완료할 수 없습니다.',
+      )
       return setCraftConfirm(null)
     }
     update(completeRecipe(data, ship.id, recipe))
@@ -618,13 +623,24 @@ export default function App() {
                 공유됩니다.
               </p>
               {pendingRecipes.map((recipe, index) => {
-                const canCraft = canCompleteRecipe(data.inventory, recipe)
+                const materialsReady = canCompleteRecipe(data.inventory, recipe)
+                const prerequisiteCount = recipe.prerequisiteRecipeIds?.length ?? 0
+                const completedPrerequisiteCount =
+                  recipe.prerequisiteRecipeIds?.filter((recipeId) =>
+                    isRecipeCompleted(data, currentShip.id, recipeId),
+                  ).length ?? 0
+                const canCraft = canCompleteRecipeForShip(data, currentShip.id, recipe)
                 return (
                   <article className="recipe" key={recipe.id}>
                     <div>
                       <p>진행률 {recipeProgress(recipe, data.inventory)}%</p>
                       <h3>{recipe.name}</h3>
                       <small>{recipe.description}</small>
+                      {prerequisiteCount > 0 && (
+                        <small className="recipe-prerequisite">
+                          선행 제작 · 파템 {completedPrerequisiteCount}/{prerequisiteCount}종 완료
+                        </small>
+                      )}
                     </div>
                     {recipe.slot && (
                       <span className="order-actions">
@@ -663,7 +679,9 @@ export default function App() {
                       <small>
                         {canCraft
                           ? '재료가 모두 준비되었습니다. 제작 완료 시 공유 재고에서 차감합니다.'
-                          : '모든 재료를 보유하면 제작 완료 처리를 할 수 있습니다.'}
+                          : !materialsReady
+                            ? '모든 재료를 보유하면 제작 완료 처리를 할 수 있습니다.'
+                            : '선행 파템 제작을 모두 완료하면 증축할 수 있습니다.'}
                       </small>
                       <button
                         className="primary"

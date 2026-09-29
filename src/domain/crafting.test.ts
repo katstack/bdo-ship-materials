@@ -4,6 +4,7 @@ import { freshSample } from '../storage'
 import { aggregateMaterialDemand, fleetDemandScope, shipDemandScope } from './materialDemand'
 import {
   canCompleteRecipe,
+  canCompleteRecipeForShip,
   completeRecipe,
   craftRecordKey,
   isRecipeCompleted,
@@ -84,5 +85,26 @@ describe('crafting domain', () => {
         (item) => item.id === 'low',
       )?.required,
     ).toBe(60)
+  })
+
+  it('uses completed blue gear as a carrack prerequisite without adding it to material demand', () => {
+    const data = freshSample()
+    const upgrade = recipes.find((item) => item.id === 'advance')!
+    data.inventory = Object.fromEntries(
+      upgrade.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+    )
+
+    expect(
+      upgrade.requirements.some((requirement) => requirement.materialId === 'blue-cannon'),
+    ).toBe(false)
+    expect(canCompleteRecipeForShip(data, shipId, upgrade)).toBe(false)
+
+    upgrade.prerequisiteRecipeIds!.forEach((recipeId) => {
+      data.completedRecipes[craftRecordKey(shipId, recipeId)] = {
+        completedAt: '2026-01-01T00:00:00.000Z',
+        consumedMaterials: {},
+      }
+    })
+    expect(canCompleteRecipeForShip(data, shipId, upgrade)).toBe(true)
   })
 })

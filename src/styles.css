@@ -538,6 +538,11 @@ tr:last-child td {
 .recipe > div:first-child h3 {
   margin: 5px 0;
 }
+.recipe-prerequisite {
+  display: block;
+  margin-top: 7px;
+  color: #9cd8ca;
+}
 .recipe > .progress {
   float: right;
   margin-top: 14px;

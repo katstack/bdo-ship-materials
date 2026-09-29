@@ -22,6 +22,7 @@ export interface Recipe {
   description: string
   slot?: EquipmentSlot
   usesUpgradeHull?: boolean
+  prerequisiteRecipeIds?: string[]
 }
 export interface Ship {
   id: string
