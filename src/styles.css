@@ -561,7 +561,11 @@ tr:last-child td {
   margin-top: 16px;
   border-top: 1px solid #314049;
 }
-.recipe-rows > div {
+.recipe-row-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.recipe-row-scroll > div {
   display: grid;
   grid-template-columns: 1.4fr 0.55fr 92px 0.7fr 130px 0.9fr;
   gap: 10px;
@@ -569,6 +573,9 @@ tr:last-child td {
   padding: 9px 0;
   border-bottom: 1px solid #293840;
   font-size: 13px;
+}
+.recipe-scroll-hint {
+  display: none;
 }
 .recipe-rows em {
   font-style: normal;
@@ -649,12 +656,6 @@ tr:last-child td {
   .recipe > .progress {
     float: none;
     width: 100%;
-  }
-  .recipe-rows > div {
-    grid-template-columns: 1fr 1fr;
-  }
-  .recipe-rows > div .progress {
-    min-width: 0;
   }
   .ship-edit {
     grid-template-columns: 1fr;
@@ -872,7 +873,7 @@ tr:last-child td {
   background: #2a3038;
   border-color: #47515b;
 }
-.recipe-rows > .recipe-row-head {
+.recipe-row-scroll > .recipe-row-head {
   color: #91a8b1;
   background: #202c33;
   font-size: 11px;
@@ -920,12 +921,17 @@ tr:last-child td {
   color: #8fe0d1;
   white-space: nowrap;
 }
-.recipe-rows > div {
+.recipe-row-scroll > div {
   grid-template-columns: 1.4fr 0.55fr 92px 0.7fr 130px 0.55fr 0.55fr 0.8fr 0.9fr;
+  min-width: 1020px;
 }
 @media (max-width: 760px) {
-  .recipe-rows > div {
-    grid-template-columns: 1fr 1fr;
+  .recipe-scroll-hint {
+    display: block;
+    margin: 8px 0 6px;
+    color: #8ca7af;
+    font-size: 11px;
+    text-align: right;
   }
 }
 .location-quest-list {
