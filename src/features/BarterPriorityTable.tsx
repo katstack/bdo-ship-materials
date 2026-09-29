@@ -2,7 +2,9 @@ import type { AggregateMaterial, AppData, MaterialExchangeSortKey } from '../typ
 import { number } from '../utils'
 
 export type BarterRow = AggregateMaterial & {
+  exchangeKey: string
   outputQuantity: number
+  variableOutput: boolean
   afterExchangeShortage: number
   progressGain: number
   exchangeCrowValue?: number
@@ -59,11 +61,11 @@ export function BarterPriorityTable({
         </thead>
         <tbody>
           {rows.map((row, index) => {
-            const count = session.exchangeCounts[row.id] || 0
+            const count = session.exchangeCounts[row.exchangeKey] || 0
             return (
               <tr
                 key={row.id}
-                className={`${count ? 'barter-listed' : ''} ${flashId === row.id ? 'barter-flash' : ''}`}
+                className={`${count ? 'barter-listed' : ''} ${flashId === row.exchangeKey ? 'barter-flash' : ''}`}
                 onClick={() => onAdd(row)}
                 onContextMenu={(event) => {
                   event.preventDefault()
@@ -90,7 +92,13 @@ export function BarterPriorityTable({
                 <td className="shortage">{number(row.shortage)}</td>
                 <td>
                   1 : {number(row.outputQuantity)}
-                  {row.outputQuantity === 1 ? <small className="default-rate"> 기본</small> : ''}
+                  {row.variableOutput ? (
+                    <small className="variable-rate"> 변동 품목</small>
+                  ) : row.outputQuantity === 1 ? (
+                    <small className="default-rate"> 기본</small>
+                  ) : (
+                    ''
+                  )}
                 </td>
                 <td>{number(row.afterExchangeShortage)}</td>
                 <td>+{row.progressGain}%</td>

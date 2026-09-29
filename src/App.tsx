@@ -42,7 +42,7 @@ import { npcById } from './data/npcs'
 import { questRoutes } from './data/questRoutes'
 import { codexNpcUrl } from './data/codex'
 import type { QuestRoute } from './types'
-import { materialExchangeOutput } from './data/materialExchanges'
+import { materialExchangeKey, materialExchangeOutputOptions } from './data/materialExchanges'
 import { GuidePage } from './features/GuidePage'
 import { BarterSessionControls } from './features/BarterSessionControls'
 import { BarterPriorityTable, type BarterRow } from './features/BarterPriorityTable'
@@ -57,24 +57,39 @@ const toBarterRows = (
   exchangeCounts: Record<string, number> = {},
 ): BarterRow[] =>
   rows
-    .filter((row) => row.shortage > 0 || (exchangeCounts[row.id] || 0) > 0)
-    .map((row) => {
-      const outputQuantity = materialExchangeOutput(row.id)
-      const gained = Math.min(outputQuantity, row.shortage)
-      const afterExchangeShortage = row.shortage - gained
-      const afterProgress = row.required
-        ? Math.min(100, Math.round(((row.owned + gained) / row.required) * 100))
-        : 100
-      const exchangeCrowValue =
-        row.crowCoinPrice === undefined ? undefined : gained * row.crowCoinPrice
-      return {
-        ...row,
-        outputQuantity,
-        afterExchangeShortage,
-        progressGain: afterProgress - row.progress,
-        exchangeCrowValue,
-        priority: exchangeCrowValue ?? -1,
-      }
+    .filter(
+      (row) =>
+        row.shortage > 0 ||
+        materialExchangeOutputOptions(row.id).some((outputQuantity) => {
+          const key =
+            materialExchangeOutputOptions(row.id).length === 1
+              ? row.id
+              : materialExchangeKey(row.id, outputQuantity)
+          return (exchangeCounts[key] || 0) > 0
+        }),
+    )
+    .flatMap((row) => {
+      const outputOptions = materialExchangeOutputOptions(row.id)
+      return outputOptions.map((outputQuantity) => {
+        const gained = Math.min(outputQuantity, row.shortage)
+        const afterExchangeShortage = row.shortage - gained
+        const afterProgress = row.required
+          ? Math.min(100, Math.round(((row.owned + gained) / row.required) * 100))
+          : 100
+        const exchangeCrowValue =
+          row.crowCoinPrice === undefined ? undefined : gained * row.crowCoinPrice
+        return {
+          ...row,
+          exchangeKey:
+            outputOptions.length === 1 ? row.id : materialExchangeKey(row.id, outputQuantity),
+          outputQuantity,
+          variableOutput: outputOptions.length > 1,
+          afterExchangeShortage,
+          progressGain: afterProgress - row.progress,
+          exchangeCrowValue,
+          priority: exchangeCrowValue ?? -1,
+        }
+      })
     })
 const sortBarterRows = (
   rows: BarterRow[],
@@ -325,32 +340,32 @@ export default function App() {
     const session = data.barterSession
     const exchangeCounts = {
       ...session.exchangeCounts,
-      [row.id]: (session.exchangeCounts[row.id] || 0) + 1,
+      [row.exchangeKey]: (session.exchangeCounts[row.exchangeKey] || 0) + 1,
     }
     update({ ...data, barterSession: { ...session, exchangeCounts } })
-    setBarterFlashId(row.id)
+    setBarterFlashId(row.exchangeKey)
     window.setTimeout(
-      () => setBarterFlashId((current) => (current === row.id ? null : current)),
+      () => setBarterFlashId((current) => (current === row.exchangeKey ? null : current)),
       420,
     )
   }
   const removeBarterListing = (row: BarterRow) => {
     const session = data.barterSession
-    const count = session.exchangeCounts[row.id] || 0
+    const count = session.exchangeCounts[row.exchangeKey] || 0
     if (!count) return
-    const exchangeCounts = { ...session.exchangeCounts, [row.id]: count - 1 }
+    const exchangeCounts = { ...session.exchangeCounts, [row.exchangeKey]: count - 1 }
     update({ ...data, barterSession: { ...session, exchangeCounts } })
-    setBarterFlashId(row.id)
+    setBarterFlashId(row.exchangeKey)
     window.setTimeout(
-      () => setBarterFlashId((current) => (current === row.id ? null : current)),
+      () => setBarterFlashId((current) => (current === row.exchangeKey ? null : current)),
       420,
     )
   }
   const completeBarter = (row: BarterRow) => {
     const session = data.barterSession
-    const count = session.exchangeCounts[row.id] || 0
+    const count = session.exchangeCounts[row.exchangeKey] || 0
     if (!count) return
-    const exchangeCounts = { ...session.exchangeCounts, [row.id]: count - 1 }
+    const exchangeCounts = { ...session.exchangeCounts, [row.exchangeKey]: count - 1 }
     const inventory = session.addToInventory
       ? { ...data.inventory, [row.id]: clamp(data.inventory[row.id]) + row.outputQuantity }
       : data.inventory

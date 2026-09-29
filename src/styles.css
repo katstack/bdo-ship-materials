@@ -1164,6 +1164,12 @@ tr:last-child td {
   color: #91d9cd;
   font-size: 10px;
 }
+.variable-rate {
+  margin-left: 4px;
+  color: #d8b56b;
+  font-size: 10px;
+  white-space: nowrap;
+}
 .barter-pending {
   display: inline-flex;
   align-items: center;

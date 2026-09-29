@@ -36,4 +36,11 @@ describe('stored progress normalization', () => {
     expect(restored.ships[0].activeStage).toBe(2)
     expect(restored.ships[1].activeStage).toBe(3)
   })
+
+  it('moves legacy wave barter listings to the 1:1 variable-rate listing', () => {
+    const saved = structuredClone(sampleData)
+    saved.barterSession.exchangeCounts = { wave: 2 }
+
+    expect(normalize(saved).barterSession.exchangeCounts).toEqual({ 'wave@1': 2 })
+  })
 })

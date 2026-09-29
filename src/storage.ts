@@ -1,4 +1,5 @@
 import { sampleData } from './sampleData'
+import { materialExchangeKey } from './data/materialExchanges'
 import type { AppData, MaterialExchangeSortKey, MaterialSortKey } from './types'
 import { clamp } from './utils'
 import type { Hull, Stage } from './types'
@@ -110,7 +111,8 @@ export function normalize(input: unknown): AppData {
     addToInventory: rawBarter?.addToInventory !== false,
     exchangeCounts: Object.fromEntries(
       Object.entries(rawBarter?.exchangeCounts || {}).map(([id, count]) => [
-        id,
+        // 변동 비율 도입 전의 각목 거래 지정은 보수적인 1:1 항목으로 옮긴다.
+        id === 'wave' ? materialExchangeKey('wave', 1) : id,
         clamp(Number(count)),
       ]),
     ),
