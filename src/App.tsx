@@ -707,13 +707,15 @@ export default function App() {
                               .join(' · ')}
                           </small>
                         </div>
-                        <Progress value={100} />
-                        <button
-                          className="craft-undo"
-                          onClick={() => undoCraft(currentShip, recipe.id)}
-                        >
-                          제작 완료 취소 · 재료 복구
-                        </button>
+                        <div className="completed-recipe-actions">
+                          <span className="completed-status">완료</span>
+                          <button
+                            className="craft-undo"
+                            onClick={() => undoCraft(currentShip, recipe.id)}
+                          >
+                            제작 완료 취소 · 재료 복구
+                          </button>
+                        </div>
                       </article>
                     )
                   })}

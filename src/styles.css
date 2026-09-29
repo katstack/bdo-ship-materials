@@ -621,6 +621,13 @@ tr:last-child td {
   margin-top: 15px;
 }
 @media (max-width: 760px) {
+  .completed-recipe {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .completed-recipe-actions {
+    justify-content: space-between;
+  }
   .guide-grid {
     grid-template-columns: 1fr;
   }
@@ -1243,12 +1250,36 @@ tr:last-child td {
   border-color: #38655d;
   background: #18312e;
 }
+.completed-recipe {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.completed-recipe > div:first-child {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
 .completed-recipe > div:first-child p {
   color: #8dd8c9;
 }
+.completed-recipe-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.completed-status {
+  min-width: 52px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #4fcaa5;
+  color: #0d2b26;
+  font: 700 12px 'Roboto Mono';
+  text-align: center;
+}
 .craft-undo {
-  float: right;
-  margin-top: 14px;
+  margin: 0;
   color: #c4ddd7;
   border-color: #4e756e;
   background: #203e39;
