@@ -24,13 +24,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
           VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}

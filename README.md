@@ -15,21 +15,22 @@ nvm install
 nvm use
 ```
 
-그다음 의존성을 설치하고 개발 서버를 실행합니다.
+그다음 Corepack으로 프로젝트에 고정된 pnpm을 활성화하고, 의존성을 설치해 개발 서버를 실행합니다.
 
 ```bash
-npm install
-npm run dev
+corepack enable
+pnpm install
+pnpm dev
 ```
 
-배포용 결과물 검증은 `npm run build`로 할 수 있습니다. 결과 파일은 `dist/`에 생성됩니다.
+배포용 결과물 검증은 `pnpm build`로 할 수 있습니다. 결과 파일은 `dist/`에 생성됩니다.
 
 ## GitHub Pages 배포
 
 GitHub Actions 또는 Pages 빌드 환경에서 아래처럼 저장소 이름을 base path로 지정합니다. 예: 저장소가 `bdo-ship-materials`일 때
 
 ```bash
-VITE_BASE_PATH=/bdo-ship-materials/ npm run build
+VITE_BASE_PATH=/bdo-ship-materials/ pnpm build
 ```
 
 생성된 `dist` 디렉터리를 GitHub Pages의 배포 원본으로 지정하세요. 사용자/조직 페이지(`username.github.io`)는 기본값 `/`로 빌드하면 됩니다. `vite.config.ts`에서 `VITE_BASE_PATH`를 읽으므로 배포 환경별로 바꿀 수 있습니다.
@@ -39,7 +40,7 @@ VITE_BASE_PATH=/bdo-ship-materials/ npm run build
 OAuth Client ID는 앱 코드에 공개 식별자로 고정되어 있습니다. Client ID는 비밀값이 아니며, Client Secret은 이 앱에서 사용하거나 저장하지 않습니다.
 
 ```bash
-VITE_BASE_PATH=/bdo-ship-materials/ npm run build
+VITE_BASE_PATH=/bdo-ship-materials/ pnpm build
 ```
 
 Google Cloud Console에서 이 앱의 배포 주소와 로컬 개발 주소를 OAuth **승인된 JavaScript 원본**에 등록해야 합니다. 이 앱은 Google Identity Services의 브라우저 OAuth 토큰 흐름만 쓰며 Client Secret을 사용하거나 저장하지 않습니다. 요청 권한은 `https://www.googleapis.com/auth/drive.appdata` 하나이며, 데이터는 사용자 Drive 파일 목록에 표시되지 않는 앱 전용 `appDataFolder/bdo-ship-materials.json`에 저장됩니다.
