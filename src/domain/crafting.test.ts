@@ -110,4 +110,20 @@ describe('crafting domain', () => {
     })
     expect(canCompleteRecipeForShip(data, shipId, upgrade)).toBe(true)
   })
+
+  it('adds a crafted carrack part to inventory and removes it again when undone', () => {
+    const data = freshSample()
+    const chiro = recipes.find(
+      (item) => item.id === '3-치로의 함포' && item.hulls[0] === 'advance',
+    )!
+    data.inventory = Object.fromEntries(
+      chiro.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+    )
+
+    const completed = completeRecipe(data, 'advance-a', chiro, '2026-01-01T00:00:00.000Z')
+    expect(completed.inventory['chiro-advance-cannon']).toBe(1)
+
+    const restored = undoRecipeCompletion(completed, 'advance-a', chiro.id)
+    expect(restored.inventory['chiro-advance-cannon']).toBe(0)
+  })
 })

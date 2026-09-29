@@ -19,10 +19,15 @@ export interface Recipe {
   stage: Stage
   hulls: Hull[]
   requirements: Requirement[]
+  /** 제작 완료 시 공유 재고에 추가되는 결과물(다음 장비 단계의 재료가 될 수 있다). */
+  produces?: Requirement[]
   description: string
   slot?: EquipmentSlot
   usesUpgradeHull?: boolean
   prerequisiteRecipeIds?: string[]
+  prerequisiteLabel?: string
+  codexDesignId?: string
+  codexItemId?: string
 }
 export interface Ship {
   id: string
@@ -69,6 +74,7 @@ export interface BarterSession {
 export interface CraftRecord {
   completedAt: string
   consumedMaterials: Record<string, number>
+  producedMaterials?: Record<string, number>
 }
 export interface QuestRewardOption {
   id: string

@@ -1069,6 +1069,18 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
+                {recipe.produces?.length ? (
+                  <p className="craft-result">
+                    제작 결과 ·{' '}
+                    {recipe.produces
+                      .map(
+                        (product) =>
+                          `${materialById[product.materialId].name} ${number(product.quantity)}개`,
+                      )
+                      .join(' · ')}{' '}
+                    재고에 추가
+                  </p>
+                ) : null}
                 <div className="modal-actions">
                   <button onClick={() => setCraftConfirm(null)}>취소</button>
                   <button className="primary" onClick={completeCraft}>

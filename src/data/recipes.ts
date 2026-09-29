@@ -1,4 +1,4 @@
-import type { CarrackHull, EquipmentSlot, Hull, Recipe, Stage } from '../types'
+import type { CarrackHull, EquipmentSlot, Hull, Recipe } from '../types'
 
 const r = (materialId: string, quantity: number) => ({ materialId, quantity })
 
@@ -59,30 +59,92 @@ const carrackName: Record<CarrackHull, string> = {
   volante: '에페리아 중범선 비상',
   valor: '에페리아 중범선 용맹',
 }
-const carrackSlots: { slot: EquipmentSlot; name: string }[] = [
-  { slot: 'figurehead', name: '선수상' },
-  { slot: 'plating', name: '장갑' },
-  { slot: 'cannon', name: '함포' },
-  { slot: 'sail', name: '돛' },
+const carrackSlots: {
+  slot: EquipmentSlot
+  name: string
+  materialKey: 'cannon' | 'sail' | 'figurehead' | 'plating'
+}[] = [
+  { slot: 'cannon', name: '함포', materialKey: 'cannon' },
+  { slot: 'sail', name: '돛', materialKey: 'sail' },
+  { slot: 'figurehead', name: '선수상', materialKey: 'figurehead' },
+  { slot: 'plating', name: '장갑', materialKey: 'plating' },
 ]
-const carrackGear = (
-  stage: Stage,
-  maker: '치로' | '팔라시',
-  reqs: ReturnType<typeof r>[],
-): Recipe[] =>
-  carrackHulls.flatMap((hull) =>
-    carrackSlots.map(({ slot, name }) => ({
-      // 제작 완료 기록은 선박 ID와 조합한다. 기존 저장 데이터의 레시피 ID도 유지한다.
-      id: `${stage}-${maker}의 ${name}`,
-      name: `${carrackName[hull]}: ${maker}의 ${maker === '치로' && slot === 'plating' ? '흑장갑' : name}`,
-      slot,
-      stage,
-      hulls: [hull],
-      description:
-        stage === 3 ? '중범선 파란색 등급 치로 장비 제작' : '중범선 노란색 등급 팔라시 장비 제작',
-      requirements: reqs,
-    })),
-  )
+const carrackGearIds: Record<
+  CarrackHull,
+  {
+    chiroDesignStart: number
+    chiroItemStart: number
+    falasiDesignStart: number
+    falasiItemStart: number
+  }
+> = {
+  advance: {
+    chiroDesignStart: 8987,
+    chiroItemStart: 49746,
+    falasiDesignStart: 9041,
+    falasiItemStart: 49778,
+  },
+  balance: {
+    chiroDesignStart: 8992,
+    chiroItemStart: 49762,
+    falasiDesignStart: 9045,
+    falasiItemStart: 49782,
+  },
+  volante: {
+    chiroDesignStart: 8996,
+    chiroItemStart: 49766,
+    falasiDesignStart: 9049,
+    falasiItemStart: 49786,
+  },
+  valor: {
+    chiroDesignStart: 9000,
+    chiroItemStart: 49770,
+    falasiDesignStart: 9053,
+    falasiItemStart: 49790,
+  },
+}
+
+/** BDO Codex 디자인(치로 1단계/팔라시 2단계) 기준의 중범선 장비 제작식. */
+const carrackGear = (stage: 3 | 4, maker: '치로' | '팔라시'): Recipe[] =>
+  carrackHulls.flatMap((hull) => {
+    const ids = carrackGearIds[hull]
+    return carrackSlots.map(({ slot, name, materialKey }, index) => {
+      const isChiro = maker === '치로'
+      const designId = isChiro ? ids.chiroDesignStart + index : ids.falasiDesignStart + index
+      const itemId = isChiro ? ids.chiroItemStart + index : ids.falasiItemStart + index
+      const outputId = `${isChiro ? 'chiro' : 'falasi'}-${hull}-${materialKey}`
+      const requirements = isChiro
+        ? [
+            r(`toro-${materialKey}`, 1),
+            r('violent', 100),
+            r('support', 100),
+            r('adhesive', 100),
+            r(`chiro-blueprint-${materialKey}`, 10),
+            r(`carrack-permit-${hull}`, 1),
+          ]
+        : [
+            r(`chiro-${hull}-${materialKey}`, 1),
+            r(`falasi-blueprint-${materialKey}`, 10),
+            r('coral', 125),
+            r('rough', 75),
+            r('crimson', 50),
+            r(`falasi-permit-${hull}`, 1),
+          ]
+      const equipmentName = isChiro && slot === 'plating' ? '흑장갑' : name
+      return {
+        id: `${stage}-${maker}의 ${name}`,
+        name: `${carrackName[hull]}: ${maker}의 ${equipmentName}`,
+        slot,
+        stage,
+        hulls: [hull],
+        description: `일리야섬 3번지 치로의 선박 부품 공방 ${isChiro ? 1 : 2}단계 제작`,
+        requirements,
+        produces: [r(outputId, 1)],
+        codexDesignId: String(designId),
+        codexItemId: String(itemId),
+      }
+    })
+  })
 const blueRecipeIds = (hull: 'trade' | 'warship') => [
   `blue-figure-${hull}`,
   `blue-plating-${hull}`,
@@ -187,6 +249,6 @@ export const recipes: Recipe[] = [
       r('tear', 42),
     ],
   },
-  ...carrackGear(3, '치로', [r('violent', 100), r('support', 100), r('adhesive', 100)]),
-  ...carrackGear(4, '팔라시', [r('rough', 75), r('coral', 125), r('crimson', 50)]),
+  ...carrackGear(3, '치로'),
+  ...carrackGear(4, '팔라시'),
 ]

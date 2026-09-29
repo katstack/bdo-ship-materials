@@ -125,9 +125,242 @@ export const items: ItemRecord[] = [
     codexItemId: '8021',
     crowCoinPrice: 300,
   },
-  { materialId: 'rough', name: '거센 파도가 새겨진 합판' },
-  { materialId: 'coral', name: '견고한 산호 지지대' },
-  { materialId: 'crimson', name: '진홍빛 산호가 잠든 접착제' },
+  { materialId: 'rough', name: '거센 파도가 새겨진 합판', codexItemId: '821366' },
+  { materialId: 'coral', name: '견고한 산호 지지대', codexItemId: '821365' },
+  { materialId: 'crimson', name: '진홍빛 산호가 잠든 접착제', codexItemId: '821367' },
+  // 중범선 장비의 선행 장비와 제작 재료. ID는 BDO Codex 디자인 상세에서 확인한다.
+  { materialId: 'toro-cannon', name: '에페리아 중범선: 토로의 함포 (+10)', codexItemId: '49742' },
+  { materialId: 'toro-sail', name: '에페리아 중범선: 토로의 돛 (+10)', codexItemId: '49743' },
+  {
+    materialId: 'toro-figurehead',
+    name: '에페리아 중범선: 토로의 선수상 (+10)',
+    codexItemId: '49744',
+  },
+  { materialId: 'toro-plating', name: '에페리아 중범선: 토로의 장갑 (+10)', codexItemId: '49745' },
+  { materialId: 'chiro-blueprint-cannon', name: '설계도면 : 치로의 함포', codexItemId: '8012' },
+  { materialId: 'chiro-blueprint-sail', name: '설계도면 : 치로의 돛', codexItemId: '8013' },
+  {
+    materialId: 'chiro-blueprint-figurehead',
+    name: '설계도면 : 치로의 선수상',
+    codexItemId: '8014',
+  },
+  { materialId: 'chiro-blueprint-plating', name: '설계도면 : 치로의 흑장갑', codexItemId: '8015' },
+  {
+    materialId: 'carrack-permit-advance',
+    name: '에페리아 중범선 부품 개조 허가증 : 점진',
+    codexItemId: '59316',
+  },
+  {
+    materialId: 'carrack-permit-balance',
+    name: '에페리아 중범선 부품 개조 허가증 : 균형',
+    codexItemId: '59317',
+  },
+  {
+    materialId: 'carrack-permit-volante',
+    name: '에페리아 중범선 부품 개조 허가증 : 비상',
+    codexItemId: '59318',
+  },
+  {
+    materialId: 'carrack-permit-valor',
+    name: '에페리아 중범선 부품 개조 허가증 : 용맹',
+    codexItemId: '59319',
+  },
+  {
+    materialId: 'falasi-blueprint-cannon',
+    name: '설계도면 : 팔라시의 함포',
+    codexItemId: '821354',
+  },
+  { materialId: 'falasi-blueprint-sail', name: '설계도면 : 팔라시의 돛', codexItemId: '821355' },
+  {
+    materialId: 'falasi-blueprint-figurehead',
+    name: '설계도면 : 팔라시의 선수상',
+    codexItemId: '821356',
+  },
+  {
+    materialId: 'falasi-blueprint-plating',
+    name: '설계도면 : 팔라시의 장갑',
+    codexItemId: '821357',
+  },
+  {
+    materialId: 'falasi-permit-advance',
+    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 점진',
+    codexItemId: '59464',
+  },
+  {
+    materialId: 'falasi-permit-balance',
+    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 균형',
+    codexItemId: '59465',
+  },
+  {
+    materialId: 'falasi-permit-volante',
+    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 비상',
+    codexItemId: '59466',
+  },
+  {
+    materialId: 'falasi-permit-valor',
+    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 용맹',
+    codexItemId: '59467',
+  },
+  {
+    materialId: 'chiro-advance-cannon',
+    name: '에페리아 중범선 점진: 치로의 함포 (+10)',
+    codexItemId: '49746',
+  },
+  {
+    materialId: 'chiro-advance-sail',
+    name: '에페리아 중범선 점진: 치로의 돛 (+10)',
+    codexItemId: '49747',
+  },
+  {
+    materialId: 'chiro-advance-figurehead',
+    name: '에페리아 중범선 점진: 치로의 선수상 (+10)',
+    codexItemId: '49748',
+  },
+  {
+    materialId: 'chiro-advance-plating',
+    name: '에페리아 중범선 점진: 치로의 흑장갑 (+10)',
+    codexItemId: '49749',
+  },
+  {
+    materialId: 'chiro-balance-cannon',
+    name: '에페리아 중범선 균형: 치로의 함포 (+10)',
+    codexItemId: '49762',
+  },
+  {
+    materialId: 'chiro-balance-sail',
+    name: '에페리아 중범선 균형: 치로의 돛 (+10)',
+    codexItemId: '49763',
+  },
+  {
+    materialId: 'chiro-balance-figurehead',
+    name: '에페리아 중범선 균형: 치로의 선수상 (+10)',
+    codexItemId: '49764',
+  },
+  {
+    materialId: 'chiro-balance-plating',
+    name: '에페리아 중범선 균형: 치로의 흑장갑 (+10)',
+    codexItemId: '49765',
+  },
+  {
+    materialId: 'chiro-volante-cannon',
+    name: '에페리아 중범선 비상: 치로의 함포 (+10)',
+    codexItemId: '49766',
+  },
+  {
+    materialId: 'chiro-volante-sail',
+    name: '에페리아 중범선 비상: 치로의 돛 (+10)',
+    codexItemId: '49767',
+  },
+  {
+    materialId: 'chiro-volante-figurehead',
+    name: '에페리아 중범선 비상: 치로의 선수상 (+10)',
+    codexItemId: '49768',
+  },
+  {
+    materialId: 'chiro-volante-plating',
+    name: '에페리아 중범선 비상: 치로의 흑장갑 (+10)',
+    codexItemId: '49769',
+  },
+  {
+    materialId: 'chiro-valor-cannon',
+    name: '에페리아 중범선 용맹: 치로의 함포 (+10)',
+    codexItemId: '49770',
+  },
+  {
+    materialId: 'chiro-valor-sail',
+    name: '에페리아 중범선 용맹: 치로의 돛 (+10)',
+    codexItemId: '49771',
+  },
+  {
+    materialId: 'chiro-valor-figurehead',
+    name: '에페리아 중범선 용맹: 치로의 선수상 (+10)',
+    codexItemId: '49772',
+  },
+  {
+    materialId: 'chiro-valor-plating',
+    name: '에페리아 중범선 용맹: 치로의 흑장갑 (+10)',
+    codexItemId: '49773',
+  },
+  {
+    materialId: 'falasi-advance-cannon',
+    name: '에페리아 중범선 점진: 팔라시의 함포 (+10)',
+    codexItemId: '49778',
+  },
+  {
+    materialId: 'falasi-advance-sail',
+    name: '에페리아 중범선 점진: 팔라시의 돛 (+10)',
+    codexItemId: '49779',
+  },
+  {
+    materialId: 'falasi-advance-figurehead',
+    name: '에페리아 중범선 점진: 팔라시의 선수상 (+10)',
+    codexItemId: '49780',
+  },
+  {
+    materialId: 'falasi-advance-plating',
+    name: '에페리아 중범선 점진: 팔라시의 장갑 (+10)',
+    codexItemId: '49781',
+  },
+  {
+    materialId: 'falasi-balance-cannon',
+    name: '에페리아 중범선 균형: 팔라시의 함포 (+10)',
+    codexItemId: '49782',
+  },
+  {
+    materialId: 'falasi-balance-sail',
+    name: '에페리아 중범선 균형: 팔라시의 돛 (+10)',
+    codexItemId: '49783',
+  },
+  {
+    materialId: 'falasi-balance-figurehead',
+    name: '에페리아 중범선 균형: 팔라시의 선수상 (+10)',
+    codexItemId: '49784',
+  },
+  {
+    materialId: 'falasi-balance-plating',
+    name: '에페리아 중범선 균형: 팔라시의 장갑 (+10)',
+    codexItemId: '49785',
+  },
+  {
+    materialId: 'falasi-volante-cannon',
+    name: '에페리아 중범선 비상: 팔라시의 함포 (+10)',
+    codexItemId: '49786',
+  },
+  {
+    materialId: 'falasi-volante-sail',
+    name: '에페리아 중범선 비상: 팔라시의 돛 (+10)',
+    codexItemId: '49787',
+  },
+  {
+    materialId: 'falasi-volante-figurehead',
+    name: '에페리아 중범선 비상: 팔라시의 선수상 (+10)',
+    codexItemId: '49788',
+  },
+  {
+    materialId: 'falasi-volante-plating',
+    name: '에페리아 중범선 비상: 팔라시의 장갑 (+10)',
+    codexItemId: '49789',
+  },
+  {
+    materialId: 'falasi-valor-cannon',
+    name: '에페리아 중범선 용맹: 팔라시의 함포 (+10)',
+    codexItemId: '49790',
+  },
+  {
+    materialId: 'falasi-valor-sail',
+    name: '에페리아 중범선 용맹: 팔라시의 돛 (+10)',
+    codexItemId: '49791',
+  },
+  {
+    materialId: 'falasi-valor-figurehead',
+    name: '에페리아 중범선 용맹: 팔라시의 선수상 (+10)',
+    codexItemId: '49792',
+  },
+  {
+    materialId: 'falasi-valor-plating',
+    name: '에페리아 중범선 용맹: 팔라시의 장갑 (+10)',
+    codexItemId: '49793',
+  },
 ]
 
 export const itemByMaterialId = Object.fromEntries(

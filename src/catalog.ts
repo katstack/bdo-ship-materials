@@ -184,6 +184,53 @@ export const materials: MaterialDefinition[] = [
     undefined,
     '린바크의 진액 + 별빛 강화제 + 별빛 유화제 간이 연금',
   ),
+  ...['toro-cannon', 'toro-sail', 'toro-figurehead', 'toro-plating'].map((id) =>
+    m(id, '', undefined, '에페리아 중범선: 토로 장비 강화 +10'),
+  ),
+  ...[
+    'chiro-blueprint-cannon',
+    'chiro-blueprint-sail',
+    'chiro-blueprint-figurehead',
+    'chiro-blueprint-plating',
+  ].map((id) => m(id, '', undefined, '중범선 장비 제작 노드')),
+  ...[
+    'carrack-permit-advance',
+    'carrack-permit-balance',
+    'carrack-permit-volante',
+    'carrack-permit-valor',
+  ].map((id) => m(id, '', undefined, '에페리아 항구 마을 필라베르토 팔라시 판매')),
+  ...[
+    'falasi-blueprint-cannon',
+    'falasi-blueprint-sail',
+    'falasi-blueprint-figurehead',
+    'falasi-blueprint-plating',
+  ].map((id) => m(id, '', undefined, '중범선 장비 제작 노드')),
+  ...[
+    'falasi-permit-advance',
+    'falasi-permit-balance',
+    'falasi-permit-volante',
+    'falasi-permit-valor',
+  ].map((id) => m(id, '', undefined, '에페리아 항구 마을 필라베르토 팔라시 판매')),
+  ...(['advance', 'balance', 'volante', 'valor'] as const).flatMap((hull) =>
+    ['cannon', 'sail', 'figurehead', 'plating'].map((slot) =>
+      m(
+        `chiro-${hull}-${slot}`,
+        '',
+        undefined,
+        '치로의 선박 부품 공방 1단계 제작 후 파도의 블랙스톤 강화 +10',
+      ),
+    ),
+  ),
+  ...(['advance', 'balance', 'volante', 'valor'] as const).flatMap((hull) =>
+    ['cannon', 'sail', 'figurehead', 'plating'].map((slot) =>
+      m(
+        `falasi-${hull}-${slot}`,
+        '',
+        undefined,
+        '치로의 선박 부품 공방 2단계 제작 후 노을진 파도의 블랙스톤 강화 +10',
+      ),
+    ),
+  ),
 ]
 const r = (materialId: string, quantity: number) => ({ materialId, quantity })
 const choice = (id: string, label: string, ...rewards: ReturnType<typeof r>[]) => ({

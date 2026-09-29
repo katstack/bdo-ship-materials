@@ -38,13 +38,22 @@ export function completeRecipe(
     // 완료 기록은 요구 수량 전체를 남긴다. 취소 시 같은 수량을 되돌릴 수 있다.
     consumedMaterials[requirement.materialId] = requirement.quantity
   })
+  const producedMaterials: Record<string, number> = {}
+  recipe.produces?.forEach((product) => {
+    inventory[product.materialId] = quantity(inventory[product.materialId]) + product.quantity
+    producedMaterials[product.materialId] = product.quantity
+  })
 
   return {
     ...data,
     inventory,
     completedRecipes: {
       ...data.completedRecipes,
-      [key]: { completedAt, consumedMaterials },
+      [key]: {
+        completedAt,
+        consumedMaterials,
+        ...(Object.keys(producedMaterials).length ? { producedMaterials } : {}),
+      },
     },
   }
 }
@@ -55,6 +64,9 @@ export function undoRecipeCompletion(data: AppData, shipId: string, recipeId: st
   if (!record) throw new Error('완료 기록을 찾을 수 없습니다.')
 
   const inventory = { ...data.inventory }
+  Object.entries(record.producedMaterials || {}).forEach(([materialId, produced]) => {
+    inventory[materialId] = Math.max(0, quantity(inventory[materialId]) - quantity(produced))
+  })
   Object.entries(record.consumedMaterials).forEach(([materialId, consumed]) => {
     inventory[materialId] = quantity(inventory[materialId]) + quantity(consumed)
   })
