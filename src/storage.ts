@@ -106,16 +106,24 @@ export function normalize(input: unknown): AppData {
     }),
   )
   const rawBarter = raw.barterSession as Partial<AppData['barterSession']> | undefined
+  const exchangeCounts = Object.entries(rawBarter?.exchangeCounts || {}).reduce<
+    Record<string, number>
+  >((result, [id, count]) => {
+    // 기존 짙은 파도빛 각목은 당시 고정 1:2였으므로 해당 변동 행으로 옮긴다.
+    // 잘못 배포됐던 파도빛 각목 변동 행은 원래의 1:1 행으로 합친다.
+    const key =
+      id === 'deep-tide'
+        ? materialExchangeKey('deep-tide', 2)
+        : id === 'wave@1' || id === 'wave@2'
+          ? 'wave'
+          : id
+    result[key] = (result[key] || 0) + clamp(Number(count))
+    return result
+  }, {})
   const barterSession = {
     costPerExchange: clamp(Number(rawBarter?.costPerExchange)),
     addToInventory: rawBarter?.addToInventory !== false,
-    exchangeCounts: Object.fromEntries(
-      Object.entries(rawBarter?.exchangeCounts || {}).map(([id, count]) => [
-        // 변동 비율 도입 전의 각목 거래 지정은 보수적인 1:1 항목으로 옮긴다.
-        id === 'wave' ? materialExchangeKey('wave', 1) : id,
-        clamp(Number(count)),
-      ]),
-    ),
+    exchangeCounts,
   }
   return {
     version: 3,

@@ -64,7 +64,7 @@ export function BarterPriorityTable({
             const count = session.exchangeCounts[row.exchangeKey] || 0
             return (
               <tr
-                key={row.id}
+                key={row.exchangeKey}
                 className={`${count ? 'barter-listed' : ''} ${flashId === row.exchangeKey ? 'barter-flash' : ''}`}
                 onClick={() => onAdd(row)}
                 onContextMenu={(event) => {

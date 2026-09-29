@@ -5,8 +5,7 @@ export const materialExchangeOutputs: Record<string, number | number[]> = {
   island: 50,
   enhanced: 10,
   steel: 3,
-  'deep-tide': 2,
-  wave: [1, 2],
+  'deep-tide': [1, 2],
 }
 
 export const materialExchangeOutputOptions = (materialId: string) => {

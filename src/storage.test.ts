@@ -37,10 +37,17 @@ describe('stored progress normalization', () => {
     expect(restored.ships[1].activeStage).toBe(3)
   })
 
-  it('moves legacy wave barter listings to the 1:1 variable-rate listing', () => {
+  it('moves legacy deep-tide barter listings to the former 1:2 variable-rate listing', () => {
     const saved = structuredClone(sampleData)
-    saved.barterSession.exchangeCounts = { wave: 2 }
+    saved.barterSession.exchangeCounts = { 'deep-tide': 2 }
 
-    expect(normalize(saved).barterSession.exchangeCounts).toEqual({ 'wave@1': 2 })
+    expect(normalize(saved).barterSession.exchangeCounts).toEqual({ 'deep-tide@2': 2 })
+  })
+
+  it('folds the incorrectly published wave variants back to the fixed 1:1 listing', () => {
+    const saved = structuredClone(sampleData)
+    saved.barterSession.exchangeCounts = { 'wave@1': 2, 'wave@2': 1 }
+
+    expect(normalize(saved).barterSession.exchangeCounts).toEqual({ wave: 3 })
   })
 })
