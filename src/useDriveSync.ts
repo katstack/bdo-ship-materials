@@ -52,6 +52,7 @@ export function useDriveSync(
   const rememberedConnectionRef = useRef(hasRememberedConnection)
   const tokenRequestInFlight = useRef(false)
   const needsInteractiveAuth = useRef(false)
+  const silentResumeAttempted = useRef(false)
   useEffect(() => {
     dataRef.current = data
   }, [data])
@@ -112,7 +113,7 @@ export function useDriveSync(
     })
   }, [write])
   const requestToken = useCallback(
-    async (prompt: '' | 'select_account') => {
+    async (prompt: 'none' | 'select_account') => {
       if (tokenRequestInFlight.current) return
       const clientId = getClientId()
       if (!clientId) {
@@ -149,10 +150,10 @@ export function useDriveSync(
           error_callback: (issue) => {
             tokenRequestInFlight.current = false
             needsInteractiveAuth.current = true
-            setStatus(prompt === '' ? 'disconnected' : 'failed')
+            setStatus(prompt === 'none' ? 'disconnected' : 'failed')
             setError(
-              prompt === ''
-                ? 'Google 세션 확인이 필요합니다. Drive 상태를 눌러 다시 연결하세요.'
+              prompt === 'none'
+                ? 'Google 로그인 세션을 확인할 수 없습니다. 상단의 Google 계정을 눌러 다시 연결하세요.'
                 : issue.message || 'Google 인증 창을 닫았습니다.',
             )
           },
@@ -177,7 +178,9 @@ export function useDriveSync(
         needsInteractiveAuth.current,
       )
     )
-      void requestToken('')
+      // `none`은 Google 계정 선택창·동의창을 절대 표시하지 않는다. 기존 Google 세션과
+      // 권한이 모두 남아 있을 때에만 새 access token을 돌려준다.
+      void requestToken('none')
   }, [requestToken])
   const reauthorize = useCallback(() => {
     if (needsInteractiveAuth.current) {
@@ -186,17 +189,14 @@ export function useDriveSync(
     }
     resumeSilently()
   }, [authorize, resumeSilently])
-  // GIS를 미리 불러 두면 다음 일반 클릭에서 조용히 재인가할 수 있다.
+  // 앱 진입 시 한 번만 무표시 재인증한다. 일반 화면 클릭은 인증 시도로 사용하지 않는다.
   useEffect(() => {
-    if (rememberedConnectionRef.current) void loadGoogleIdentity().catch(() => undefined)
-  }, [])
-  // 토큰 만료 뒤의 다음 일반 조작을 authorization gesture로 사용한다.
-  useEffect(() => {
-    if (!hasRememberedConnection) return
-    const onUserAction = () => resumeSilently()
-    window.addEventListener('pointerdown', onUserAction, { capture: true })
-    return () => window.removeEventListener('pointerdown', onUserAction, { capture: true })
-  }, [hasRememberedConnection, resumeSilently])
+    if (!rememberedConnectionRef.current || token.current || silentResumeAttempted.current) return
+    silentResumeAttempted.current = true
+    void loadGoogleIdentity()
+      .then(resumeSilently)
+      .catch(() => undefined)
+  }, [hasRememberedConnection, resumeSilently, status])
   // 캐시 토큰이 남아 있으면 Drive 파일만 읽어 비교한다. GIS 인증 요청은 하지 않으므로 팝업이 없다.
   useEffect(() => {
     if (!token.current) return
@@ -231,6 +231,7 @@ export function useDriveSync(
     setDriveConnected(false)
     setHasRememberedConnection(false)
     needsInteractiveAuth.current = false
+    silentResumeAttempted.current = false
     setConflict(null)
     setStatus('disconnected')
     setLastSavedAt(null)

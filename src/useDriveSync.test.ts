@@ -11,7 +11,7 @@ describe('first Drive connection', () => {
     expect(shouldRestoreDriveOnFirstConnection(false, false)).toBe(false)
   })
 
-  it('uses the next normal user action to silently resume a remembered connection', () => {
+  it('allows one non-interactive resume only for a remembered connection without a token', () => {
     expect(shouldAttemptSilentResume(true, false, false, false)).toBe(true)
     expect(shouldAttemptSilentResume(false, false, false, false)).toBe(false)
     expect(shouldAttemptSilentResume(true, true, false, false)).toBe(false)

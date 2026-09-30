@@ -436,13 +436,13 @@ export default function App() {
           >
             {drive.status === 'disconnected'
               ? drive.hasRememberedConnection
-                ? '● 동기화 대기'
-                : 'Google Drive 연결'
+                ? 'Google 계정 · 동기화 대기'
+                : 'Google 계정 연결'
               : drive.status === 'connecting'
-                ? 'Drive 연결 중…'
+                ? 'Google 계정 확인 중…'
                 : drive.status === 'synced'
-                  ? '● 동기화됨'
-                  : '● 동기화 실패'}
+                  ? 'Google 계정 · 동기화됨'
+                  : 'Google 계정 · 동기화 실패'}
           </button>
           <span className="save">
             {drive.lastSavedAt
