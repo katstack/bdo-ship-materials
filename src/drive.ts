@@ -11,6 +11,11 @@ declare global {
     google?: {
       accounts: {
         oauth2: { initTokenClient: (options: GoogleTokenClientConfig) => GoogleTokenClient }
+        id: {
+          initialize: (options: GoogleOneTapConfig) => void
+          prompt: () => void
+          cancel: () => void
+        }
       }
     }
   }
@@ -29,6 +34,12 @@ interface GoogleTokenResponse {
   error?: string
   error_description?: string
   expires_in?: number
+}
+interface GoogleOneTapConfig {
+  client_id: string
+  callback: (response: { credential?: string }) => void
+  cancel_on_tap_outside?: boolean
+  context?: 'signin'
 }
 interface DriveFile {
   id: string
@@ -78,7 +89,7 @@ export function clearCachedDriveToken() {
 }
 
 export async function loadGoogleIdentity() {
-  if (window.google?.accounts.oauth2) return
+  if (window.google?.accounts.oauth2 && window.google.accounts.id) return
   await new Promise<void>((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(`script[src="${GIS_URL}"]`)
     if (existing) {
@@ -97,8 +108,30 @@ export async function loadGoogleIdentity() {
     script.onerror = () => reject(new Error('Google Identity Services를 불러오지 못했습니다.'))
     document.head.append(script)
   })
-  if (!window.google?.accounts.oauth2)
+  if (!window.google?.accounts.oauth2 || !window.google.accounts.id)
     throw new Error('Google Identity Services를 초기화하지 못했습니다.')
+}
+
+/**
+ * Google One Tap은 새 창 OAuth가 아니라 페이지 우측 상단의 Google 카드다.
+ * ID credential은 저장하지 않고, 사용자가 '계속'을 누른 직후 Drive access token을 조용히 갱신하는
+ * 신호로만 사용한다.
+ */
+export function promptGoogleOneTap(onContinue: () => void) {
+  if (!window.google?.accounts.id) throw new Error('Google One Tap을 초기화하지 못했습니다.')
+  window.google.accounts.id.initialize({
+    client_id: getClientId(),
+    callback: (response) => {
+      if (response.credential) onContinue()
+    },
+    cancel_on_tap_outside: true,
+    context: 'signin',
+  })
+  window.google.accounts.id.prompt()
+}
+
+export function cancelGoogleOneTap() {
+  window.google?.accounts.id?.cancel()
 }
 export async function getDriveFile(token: string): Promise<{ id: string; data: AppData } | null> {
   const params = new URLSearchParams({

@@ -2,12 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AppData } from './types'
 import {
   cacheDriveToken,
+  cancelGoogleOneTap,
   clearCachedDriveToken,
   getCachedDriveToken,
   getClientId,
   getDriveFile,
   isDriveConnected,
   loadGoogleIdentity,
+  promptGoogleOneTap,
   saveDriveFile,
   setDriveConnected,
 } from './drive'
@@ -43,6 +45,7 @@ export function useDriveSync(
   const hasLocalProgressRef = useRef(hasLocalProgress)
   const replaceLocalRef = useRef(replaceLocal)
   const tokenRequestInFlight = useRef(false)
+  const oneTapPrompted = useRef(false)
   useEffect(() => {
     dataRef.current = data
   }, [data])
@@ -99,55 +102,65 @@ export function useDriveSync(
       newer: Date.parse(remote.data.updatedAt) > Date.parse(local.updatedAt) ? 'drive' : 'local',
     })
   }, [write])
-  const requestToken = useCallback(async () => {
-    if (tokenRequestInFlight.current) return
-    const clientId = getClientId()
-    if (!clientId) {
-      setStatus('failed')
-      setError('Google OAuth Client ID를 설정하세요.')
-      return
-    }
-    try {
-      tokenRequestInFlight.current = true
-      setStatus('connecting')
-      await loadGoogleIdentity()
-      const client = window.google!.accounts.oauth2.initTokenClient({
-        client_id: clientId,
-        scope: 'https://www.googleapis.com/auth/drive.appdata',
-        callback: (response) => {
-          if (!response.access_token) {
+  const requestToken = useCallback(
+    async (prompt: 'none' | 'select_account') => {
+      if (tokenRequestInFlight.current) return
+      const clientId = getClientId()
+      if (!clientId) {
+        setStatus('failed')
+        setError('Google OAuth Client ID를 설정하세요.')
+        return
+      }
+      try {
+        tokenRequestInFlight.current = true
+        setStatus('connecting')
+        await loadGoogleIdentity()
+        const client = window.google!.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: 'https://www.googleapis.com/auth/drive.appdata',
+          callback: (response) => {
+            if (!response.access_token) {
+              tokenRequestInFlight.current = false
+              setStatus('failed')
+              setError(response.error_description || 'Google 인증에 실패했습니다.')
+              return
+            }
+            token.current = response.access_token
+            cacheDriveToken(response.access_token, response.expires_in)
+            setDriveConnected(true)
+            setHasRememberedConnection(true)
             tokenRequestInFlight.current = false
-            setStatus('failed')
-            setError(response.error_description || 'Google 인증에 실패했습니다.')
-            return
-          }
-          token.current = response.access_token
-          cacheDriveToken(response.access_token, response.expires_in)
-          setDriveConnected(true)
-          setHasRememberedConnection(true)
-          tokenRequestInFlight.current = false
-          compare().catch((e) => {
-            setStatus('failed')
-            setError(e instanceof Error ? e.message : 'Drive 동기화에 실패했습니다.')
-          })
-        },
-        error_callback: (issue) => {
-          tokenRequestInFlight.current = false
-          setStatus('failed')
-          setError(issue.message || 'Google 인증 창을 닫았습니다.')
-        },
-      })
-      client.requestAccessToken({ prompt: 'select_account' })
-    } catch (e) {
-      tokenRequestInFlight.current = false
-      setStatus('failed')
-      setError(e instanceof Error ? e.message : 'Google Identity Services 오류')
-    }
-  }, [compare])
-  const authorize = useCallback(() => requestToken(), [requestToken])
-  // OAuth token 발급은 새로고침/화면 클릭으로 절대 요청하지 않는다. 브라우저마다 빈 prompt도
-  // 팝업으로 승격될 수 있기 때문이다. 유효한 캐시 토큰만 조용히 재사용한다.
+            compare().catch((e) => {
+              setStatus('failed')
+              setError(e instanceof Error ? e.message : 'Drive 동기화에 실패했습니다.')
+            })
+          },
+          error_callback: (issue) => {
+            tokenRequestInFlight.current = false
+            setStatus(prompt === 'none' ? 'disconnected' : 'failed')
+            setError(prompt === 'none' ? '' : issue.message || 'Google 인증 창을 닫았습니다.')
+          },
+        })
+        client.requestAccessToken({ prompt })
+      } catch (e) {
+        tokenRequestInFlight.current = false
+        setStatus('failed')
+        setError(e instanceof Error ? e.message : 'Google Identity Services 오류')
+      }
+    },
+    [compare],
+  )
+  const authorize = useCallback(() => requestToken('select_account'), [requestToken])
+  // OAuth token 발급은 새로고침에 직접 요청하지 않는다. 이전에 연결한 브라우저는 Google One Tap
+  // 카드의 '계속'으로만 시작하며, 이후 `none` 토큰 요청은 추가 창을 띄우지 않는다.
   const reauthorize = authorize
+  useEffect(() => {
+    if (!hasRememberedConnection || token.current || oneTapPrompted.current) return
+    oneTapPrompted.current = true
+    void loadGoogleIdentity()
+      .then(() => promptGoogleOneTap(() => void requestToken('none')))
+      .catch(() => undefined)
+  }, [hasRememberedConnection, requestToken])
   // 캐시 토큰이 남아 있으면 Drive 파일만 읽어 비교한다. GIS 인증 요청은 하지 않으므로 팝업이 없다.
   useEffect(() => {
     if (!token.current) return
@@ -176,6 +189,7 @@ export function useDriveSync(
     } else await write(current.local)
   }
   const disconnect = () => {
+    cancelGoogleOneTap()
     token.current = ''
     fileId.current = undefined
     clearCachedDriveToken()
@@ -185,6 +199,7 @@ export function useDriveSync(
     setStatus('disconnected')
     setLastSavedAt(null)
     setError('')
+    oneTapPrompted.current = false
   }
   return {
     status,
