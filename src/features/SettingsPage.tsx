@@ -84,8 +84,8 @@ export function SettingsPage({
       <div className="panel manage">
         <h2>Google Drive 동기화</h2>
         <p>
-          진행 데이터만 앱 전용 Drive 저장소에 동기화합니다. 앱을 다시 열 때 계정 선택 창은 자동으로
-          띄우지 않으며, Google 세션 확인이 필요한 경우에만 직접 연결합니다.
+          진행 데이터만 앱 전용 Drive 저장소에 동기화합니다. 앱을 다시 열 때는 유효한 저장 토큰만
+          재사용하며, 계정 선택 창을 자동으로 띄우지 않습니다.
         </p>
         {drive.status === 'disconnected' || drive.status === 'failed' ? (
           <button
