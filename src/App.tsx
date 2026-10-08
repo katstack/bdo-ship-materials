@@ -456,6 +456,29 @@ export default function App() {
           </span>
         </div>
       </header>
+      <div className="fleet-context">
+        <label htmlFor="current-ship">
+          <span>현재 선박</span>
+          <select
+            id="current-ship"
+            value={selected}
+            onChange={(event) => setSelected(event.target.value)}
+            disabled={!data.ships.length}
+          >
+            {!data.ships.length && <option value="">등록한 선박이 없습니다</option>}
+            {data.ships.map((ship) => (
+              <option value={ship.id} key={ship.id}>
+                {ship.name} · {hullLabel[ship.hull]}
+              </option>
+            ))}
+          </select>
+        </label>
+        {currentShip && (
+          <span className="fleet-context-detail">
+            {hullLabel[currentShip.hull]} · {stageLabel[currentShip.activeStage]}
+          </span>
+        )}
+      </div>
       <nav>
         {(
           [
@@ -565,19 +588,6 @@ export default function App() {
       )}
       {tab === 'ship' && (
         <section>
-          {
-            <div className="equip-tabs">
-              {data.ships.map((ship) => (
-                <button
-                  key={ship.id}
-                  className={ship.id === selected ? 'active' : ''}
-                  onClick={() => setSelected(ship.id)}
-                >
-                  {ship.name}
-                </button>
-              ))}
-            </div>
-          }
           {currentShip ? (
             <>
               <div className="section-title">
