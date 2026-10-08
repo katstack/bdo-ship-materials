@@ -432,12 +432,25 @@ export const hullLabel: Record<Hull, string> = {
   'improved-sailboat': '개량형 에페리아 경범선',
   frigate: '에페리아 호위함',
   'improved-frigate': '개량형 에페리아 호위함',
+  trade: '에페리아 무역선',
+  warship: '에페리아 구축함',
+  balance: '에페리아 중범선 균형',
+  advance: '에페리아 중범선 점진',
+  volante: '에페리아 중범선 비상',
+  valor: '에페리아 중범선 용맹',
+}
+/** 이미 선박 계열이 드러난 화면에서 쓰는 짧은 표기. */
+export const shortHullLabel: Record<Hull, string> = {
+  sailboat: '경범선',
+  'improved-sailboat': '개량형 경범선',
+  frigate: '호위함',
+  'improved-frigate': '개량형 호위함',
   trade: '무역선',
   warship: '구축함',
-  balance: '중범선 균형',
-  advance: '중범선 점진',
-  volante: '중범선 비상',
-  valor: '중범선 용맹',
+  balance: '균형',
+  advance: '점진',
+  volante: '비상',
+  valor: '용맹',
 }
 export const upgradeTargets: Record<'trade' | 'warship', CarrackHull[]> = {
   trade: ['balance', 'advance'],

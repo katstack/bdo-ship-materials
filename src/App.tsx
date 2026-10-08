@@ -6,6 +6,7 @@ import {
   hullLabel,
   materials,
   materialById,
+  shortHullLabel,
   stageLabel,
   upgradeTargets,
 } from './catalog'
@@ -593,7 +594,7 @@ export default function App() {
               <div className="section-title">
                 <div>
                   <p>
-                    {hullLabel[currentShip.hull]} · {stageLabel[currentShip.activeStage]}
+                    {shortHullLabel[currentShip.hull]} · {stageLabel[currentShip.activeStage]}
                   </p>
                   <h2>{currentShip.name}</h2>
                 </div>
@@ -631,7 +632,7 @@ export default function App() {
                   >
                     {upgradeTargets[currentShip.hull].map((hull) => (
                       <option key={hull} value={hull}>
-                        {hullLabel[hull]}
+                        {shortHullLabel[hull]}
                       </option>
                     ))}
                   </select>
