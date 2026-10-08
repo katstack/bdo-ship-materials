@@ -27,7 +27,18 @@ export function normalize(input: unknown): AppData {
   if (!input || typeof input !== 'object') throw new Error('데이터 형식이 올바르지 않습니다.')
   const raw = input as Partial<AppData>
   if (!Array.isArray(raw.ships)) throw new Error('함대 목록을 찾을 수 없습니다.')
-  const hulls: Hull[] = ['trade', 'warship', 'balance', 'advance', 'volante', 'valor']
+  const hulls: Hull[] = [
+    'sailboat',
+    'improved-sailboat',
+    'frigate',
+    'improved-frigate',
+    'trade',
+    'warship',
+    'balance',
+    'advance',
+    'volante',
+    'valor',
+  ]
   const sortKeys: MaterialSortKey[] = [
     'name',
     'required',
@@ -59,7 +70,12 @@ export function normalize(input: unknown): AppData {
   const completedRecipes = Object.fromEntries(
     Object.entries(raw.completedRecipes || {}).flatMap(([key, value]) => {
       if (!value || typeof value !== 'object') return []
-      const record = value as { completedAt?: unknown; consumedMaterials?: unknown }
+      const record = value as {
+        completedAt?: unknown
+        consumedMaterials?: unknown
+        producedMaterials?: unknown
+        previousShip?: unknown
+      }
       if (
         typeof record.completedAt !== 'string' ||
         !record.consumedMaterials ||
@@ -76,6 +92,50 @@ export function normalize(input: unknown): AppData {
                 ([id, quantity]) => [id, clamp(Number(quantity))],
               ),
             ),
+            ...(record.producedMaterials && typeof record.producedMaterials === 'object'
+              ? {
+                  producedMaterials: Object.fromEntries(
+                    Object.entries(record.producedMaterials as Record<string, unknown>).map(
+                      ([id, quantity]) => [id, clamp(Number(quantity))],
+                    ),
+                  ),
+                }
+              : {}),
+            ...(record.previousShip && typeof record.previousShip === 'object'
+              ? {
+                  previousShip: (() => {
+                    const previous = record.previousShip as Partial<AppData['ships'][number]>
+                    const hulls: Hull[] = [
+                      'sailboat',
+                      'improved-sailboat',
+                      'frigate',
+                      'improved-frigate',
+                      'trade',
+                      'warship',
+                      'balance',
+                      'advance',
+                      'volante',
+                      'valor',
+                    ]
+                    const hull = hulls.includes(previous.hull as Hull)
+                      ? (previous.hull as Hull)
+                      : 'trade'
+                    return {
+                      hull,
+                      activeStage: Math.max(
+                        1,
+                        Math.min(4, Number(previous.activeStage) || 1),
+                      ) as Stage,
+                      upgradeHull: previous.upgradeHull,
+                      equipmentOrder:
+                        Array.isArray(previous.equipmentOrder) &&
+                        previous.equipmentOrder.length === 4
+                          ? previous.equipmentOrder
+                          : [...defaultEquipmentOrder[hull]],
+                    }
+                  })(),
+                }
+              : {}),
           },
         ],
       ]

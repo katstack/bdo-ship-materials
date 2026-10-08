@@ -126,4 +126,28 @@ describe('crafting domain', () => {
     const restored = undoRecipeCompletion(completed, 'advance-a', chiro.id)
     expect(restored.inventory['chiro-advance-cannon']).toBe(0)
   })
+
+  it('turns an Epheria sailboat into a trade ship after its expansion and restores it on undo', () => {
+    const data = freshSample()
+    const expansion = recipes.find((item) => item.id === 'expand-trade')!
+    data.ships[0] = {
+      ...data.ships[0],
+      hull: 'sailboat',
+      name: '경범선 A',
+      activeStage: 1,
+      upgradeHull: undefined,
+    }
+    data.inventory = Object.fromEntries(
+      expansion.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+    )
+
+    const completed = completeRecipe(data, shipId, expansion, '2026-01-01T00:00:00.000Z')
+    expect(completed.ships[0].hull).toBe('trade')
+    expect(completed.ships[0].activeStage).toBe(1)
+    expect(completed.ships[0].upgradeHull).toBe('advance')
+
+    const restored = undoRecipeCompletion(completed, shipId, expansion.id)
+    expect(restored.ships[0].hull).toBe('sailboat')
+    expect(restored.ships[0].upgradeHull).toBeUndefined()
+  })
 })

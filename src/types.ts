@@ -1,4 +1,14 @@
-export type Hull = 'trade' | 'warship' | 'balance' | 'advance' | 'volante' | 'valor'
+export type Hull =
+  | 'sailboat'
+  | 'improved-sailboat'
+  | 'frigate'
+  | 'improved-frigate'
+  | 'trade'
+  | 'warship'
+  | 'balance'
+  | 'advance'
+  | 'volante'
+  | 'valor'
 export type CarrackHull = 'balance' | 'advance' | 'volante' | 'valor'
 export type Stage = 1 | 2 | 3 | 4
 export type EquipmentSlot = 'figurehead' | 'plating' | 'cannon' | 'sail'
@@ -28,6 +38,8 @@ export interface Recipe {
   prerequisiteLabel?: string
   codexDesignId?: string
   codexItemId?: string
+  /** 선박 증축이 끝난 직후 자동 전환할 선박 종류. */
+  resultHull?: 'trade' | 'warship'
 }
 export interface Ship {
   id: string
@@ -75,6 +87,7 @@ export interface CraftRecord {
   completedAt: string
   consumedMaterials: Record<string, number>
   producedMaterials?: Record<string, number>
+  previousShip?: Pick<Ship, 'hull' | 'activeStage' | 'upgradeHull' | 'equipmentOrder'>
 }
 export interface QuestRewardOption {
   id: string

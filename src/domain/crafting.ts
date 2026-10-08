@@ -1,3 +1,4 @@
+import { defaultEquipmentOrder, defaultUpgradeHull } from '../catalog'
 import type { AppData, Recipe } from '../types'
 
 const quantity = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
@@ -44,15 +45,41 @@ export function completeRecipe(
     producedMaterials[product.materialId] = product.quantity
   })
 
+  const ship = data.ships.find((candidate) => candidate.id === shipId)
+  const previousShip =
+    ship && recipe.resultHull
+      ? {
+          hull: ship.hull,
+          activeStage: ship.activeStage,
+          upgradeHull: ship.upgradeHull,
+          equipmentOrder: [...ship.equipmentOrder],
+        }
+      : undefined
+  const ships = recipe.resultHull
+    ? data.ships.map((candidate) =>
+        candidate.id === shipId
+          ? {
+              ...candidate,
+              hull: recipe.resultHull!,
+              activeStage: 1 as const,
+              upgradeHull: defaultUpgradeHull[recipe.resultHull!],
+              equipmentOrder: [...defaultEquipmentOrder[recipe.resultHull!]],
+            }
+          : candidate,
+      )
+    : data.ships
+
   return {
     ...data,
     inventory,
+    ships,
     completedRecipes: {
       ...data.completedRecipes,
       [key]: {
         completedAt,
         consumedMaterials,
         ...(Object.keys(producedMaterials).length ? { producedMaterials } : {}),
+        ...(previousShip ? { previousShip } : {}),
       },
     },
   }
@@ -72,5 +99,17 @@ export function undoRecipeCompletion(data: AppData, shipId: string, recipeId: st
   })
   const completedRecipes = { ...data.completedRecipes }
   delete completedRecipes[key]
-  return { ...data, inventory, completedRecipes }
+  const previousShip = record.previousShip
+  const ships = previousShip
+    ? data.ships.map((ship) =>
+        ship.id === shipId
+          ? {
+              ...ship,
+              ...previousShip,
+              equipmentOrder: [...previousShip.equipmentOrder],
+            }
+          : ship,
+      )
+    : data.ships
+  return { ...data, inventory, ships, completedRecipes }
 }

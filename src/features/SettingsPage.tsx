@@ -53,7 +53,13 @@ export function SettingsPage({
                 onEditShip({
                   ...ship,
                   hull,
-                  activeStage: hull === 'trade' || hull === 'warship' ? 1 : 3,
+                  activeStage:
+                    hull === 'balance' ||
+                    hull === 'advance' ||
+                    hull === 'volante' ||
+                    hull === 'valor'
+                      ? 3
+                      : 1,
                   upgradeHull:
                     hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
                   equipmentOrder: [...defaultEquipmentOrder[hull]],
@@ -72,13 +78,24 @@ export function SettingsPage({
           </div>
         ))}
         <div className="add-ships">
-          {(['trade', 'warship', 'balance', 'advance', 'volante', 'valor'] as Hull[]).map(
-            (hull) => (
-              <button key={hull} onClick={() => onAddShip(hull)}>
-                + {hullLabel[hull]}
-              </button>
-            ),
-          )}
+          {(
+            [
+              'sailboat',
+              'improved-sailboat',
+              'frigate',
+              'improved-frigate',
+              'trade',
+              'warship',
+              'balance',
+              'advance',
+              'volante',
+              'valor',
+            ] as Hull[]
+          ).map((hull) => (
+            <button key={hull} onClick={() => onAddShip(hull)}>
+              + {hullLabel[hull]}
+            </button>
+          ))}
         </div>
       </div>
       <div className="panel manage">

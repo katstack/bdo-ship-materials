@@ -428,6 +428,10 @@ export const unverifiedLegacyQuestData: DailyTask[] = [
 ]
 export const dailyTasks = verifiedCodexQuests
 export const hullLabel: Record<Hull, string> = {
+  sailboat: '에페리아 경범선',
+  'improved-sailboat': '개량형 에페리아 경범선',
+  frigate: '에페리아 호위함',
+  'improved-frigate': '개량형 에페리아 호위함',
   trade: '무역선',
   warship: '구축함',
   balance: '중범선 균형',
@@ -444,6 +448,10 @@ export const defaultUpgradeHull: Record<'trade' | 'warship', CarrackHull> = {
   warship: 'valor',
 }
 export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
+  sailboat: ['plating', 'cannon', 'figurehead', 'sail'],
+  'improved-sailboat': ['plating', 'cannon', 'figurehead', 'sail'],
+  frigate: ['cannon', 'plating', 'figurehead', 'sail'],
+  'improved-frigate': ['cannon', 'plating', 'figurehead', 'sail'],
   trade: ['plating', 'cannon', 'figurehead', 'sail'],
   warship: ['cannon', 'plating', 'figurehead', 'sail'],
   balance: ['plating', 'cannon', 'figurehead', 'sail'],

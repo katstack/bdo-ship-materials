@@ -121,7 +121,8 @@ const newShip = (hull: Hull): Ship => ({
   id: id(),
   name: `${hullLabel[hull]} ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`,
   hull,
-  activeStage: hull === 'trade' || hull === 'warship' ? 1 : 3,
+  activeStage:
+    hull === 'balance' || hull === 'advance' || hull === 'volante' || hull === 'valor' ? 3 : 1,
   upgradeHull: hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
   equipmentOrder: [...defaultEquipmentOrder[hull]],
 })
@@ -252,7 +253,11 @@ export default function App() {
     }
     update(completeRecipe(data, ship.id, recipe))
     setCraftConfirm(null)
-    setNotice(`${recipe.name} 제작 완료 · 요구 재료를 공유 재고에서 차감 처리했습니다.`)
+    setNotice(
+      recipe.resultHull
+        ? `${recipe.name} 완료 · ${hullLabel[recipe.resultHull]}으로 선박 단계를 전환하고 요구 재료를 차감했습니다.`
+        : `${recipe.name} 제작 완료 · 요구 재료를 공유 재고에서 차감 처리했습니다.`,
+    )
   }
   const undoCraft = (ship: Ship, recipeId: string) => {
     const key = craftRecordKey(ship.id, recipeId)
@@ -1050,6 +1055,12 @@ export default function App() {
                   요구 수량 전체를 함대 공유 재고에서 차감 처리합니다. 재고는 0개 아래로 내려가지
                   않으며, 완료 후 전체 재료·물교 우선순위도 즉시 다시 계산됩니다.
                 </p>
+                {recipe.resultHull && (
+                  <p className="craft-result">
+                    증축 결과 · 완료 즉시 이 선박은 <b>{hullLabel[recipe.resultHull]}</b>으로
+                    전환됩니다. 완료 취소 시에는 이전 선박 종류와 재료를 함께 복구합니다.
+                  </p>
+                )}
                 <ul>
                   {recipe.requirements.map((requirement) => (
                     <li key={requirement.materialId}>

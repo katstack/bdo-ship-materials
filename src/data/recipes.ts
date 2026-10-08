@@ -156,8 +156,9 @@ export const recipes: Recipe[] = [
     id: 'expand-trade',
     name: '무역선 증축',
     stage: 1,
-    hulls: ['trade'],
-    description: '개량형 경범선 → 무역선',
+    hulls: ['sailboat', 'improved-sailboat', 'trade'],
+    resultHull: 'trade',
+    description: '에페리아 경범선/개량형 경범선 → 에페리아 무역선',
     requirements: [
       r('graphite', 100),
       r('timber', 100),
@@ -172,8 +173,9 @@ export const recipes: Recipe[] = [
     id: 'expand-warship',
     name: '구축함 증축',
     stage: 1,
-    hulls: ['warship'],
-    description: '개량형 호위함 → 구축함',
+    hulls: ['frigate', 'improved-frigate', 'warship'],
+    resultHull: 'warship',
+    description: '에페리아 호위함/개량형 호위함 → 에페리아 구축함',
     requirements: [
       r('graphite', 100),
       r('timber', 100),
