@@ -496,5 +496,19 @@ export const stageLabel: Record<Stage, string> = {
   4: '중범선 팔라시 장비 제작',
 }
 export const stageLabelForHull = (hull: Hull, stage: Stage) =>
-  hull === 'bartali' && stage === 1 ? '에페리아 함선 증축' : stageLabel[stage]
+  stage === 1 && hull === 'bartali'
+    ? '에페리아 경범선/호위함 증축'
+    : stage === 1 && (hull === 'sailboat' || hull === 'improved-sailboat' || hull === 'trade')
+      ? '에페리아 무역선 증축'
+      : stage === 1 && (hull === 'frigate' || hull === 'improved-frigate' || hull === 'warship')
+        ? '에페리아 구축함 증축'
+        : stageLabel[stage]
+
+/** 현재 선박에 실제로 적용되는 제작 단계만 노출한다. */
+export const stagesForHull = (hull: Hull): Stage[] => {
+  if (hull === 'bartali' || hull === 'sailboat' || hull === 'improved-sailboat') return [1]
+  if (hull === 'frigate' || hull === 'improved-frigate') return [1]
+  if (hull === 'trade' || hull === 'warship') return [1, 2]
+  return [3, 4]
+}
 export const materialById = Object.fromEntries(materials.map((x) => [x.id, x]))

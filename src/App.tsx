@@ -8,6 +8,7 @@ import {
   materialById,
   shortHullLabel,
   stageLabelForHull,
+  stagesForHull,
   upgradeTargets,
 } from './catalog'
 import { clearData, freshSample, hasStoredData, loadData, normalize, saveData } from './storage'
@@ -20,7 +21,6 @@ import type {
   MaterialExchangeSortKey,
   MaterialSortKey,
   Ship,
-  Stage,
 } from './types'
 import { clamp, number, materialSupply, recipeProgress, shipRecipes, stageProgress } from './utils'
 import {
@@ -476,8 +476,7 @@ export default function App() {
         </label>
         {currentShip && (
           <span className="fleet-context-detail">
-            {hullLabel[currentShip.hull]} ·{' '}
-            {stageLabelForHull(currentShip.hull, currentShip.activeStage)}
+            현재 단계 · {stageLabelForHull(currentShip.hull, currentShip.activeStage)}
           </span>
         )}
       </div>
@@ -595,7 +594,7 @@ export default function App() {
               <div className="section-title">
                 <div>
                   <p>
-                    {shortHullLabel[currentShip.hull]} ·{' '}
+                    현재 선박 · {hullLabel[currentShip.hull]} ·{' '}
                     {stageLabelForHull(currentShip.hull, currentShip.activeStage)}
                   </p>
                   <h2>{currentShip.name}</h2>
@@ -603,7 +602,7 @@ export default function App() {
                 <Progress value={stageProgress(data, currentShip)} />
               </div>
               <div className="stepper">
-                {([1, 2, 3, 4] as Stage[]).map((s) => (
+                {stagesForHull(currentShip.hull).map((s, index) => (
                   <button
                     key={s}
                     className={
@@ -615,7 +614,7 @@ export default function App() {
                     }
                     onClick={() => editShip({ ...currentShip, activeStage: s })}
                   >
-                    <b>{s}</b>
+                    <b>{index + 1}</b>
                     {stageLabelForHull(currentShip.hull, s)}
                   </button>
                 ))}
