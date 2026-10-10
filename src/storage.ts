@@ -28,6 +28,7 @@ export function normalize(input: unknown): AppData {
   const raw = input as Partial<AppData>
   if (!Array.isArray(raw.ships)) throw new Error('함대 목록을 찾을 수 없습니다.')
   const hulls: Hull[] = [
+    'bartali',
     'sailboat',
     'improved-sailboat',
     'frigate',
@@ -106,6 +107,7 @@ export function normalize(input: unknown): AppData {
                   previousShip: (() => {
                     const previous = record.previousShip as Partial<AppData['ships'][number]>
                     const hulls: Hull[] = [
+                      'bartali',
                       'sailboat',
                       'improved-sailboat',
                       'frigate',

@@ -7,7 +7,7 @@ import {
   materials,
   materialById,
   shortHullLabel,
-  stageLabel,
+  stageLabelForHull,
   upgradeTargets,
 } from './catalog'
 import { clearData, freshSample, hasStoredData, loadData, normalize, saveData } from './storage'
@@ -476,7 +476,8 @@ export default function App() {
         </label>
         {currentShip && (
           <span className="fleet-context-detail">
-            {hullLabel[currentShip.hull]} · {stageLabel[currentShip.activeStage]}
+            {hullLabel[currentShip.hull]} ·{' '}
+            {stageLabelForHull(currentShip.hull, currentShip.activeStage)}
           </span>
         )}
       </div>
@@ -528,7 +529,7 @@ export default function App() {
                   key={ship.id}
                 >
                   <span>
-                    {hullLabel[ship.hull]} · {stageLabel[ship.activeStage]}
+                    {hullLabel[ship.hull]} · {stageLabelForHull(ship.hull, ship.activeStage)}
                   </span>
                   <h3>{ship.name}</h3>
                   <Progress value={p} />
@@ -594,7 +595,8 @@ export default function App() {
               <div className="section-title">
                 <div>
                   <p>
-                    {shortHullLabel[currentShip.hull]} · {stageLabel[currentShip.activeStage]}
+                    {shortHullLabel[currentShip.hull]} ·{' '}
+                    {stageLabelForHull(currentShip.hull, currentShip.activeStage)}
                   </p>
                   <h2>{currentShip.name}</h2>
                 </div>
@@ -614,7 +616,7 @@ export default function App() {
                     onClick={() => editShip({ ...currentShip, activeStage: s })}
                   >
                     <b>{s}</b>
-                    {stageLabel[s]}
+                    {stageLabelForHull(currentShip.hull, s)}
                   </button>
                 ))}
               </div>

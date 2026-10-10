@@ -62,7 +62,10 @@ export function completeRecipe(
               ...candidate,
               hull: recipe.resultHull!,
               activeStage: 1 as const,
-              upgradeHull: defaultUpgradeHull[recipe.resultHull!],
+              upgradeHull:
+                recipe.resultHull === 'trade' || recipe.resultHull === 'warship'
+                  ? defaultUpgradeHull[recipe.resultHull]
+                  : undefined,
               equipmentOrder: [...defaultEquipmentOrder[recipe.resultHull!]],
             }
           : candidate,

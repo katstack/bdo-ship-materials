@@ -150,4 +150,26 @@ describe('crafting domain', () => {
     expect(restored.ships[0].hull).toBe('sailboat')
     expect(restored.ships[0].upgradeHull).toBeUndefined()
   })
+
+  it('can branch a Bartali sailboat into an Epheria frigate', () => {
+    const data = freshSample()
+    const expansion = recipes.find((item) => item.id === 'upgrade-bartali-frigate')!
+    data.ships[0] = {
+      ...data.ships[0],
+      hull: 'bartali',
+      name: '바탈리 범선 A',
+      activeStage: 1,
+      upgradeHull: undefined,
+    }
+    data.inventory = Object.fromEntries(
+      expansion.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+    )
+
+    const completed = completeRecipe(data, shipId, expansion, '2026-01-01T00:00:00.000Z')
+    expect(completed.ships[0].hull).toBe('frigate')
+    expect(completed.ships[0].upgradeHull).toBeUndefined()
+
+    const restored = undoRecipeCompletion(completed, shipId, expansion.id)
+    expect(restored.ships[0].hull).toBe('bartali')
+  })
 })

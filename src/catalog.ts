@@ -25,6 +25,20 @@ const m = (
   }
 }
 export const materials: MaterialDefinition[] = [
+  m('sailboat-permit', '선박 증축 허가증 : 에페리아 경범선', undefined, '팔라시 구매'),
+  m('frigate-permit', '선박 증축 허가증 : 에페리아 호위함', undefined, '팔라시 구매'),
+  m('bartali-old-figurehead', '바탈리 범선 : 낡은 선수상 (+10)', undefined, '팔라시 구매 후 강화'),
+  m('bartali-old-plating', '바탈리 범선 : 낡은 장갑 (+10)', undefined, '팔라시 구매 후 강화'),
+  m('bartali-old-cannon', '바탈리 범선 : 낡은 함포 (+10)', undefined, '팔라시 구매 후 강화'),
+  m('bartali-old-sail', '바탈리 범선 : 낡은 바람 돛 (+10)', undefined, '팔라시 구매 후 강화'),
+  m('standard-timber', '규격 각목', undefined, '채집 · 가공'),
+  m('basic-steel', '강철', undefined, '채집 · 가공'),
+  m('pine-plywood', '소나무 합판', undefined, '채집 · 가공'),
+  m('flax-fabric', '아마포', undefined, '채집 · 가공'),
+  m('hard-pillar', '단단한 기둥', undefined, '채집 · 가공'),
+  m('jade-coral', '비취 산호 주괴', undefined, '채집 · 가공'),
+  m('pine-coated-plywood', '소나무 증착합판', undefined, '채집 · 가공'),
+  m('enhanced-flax-fabric', '강화 아마포', undefined, '채집 · 가공'),
   m(
     'graphite',
     '증축용 흑연 주괴',
@@ -428,6 +442,7 @@ export const unverifiedLegacyQuestData: DailyTask[] = [
 ]
 export const dailyTasks = verifiedCodexQuests
 export const hullLabel: Record<Hull, string> = {
+  bartali: '바탈리 범선',
   sailboat: '에페리아 경범선',
   'improved-sailboat': '개량형 에페리아 경범선',
   frigate: '에페리아 호위함',
@@ -441,6 +456,7 @@ export const hullLabel: Record<Hull, string> = {
 }
 /** 이미 선박 계열이 드러난 화면에서 쓰는 짧은 표기. */
 export const shortHullLabel: Record<Hull, string> = {
+  bartali: '바탈리 범선',
   sailboat: '경범선',
   'improved-sailboat': '개량형 경범선',
   frigate: '호위함',
@@ -461,6 +477,7 @@ export const defaultUpgradeHull: Record<'trade' | 'warship', CarrackHull> = {
   warship: 'valor',
 }
 export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
+  bartali: ['plating', 'cannon', 'figurehead', 'sail'],
   sailboat: ['plating', 'cannon', 'figurehead', 'sail'],
   'improved-sailboat': ['plating', 'cannon', 'figurehead', 'sail'],
   frigate: ['cannon', 'plating', 'figurehead', 'sail'],
@@ -478,4 +495,6 @@ export const stageLabel: Record<Stage, string> = {
   3: '중범선 치로 장비 제작',
   4: '중범선 팔라시 장비 제작',
 }
+export const stageLabelForHull = (hull: Hull, stage: Stage) =>
+  hull === 'bartali' && stage === 1 ? '에페리아 함선 증축' : stageLabel[stage]
 export const materialById = Object.fromEntries(materials.map((x) => [x.id, x]))

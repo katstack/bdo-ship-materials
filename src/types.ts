@@ -1,4 +1,5 @@
 export type Hull =
+  | 'bartali'
   | 'sailboat'
   | 'improved-sailboat'
   | 'frigate'
@@ -39,7 +40,7 @@ export interface Recipe {
   codexDesignId?: string
   codexItemId?: string
   /** 선박 증축이 끝난 직후 자동 전환할 선박 종류. */
-  resultHull?: 'trade' | 'warship'
+  resultHull?: Hull
 }
 export interface Ship {
   id: string

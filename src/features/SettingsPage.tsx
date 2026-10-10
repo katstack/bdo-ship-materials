@@ -80,6 +80,7 @@ export function SettingsPage({
         <div className="add-ships">
           {(
             [
+              'bartali',
               'sailboat',
               'improved-sailboat',
               'frigate',

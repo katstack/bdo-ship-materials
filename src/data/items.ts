@@ -44,6 +44,28 @@ export const latestCrowCoinPricesByName: Record<string, number> = {
 
 // 앱에서 다루는 모든 재료의 이름·Codex ID·까마귀 주화 가격의 단일 기준 데이터.
 export const items: ItemRecord[] = [
+  {
+    materialId: 'sailboat-permit',
+    name: '선박 증축 허가증 : 에페리아 경범선',
+    codexItemId: '49950',
+  },
+  {
+    materialId: 'frigate-permit',
+    name: '선박 증축 허가증 : 에페리아 호위함',
+    codexItemId: '49951',
+  },
+  { materialId: 'bartali-old-figurehead', name: '바탈리 범선 : 낡은 선수상 (+10)' },
+  { materialId: 'bartali-old-plating', name: '바탈리 범선 : 낡은 장갑 (+10)' },
+  { materialId: 'bartali-old-cannon', name: '바탈리 범선 : 낡은 함포 (+10)' },
+  { materialId: 'bartali-old-sail', name: '바탈리 범선 : 낡은 바람 돛 (+10)' },
+  { materialId: 'standard-timber', name: '규격 각목', codexItemId: '4685' },
+  { materialId: 'basic-steel', name: '강철' },
+  { materialId: 'pine-plywood', name: '소나무 합판' },
+  { materialId: 'flax-fabric', name: '아마포' },
+  { materialId: 'hard-pillar', name: '단단한 기둥', codexItemId: '4687' },
+  { materialId: 'jade-coral', name: '비취 산호 주괴' },
+  { materialId: 'pine-coated-plywood', name: '소나무 증착합판' },
+  { materialId: 'enhanced-flax-fabric', name: '강화 아마포' },
   { materialId: 'graphite', name: '증축용 흑연 주괴' },
   { materialId: 'timber', name: '증축용 목재' },
   { materialId: 'glue', name: '증축용 접착제' },
