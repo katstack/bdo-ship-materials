@@ -34,6 +34,7 @@ import {
   completeRecipe,
   craftRecordKey,
   isRecipeCompleted,
+  purchaseRecipe,
   undoRecipeCompletion,
 } from './domain/crafting'
 import { locationById, locations } from './data/locations'
@@ -163,9 +164,11 @@ export default function App() {
     quantity: number
   } | null>(null)
   const [barterFlashId, setBarterFlashId] = useState<string | null>(null)
-  const [craftConfirm, setCraftConfirm] = useState<{ shipId: string; recipeId: string } | null>(
-    null,
-  )
+  const [craftConfirm, setCraftConfirm] = useState<{
+    shipId: string
+    recipeId: string
+    method: 'crafted' | 'purchased'
+  } | null>(null)
   const [source, setSource] = useState<string | null>(null)
   const [supplyDetail, setSupplyDetail] = useState<{
     materialId: string
@@ -251,20 +254,38 @@ export default function App() {
       setNotice('선행 에페리아 함선 장비 제작을 모두 완료해야 증축할 수 있습니다.')
       return setCraftConfirm(null)
     }
-    update(completeRecipe(data, ship.id, recipe))
+    const purchased = craftConfirm.method === 'purchased'
+    update(
+      purchased ? purchaseRecipe(data, ship.id, recipe) : completeRecipe(data, ship.id, recipe),
+    )
     setCraftConfirm(null)
     setNotice(
       recipe.resultHull
-        ? `${recipe.name} 완료 · ${hullLabel[recipe.resultHull]}으로 선박 단계를 전환하고 요구 재료를 차감했습니다.`
-        : `${recipe.name} 제작 완료 · 요구 재료를 공유 재고에서 차감 처리했습니다.`,
+        ? `${recipe.name} 완료 · ${hullLabel[recipe.resultHull]}으로 선박 단계를 전환${purchased ? '했습니다.' : '하고 요구 재료를 차감했습니다.'}`
+        : purchased
+          ? `${recipe.name} 구매 처리 완료 · 재료 재고는 변경하지 않았습니다.`
+          : `${recipe.name} 제작 완료 · 요구 재료를 공유 재고에서 차감 처리했습니다.`,
     )
   }
   const undoCraft = (ship: Ship, recipeId: string) => {
     const key = craftRecordKey(ship.id, recipeId)
     const record = data.completedRecipes[key]
-    if (!record || !confirm('제작 완료를 취소하고 당시 차감한 재료를 재고에 복구할까요?')) return
+    const purchased = record?.completionMethod === 'purchased'
+    if (
+      !record ||
+      !confirm(
+        purchased
+          ? '구매 완료 처리를 취소할까요? 재료 재고는 변경되지 않습니다.'
+          : '제작 완료를 취소하고 당시 차감한 재료를 재고에 복구할까요?',
+      )
+    )
+      return
     update(undoRecipeCompletion(data, ship.id, recipeId))
-    setNotice('제작 완료를 취소하고 재료를 공유 재고에 복구했습니다.')
+    setNotice(
+      purchased
+        ? '구매 완료 처리를 취소했습니다.'
+        : '제작 완료를 취소하고 재료를 공유 재고에 복구했습니다.',
+    )
   }
   const setSupplyPlan = (task: DailyTask, patch: { enabled?: boolean; choiceId?: string }) =>
     update({
@@ -688,10 +709,26 @@ export default function App() {
                         className="primary"
                         disabled={!canCraft}
                         onClick={() =>
-                          setCraftConfirm({ shipId: currentShip.id, recipeId: recipe.id })
+                          setCraftConfirm({
+                            shipId: currentShip.id,
+                            recipeId: recipe.id,
+                            method: 'crafted',
+                          })
                         }
                       >
                         제작 완료
+                      </button>
+                      <button
+                        disabled={!canCraft}
+                        onClick={() =>
+                          setCraftConfirm({
+                            shipId: currentShip.id,
+                            recipeId: recipe.id,
+                            method: 'purchased',
+                          })
+                        }
+                      >
+                        구매 처리
                       </button>
                     </div>
                     <RecipeRows
@@ -714,16 +751,19 @@ export default function App() {
                       <article className="recipe completed-recipe" key={recipe.id}>
                         <div>
                           <p>
-                            제작 완료 · {new Date(record.completedAt).toLocaleDateString('ko-KR')}
+                            {record.completionMethod === 'purchased' ? '구매 처리' : '제작 완료'} ·{' '}
+                            {new Date(record.completedAt).toLocaleDateString('ko-KR')}
                           </p>
                           <h3>{recipe.name}</h3>
                           <small>
-                            {Object.entries(record.consumedMaterials)
-                              .map(
-                                ([materialId, quantity]) =>
-                                  `${materialById[materialId]?.name || materialId} ${number(quantity)}개`,
-                              )
-                              .join(' · ')}
+                            {record.completionMethod === 'purchased'
+                              ? '재료 재고 변경 없음'
+                              : Object.entries(record.consumedMaterials)
+                                  .map(
+                                    ([materialId, quantity]) =>
+                                      `${materialById[materialId]?.name || materialId} ${number(quantity)}개`,
+                                  )
+                                  .join(' · ')}
                           </small>
                         </div>
                         <div className="completed-recipe-actions">
@@ -732,7 +772,9 @@ export default function App() {
                             className="craft-undo"
                             onClick={() => undoCraft(currentShip, recipe.id)}
                           >
-                            제작 완료 취소 · 재료 복구
+                            {record.completionMethod === 'purchased'
+                              ? '구매 처리 취소'
+                              : '제작 완료 취소 · 재료 복구'}
                           </button>
                         </div>
                       </article>
@@ -1046,10 +1088,13 @@ export default function App() {
           return (
             <div className="modal">
               <div className="craft-confirm">
-                <h2>{recipe.name} 제작 완료</h2>
+                <h2>
+                  {recipe.name} {craftConfirm.method === 'purchased' ? '구매 처리' : '제작 완료'}
+                </h2>
                 <p>
-                  요구 수량 전체를 함대 공유 재고에서 차감 처리합니다. 재고는 0개 아래로 내려가지
-                  않으며, 완료 후 전체 재료·물교 우선순위도 즉시 다시 계산됩니다.
+                  {craftConfirm.method === 'purchased'
+                    ? '장비를 구매하거나 외부에서 확보한 것으로 완료 처리합니다. 공유 재료 재고와 제작 결과 재고는 변경하지 않으며, 완료 후 재료 수요와 물교 우선순위만 다시 계산됩니다.'
+                    : '요구 수량 전체를 함대 공유 재고에서 차감 처리합니다. 재고는 0개 아래로 내려가지 않으며, 완료 후 전체 재료·물교 우선순위도 즉시 다시 계산됩니다.'}
                 </p>
                 {recipe.resultHull && (
                   <p className="craft-result">
@@ -1057,26 +1102,28 @@ export default function App() {
                     전환됩니다. 완료 취소 시에는 이전 선박 종류와 재료를 함께 복구합니다.
                   </p>
                 )}
-                <ul>
-                  {recipe.requirements.map((requirement) => (
-                    <li key={requirement.materialId}>
-                      <b>{materialById[requirement.materialId].name}</b>
-                      <span>
-                        필요 {number(requirement.quantity)}개 · 보유{' '}
-                        {number(clamp(data.inventory[requirement.materialId]))}개 → {''}
-                        {number(requirement.quantity)}개 차감 처리 · 남음{' '}
-                        {number(
-                          Math.max(
-                            clamp(data.inventory[requirement.materialId]) - requirement.quantity,
-                            0,
-                          ),
-                        )}
-                        개
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                {recipe.produces?.length ? (
+                {craftConfirm.method === 'crafted' && (
+                  <ul>
+                    {recipe.requirements.map((requirement) => (
+                      <li key={requirement.materialId}>
+                        <b>{materialById[requirement.materialId].name}</b>
+                        <span>
+                          필요 {number(requirement.quantity)}개 · 보유{' '}
+                          {number(clamp(data.inventory[requirement.materialId]))}개 → {''}
+                          {number(requirement.quantity)}개 차감 처리 · 남음{' '}
+                          {number(
+                            Math.max(
+                              clamp(data.inventory[requirement.materialId]) - requirement.quantity,
+                              0,
+                            ),
+                          )}
+                          개
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {craftConfirm.method === 'crafted' && recipe.produces?.length ? (
                   <p className="craft-result">
                     제작 결과 ·{' '}
                     {recipe.produces
@@ -1091,7 +1138,9 @@ export default function App() {
                 <div className="modal-actions">
                   <button onClick={() => setCraftConfirm(null)}>취소</button>
                   <button className="primary" onClick={completeCraft}>
-                    요구 재료 차감 후 완료
+                    {craftConfirm.method === 'purchased'
+                      ? '재료 유지 후 구매 완료'
+                      : '요구 재료 차감 후 완료'}
                   </button>
                 </div>
               </div>

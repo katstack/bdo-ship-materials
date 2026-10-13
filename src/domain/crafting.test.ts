@@ -8,6 +8,7 @@ import {
   completeRecipe,
   craftRecordKey,
   isRecipeCompleted,
+  purchaseRecipe,
   undoRecipeCompletion,
 } from './crafting'
 
@@ -51,6 +52,22 @@ describe('crafting domain', () => {
     recipe.requirements.forEach((requirement) => {
       expect(completed.inventory[requirement.materialId]).toBe(0)
     })
+  })
+
+  it('marks a purchased recipe complete without changing material inventory', () => {
+    const data = dataReadyToCraft()
+    const before = { ...data.inventory }
+
+    const completed = purchaseRecipe(data, shipId, recipe, '2026-01-01T00:00:00.000Z')
+    const key = craftRecordKey(shipId, recipe.id)
+
+    expect(completed.completedRecipes[key].completionMethod).toBe('purchased')
+    expect(completed.completedRecipes[key].consumedMaterials).toEqual({})
+    expect(completed.inventory).toEqual(before)
+
+    const restored = undoRecipeCompletion(completed, shipId, recipe.id)
+    expect(restored.inventory).toEqual(before)
+    expect(isRecipeCompleted(restored, shipId, recipe.id)).toBe(false)
   })
 
   it('excludes a completed recipe from material demand and restores it on undo', () => {

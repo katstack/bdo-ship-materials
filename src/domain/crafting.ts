@@ -22,11 +22,14 @@ export const areRecipePrerequisitesComplete = (data: AppData, shipId: string, re
 export const canCompleteRecipeForShip = (data: AppData, shipId: string, recipe: Recipe) =>
   areRecipePrerequisitesComplete(data, shipId, recipe)
 
+export type CompletionMethod = 'crafted' | 'purchased'
+
 export function completeRecipe(
   data: AppData,
   shipId: string,
   recipe: Recipe,
   completedAt = new Date().toISOString(),
+  completionMethod: CompletionMethod = 'crafted',
 ): AppData {
   const key = craftRecordKey(shipId, recipe.id)
   if (data.completedRecipes[key]) throw new Error('이미 완료한 제작입니다.')
@@ -35,17 +38,21 @@ export function completeRecipe(
 
   const inventory = { ...data.inventory }
   const consumedMaterials: Record<string, number> = {}
-  recipe.requirements.forEach((requirement) => {
-    const available = quantity(inventory[requirement.materialId])
-    inventory[requirement.materialId] = Math.max(available - requirement.quantity, 0)
-    // 완료 기록은 요구 수량 전체를 남긴다. 취소 시 같은 수량을 되돌릴 수 있다.
-    consumedMaterials[requirement.materialId] = requirement.quantity
-  })
+  if (completionMethod === 'crafted') {
+    recipe.requirements.forEach((requirement) => {
+      const available = quantity(inventory[requirement.materialId])
+      inventory[requirement.materialId] = Math.max(available - requirement.quantity, 0)
+      // 완료 기록은 요구 수량 전체를 남긴다. 취소 시 같은 수량을 되돌릴 수 있다.
+      consumedMaterials[requirement.materialId] = requirement.quantity
+    })
+  }
   const producedMaterials: Record<string, number> = {}
-  recipe.produces?.forEach((product) => {
-    inventory[product.materialId] = quantity(inventory[product.materialId]) + product.quantity
-    producedMaterials[product.materialId] = product.quantity
-  })
+  if (completionMethod === 'crafted') {
+    recipe.produces?.forEach((product) => {
+      inventory[product.materialId] = quantity(inventory[product.materialId]) + product.quantity
+      producedMaterials[product.materialId] = product.quantity
+    })
+  }
 
   const ship = data.ships.find((candidate) => candidate.id === shipId)
   const previousShip =
@@ -79,6 +86,7 @@ export function completeRecipe(
       ...data.completedRecipes,
       [key]: {
         completedAt,
+        ...(completionMethod === 'purchased' ? { completionMethod } : {}),
         consumedMaterials,
         ...(Object.keys(producedMaterials).length ? { producedMaterials } : {}),
         ...(previousShip ? { previousShip } : {}),
@@ -86,6 +94,14 @@ export function completeRecipe(
     },
   }
 }
+
+/** Marks an item as acquired without touching the shared material inventory. */
+export const purchaseRecipe = (
+  data: AppData,
+  shipId: string,
+  recipe: Recipe,
+  completedAt = new Date().toISOString(),
+) => completeRecipe(data, shipId, recipe, completedAt, 'purchased')
 
 export function undoRecipeCompletion(data: AppData, shipId: string, recipeId: string): AppData {
   const key = craftRecordKey(shipId, recipeId)

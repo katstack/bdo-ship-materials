@@ -1489,6 +1489,10 @@ tr:last-child td {
   margin: 0;
   white-space: nowrap;
 }
+.craft-action > button {
+  margin: 0;
+  white-space: nowrap;
+}
 .completed-recipes {
   margin-top: 22px;
   border: 1px solid #35544f;

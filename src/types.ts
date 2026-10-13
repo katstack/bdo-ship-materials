@@ -102,6 +102,8 @@ export interface BarterSession {
 }
 export interface CraftRecord {
   completedAt: string
+  /** 제작 재료를 차감했는지, 장비를 구매한 것으로 처리했는지 구분한다. */
+  completionMethod?: 'crafted' | 'purchased'
   consumedMaterials: Record<string, number>
   producedMaterials?: Record<string, number>
   previousShip?: Pick<Ship, 'hull' | 'activeStage' | 'upgradeHull' | 'equipmentOrder'>

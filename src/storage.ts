@@ -73,6 +73,7 @@ export function normalize(input: unknown): AppData {
       if (!value || typeof value !== 'object') return []
       const record = value as {
         completedAt?: unknown
+        completionMethod?: unknown
         consumedMaterials?: unknown
         producedMaterials?: unknown
         previousShip?: unknown
@@ -88,6 +89,7 @@ export function normalize(input: unknown): AppData {
           key,
           {
             completedAt: record.completedAt,
+            ...(record.completionMethod === 'purchased' ? { completionMethod: 'purchased' } : {}),
             consumedMaterials: Object.fromEntries(
               Object.entries(record.consumedMaterials as Record<string, unknown>).map(
                 ([id, quantity]) => [id, clamp(Number(quantity))],
