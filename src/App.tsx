@@ -1089,27 +1089,63 @@ export default function App() {
             </div>
           )
         })()}
-      {source && (
-        <div className="modal">
-          <div>
-            <h2>{materialById[source].name} · 획득처</h2>
-            <p>
-              까마귀 주화 단가:{' '}
-              {materialById[source].crowCoinPrice === undefined
-                ? '확인 필요'
-                : `${number(materialById[source].crowCoinPrice!)}개 / 1개`}
-            </p>
-            <ul>
-              {materialById[source].sources.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
-            <div className="modal-actions">
-              <button onClick={() => setSource(null)}>닫기</button>
+      {source &&
+        (() => {
+          const material = materialById[source]
+          return (
+            <div className="modal">
+              <div>
+                <h2>{material.name} · 획득처</h2>
+                <p>
+                  까마귀 주화 단가:{' '}
+                  {material.crowCoinPrice === undefined
+                    ? '확인 필요'
+                    : `${number(material.crowCoinPrice)}개 / 1개`}
+                </p>
+                {material.processingRecipes?.length ? (
+                  <section className="acquisition-detail" aria-label="제작 노트 가공식">
+                    <h3>제작 노트 가공식</h3>
+                    {material.processingRecipes.map((recipe) => (
+                      <div key={recipe.method} className="processing-recipe">
+                        <b>{recipe.method}</b>
+                        <p>
+                          {recipe.ingredients
+                            .map(
+                              (ingredient) => `${ingredient.name} ${number(ingredient.quantity)}개`,
+                            )
+                            .join(' + ')}
+                        </p>
+                        {recipe.knowledge ? <small>필요 지식 · {recipe.knowledge}</small> : null}
+                        {recipe.note ? <small>{recipe.note}</small> : null}
+                      </div>
+                    ))}
+                  </section>
+                ) : null}
+                <section className="acquisition-detail" aria-label="기타 획득처">
+                  <h3>기타 획득처</h3>
+                  <ul>
+                    {material.sources.map((x) => (
+                      <li key={x}>{x}</li>
+                    ))}
+                  </ul>
+                </section>
+                <div className="modal-actions">
+                  {material.codexItemId ? (
+                    <a
+                      className="button-link"
+                      href={`https://bdocodex.com/kr/item/${material.codexItemId}/?sl=1`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      BDO Codex 상세
+                    </a>
+                  ) : null}
+                  <button onClick={() => setSource(null)}>닫기</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )
+        })()}
       {supplyDetail &&
         (() => {
           const material = materialById[supplyDetail.materialId]

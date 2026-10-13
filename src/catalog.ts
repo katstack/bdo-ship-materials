@@ -22,6 +22,7 @@ const m = (
     codexItemId: item.codexItemId,
     crowCoinPrice: item.crowCoinPrice,
     sources,
+    processingRecipes: item.processingRecipes,
   }
 }
 export const materials: MaterialDefinition[] = [

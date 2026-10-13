@@ -395,6 +395,41 @@ tr:last-child td {
   font-size: 14px;
   line-height: 1.65;
 }
+.acquisition-detail {
+  margin-top: 18px;
+  border-top: 1px solid #405058;
+  padding-top: 14px;
+}
+.acquisition-detail h3 {
+  margin: 0 0 9px;
+  font-size: 14px;
+  color: #e4ecee;
+}
+.acquisition-detail ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #c5d0d3;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.processing-recipe {
+  border-radius: 8px;
+  background: #162126;
+  padding: 12px 14px;
+}
+.processing-recipe b {
+  color: #74d2c3;
+  font-size: 14px;
+}
+.processing-recipe p {
+  margin: 5px 0 3px;
+  color: #edf3f4;
+}
+.processing-recipe small {
+  display: block;
+  color: #91a6ac;
+  line-height: 1.5;
+}
 .modal-actions {
   display: flex;
   align-items: center;
@@ -405,6 +440,19 @@ tr:last-child td {
 }
 .modal-actions button {
   margin: 0;
+}
+.button-link {
+  color: #dff7f1;
+  border: 1px solid #3b8077;
+  border-radius: 7px;
+  padding: 9px 13px;
+  background: #1b504d;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.button-link:hover {
+  background: #236861;
 }
 @media (max-width: 760px) {
   main {

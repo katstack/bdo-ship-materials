@@ -19,6 +19,18 @@ export interface MaterialDefinition {
   codexItemId?: string
   crowCoinPrice?: number
   sources: string[]
+  /** 게임 내 제작 노트에서 확인한 직접 가공식. */
+  processingRecipes?: ProcessingRecipe[]
+}
+export interface ProcessingIngredient {
+  name: string
+  quantity: number
+}
+export interface ProcessingRecipe {
+  method: string
+  ingredients: ProcessingIngredient[]
+  knowledge?: string
+  note?: string
 }
 export interface Requirement {
   materialId: string

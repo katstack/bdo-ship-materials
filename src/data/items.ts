@@ -1,9 +1,13 @@
+import type { ProcessingRecipe } from '../types'
+
 export interface ItemRecord {
   // LocalStorage 및 레시피가 참조하는 안정적인 앱 키다. Codex ID가 바뀌어도 진행 데이터는 유지한다.
   materialId: string
   name: string
   codexItemId?: string
   crowCoinPrice?: number
+  /** 게임 내 제작 노트와 Codex 아이템 설명에서 대조한 가공식. */
+  processingRecipes?: ProcessingRecipe[]
 }
 
 // 출처: 검은사막 한국 업데이트 안내(groupContentNo=15614)의 까마귀 주화 상점 표.
@@ -58,14 +62,60 @@ export const items: ItemRecord[] = [
   { materialId: 'bartali-old-plating', name: '바탈리 범선 : 낡은 장갑 (+10)' },
   { materialId: 'bartali-old-cannon', name: '바탈리 범선 : 낡은 함포 (+10)' },
   { materialId: 'bartali-old-sail', name: '바탈리 범선 : 낡은 바람 돛 (+10)' },
-  { materialId: 'standard-timber', name: '규격 각목', codexItemId: '4685' },
+  {
+    materialId: 'standard-timber',
+    name: '규격 각목',
+    codexItemId: '4685',
+    processingRecipes: [
+      {
+        method: '장작패기',
+        ingredients: [{ name: '쓸만한 각목', quantity: 10 }],
+        knowledge: '장작패기 - 수련 지식',
+      },
+    ],
+  },
   { materialId: 'basic-steel', name: '강철' },
-  { materialId: 'pine-plywood', name: '소나무 합판' },
+  {
+    materialId: 'pine-plywood',
+    name: '소나무 합판',
+    codexItemId: '4658',
+    processingRecipes: [
+      { method: '장작패기', ingredients: [{ name: '소나무 원목', quantity: 5 }] },
+    ],
+  },
   { materialId: 'flax-fabric', name: '아마포' },
   { materialId: 'hard-pillar', name: '단단한 기둥', codexItemId: '4687' },
   { materialId: 'jade-coral', name: '비취 산호 주괴' },
-  { materialId: 'pine-coated-plywood', name: '소나무 증착합판' },
-  { materialId: 'enhanced-flax-fabric', name: '강화 아마포' },
+  {
+    materialId: 'pine-coated-plywood',
+    name: '소나무 증착합판',
+    codexItemId: '4691',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '코코넛', quantity: 50 },
+          { name: '소나무 합판', quantity: 5 },
+        ],
+        knowledge: '가열하기 - 숙련 지식',
+      },
+    ],
+  },
+  {
+    materialId: 'enhanced-flax-fabric',
+    name: '강화 아마포',
+    codexItemId: '5860',
+    processingRecipes: [
+      {
+        method: '빻기',
+        ingredients: [
+          { name: '아마포', quantity: 5 },
+          { name: '빛나는 가루', quantity: 5 },
+        ],
+        knowledge: '빻기 - 숙련 지식',
+      },
+    ],
+  },
   { materialId: 'graphite', name: '증축용 흑연 주괴' },
   { materialId: 'timber', name: '증축용 목재' },
   { materialId: 'glue', name: '증축용 접착제' },
