@@ -137,7 +137,9 @@ const carrackGear = (stage: 3 | 4, maker: '치로' | '팔라시'): Recipe[] =>
         slot,
         stage,
         hulls: [hull],
-        description: `일리야섬 3번지 치로의 선박 부품 공방 ${isChiro ? 1 : 2}단계 제작`,
+        description: `일리야 섬 3번지 선박 부품 공방 ${isChiro ? 1 : 2}단계 제작${
+          isChiro ? '' : ' · 제작 후 노을진 파도의 블랙스톤으로 +10 강화 (시도당 1개 소모)'
+        }`,
         requirements,
         produces: [r(outputId, 1)],
         codexDesignId: String(designId),

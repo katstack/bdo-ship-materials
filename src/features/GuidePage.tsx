@@ -24,11 +24,9 @@ export function GuidePage({ materials, query, onQueryChange }: GuidePageProps) {
           .map((material) => (
             <article className="guide-card" key={material.id}>
               <h3>{material.name}</h3>
-              <b>
-                {material.crowCoinPrice === undefined
-                  ? '까마귀 주화 단가 미확인'
-                  : `${number(material.crowCoinPrice)} 까마귀 주화 / 개`}
-              </b>
+              {material.crowCoinPrice !== undefined ? (
+                <b>{number(material.crowCoinPrice)} 까마귀 주화 / 개</b>
+              ) : null}
               <ul>
                 {material.sources.map((source) => (
                   <li key={source}>{source}</li>

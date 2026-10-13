@@ -327,9 +327,57 @@ export const items: ItemRecord[] = [
     codexItemId: '8021',
     crowCoinPrice: 300,
   },
-  { materialId: 'rough', name: '거센 파도가 새겨진 합판', codexItemId: '821366' },
-  { materialId: 'coral', name: '견고한 산호 지지대', codexItemId: '821365' },
-  { materialId: 'crimson', name: '진홍빛 산호가 잠든 접착제', codexItemId: '821367' },
+  {
+    materialId: 'rough',
+    name: '거센 파도가 새겨진 합판',
+    codexItemId: '821366',
+    processingRecipes: [
+      {
+        method: '공작',
+        ingredients: [
+          { name: '린바크의 비늘', quantity: 1 },
+          { name: '별빛 강화제', quantity: 1 },
+          { name: '별빛 유화제', quantity: 1 },
+        ],
+        result: '1개',
+        note: '각 재료 10개와 블랙스톤 가루 1개를 함께 가공하면 10개를 대량 제작할 수 있습니다.',
+      },
+    ],
+  },
+  {
+    materialId: 'coral',
+    name: '견고한 산호 지지대',
+    codexItemId: '821365',
+    processingRecipes: [
+      {
+        method: '공작',
+        ingredients: [
+          { name: '린바크의 뼈', quantity: 1 },
+          { name: '별빛 강화제', quantity: 1 },
+          { name: '별빛 유화제', quantity: 1 },
+        ],
+        result: '1개',
+        note: '각 재료 10개와 블랙스톤 가루 1개를 함께 가공하면 10개를 대량 제작할 수 있습니다.',
+      },
+    ],
+  },
+  {
+    materialId: 'crimson',
+    name: '진홍빛 산호가 잠든 접착제',
+    codexItemId: '821367',
+    processingRecipes: [
+      {
+        method: '간이 연금',
+        ingredients: [
+          { name: '린바크의 진액', quantity: 1 },
+          { name: '별빛 강화제', quantity: 1 },
+          { name: '별빛 유화제', quantity: 1 },
+        ],
+        result: '1개',
+        note: '각 재료 10개와 블랙스톤 가루 1개를 함께 가공하면 10개를 대량 제작할 수 있습니다.',
+      },
+    ],
+  },
   // 중범선 장비의 선행 장비와 제작 재료. ID는 BDO Codex 디자인 상세에서 확인한다.
   { materialId: 'toro-cannon', name: '에페리아 중범선: 토로의 함포 (+10)', codexItemId: '49742' },
   { materialId: 'toro-sail', name: '에페리아 중범선: 토로의 돛 (+10)', codexItemId: '49743' },
@@ -385,22 +433,22 @@ export const items: ItemRecord[] = [
   },
   {
     materialId: 'falasi-permit-advance',
-    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 점진',
+    name: '에페리아 중범선 부품 개조 허가증 : 점진',
     codexItemId: '59464',
   },
   {
     materialId: 'falasi-permit-balance',
-    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 균형',
+    name: '에페리아 중범선 부품 개조 허가증 : 균형',
     codexItemId: '59465',
   },
   {
     materialId: 'falasi-permit-volante',
-    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 비상',
+    name: '에페리아 중범선 부품 개조 허가증 : 비상',
     codexItemId: '59466',
   },
   {
     materialId: 'falasi-permit-valor',
-    name: '팔라시의 에페리아 중범선 부품 개조 허가증 : 용맹',
+    name: '에페리아 중범선 부품 개조 허가증 : 용맹',
     codexItemId: '59467',
   },
   {
