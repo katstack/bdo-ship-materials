@@ -2,6 +2,8 @@ import { defaultCarrackTargetForHull, defaultEquipmentOrder } from '../catalog'
 import type { AppData, Recipe } from '../types'
 
 const quantity = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
+const isCarrackHull = (hull: NonNullable<Recipe['resultHull']>) =>
+  hull === 'balance' || hull === 'advance' || hull === 'volante' || hull === 'valor'
 
 export const craftRecordKey = (shipId: string, recipeId: string) => `${shipId}:${recipeId}`
 
@@ -61,7 +63,7 @@ export function completeRecipe(
           ? {
               ...candidate,
               hull: recipe.resultHull!,
-              activeStage: 1 as const,
+              activeStage: (isCarrackHull(recipe.resultHull!) ? 3 : 1) as 1 | 3,
               upgradeHull: candidate.upgradeHull || defaultCarrackTargetForHull(recipe.resultHull!),
               equipmentOrder: [...defaultEquipmentOrder[recipe.resultHull!]],
             }

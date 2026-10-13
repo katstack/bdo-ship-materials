@@ -233,6 +233,7 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['balance'],
     usesUpgradeHull: true,
+    resultHull: 'balance',
     description: '에페리아 무역선 → 에페리아 중범선 균형',
     prerequisiteRecipeIds: blueRecipeIds('trade'),
     requirements: [
@@ -249,6 +250,7 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['advance'],
     usesUpgradeHull: true,
+    resultHull: 'advance',
     description: '에페리아 무역선 → 에페리아 중범선 점진',
     prerequisiteRecipeIds: blueRecipeIds('trade'),
     requirements: [
@@ -265,6 +267,7 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['volante'],
     usesUpgradeHull: true,
+    resultHull: 'volante',
     description: '에페리아 구축함 → 에페리아 중범선 비상',
     prerequisiteRecipeIds: blueRecipeIds('warship'),
     requirements: [
@@ -281,6 +284,7 @@ export const recipes: Recipe[] = [
     stage: 2,
     hulls: ['valor'],
     usesUpgradeHull: true,
+    resultHull: 'valor',
     description: '에페리아 구축함 → 에페리아 중범선 용맹',
     prerequisiteRecipeIds: blueRecipeIds('warship'),
     requirements: [

@@ -172,4 +172,34 @@ describe('crafting domain', () => {
     const restored = undoRecipeCompletion(completed, shipId, expansion.id)
     expect(restored.ships[0].hull).toBe('bartali')
   })
+
+  it('turns a destroyer into a Volante and advances to Carrack gear after the upgrade', () => {
+    const data = freshSample()
+    const upgrade = recipes.find((item) => item.id === 'volante')!
+    data.ships[0] = {
+      ...data.ships[0],
+      hull: 'warship',
+      name: '비상',
+      activeStage: 2,
+      upgradeHull: 'volante',
+    }
+    data.inventory = Object.fromEntries(
+      upgrade.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
+    )
+    upgrade.prerequisiteRecipeIds!.forEach((recipeId) => {
+      data.completedRecipes[craftRecordKey(shipId, recipeId)] = {
+        completedAt: '2026-01-01T00:00:00.000Z',
+        consumedMaterials: {},
+      }
+    })
+
+    const completed = completeRecipe(data, shipId, upgrade, '2026-01-01T00:00:00.000Z')
+    expect(completed.ships[0].hull).toBe('volante')
+    expect(completed.ships[0].activeStage).toBe(3)
+    expect(completed.ships[0].upgradeHull).toBe('volante')
+
+    const restored = undoRecipeCompletion(completed, shipId, upgrade.id)
+    expect(restored.ships[0].hull).toBe('warship')
+    expect(restored.ships[0].activeStage).toBe(2)
+  })
 })
