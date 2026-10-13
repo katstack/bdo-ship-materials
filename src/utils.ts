@@ -1,4 +1,5 @@
 import { recipes } from './data/recipes'
+import { defaultCarrackTargetForHull, epheriaHullForCarrackTarget } from './catalog'
 import type { AppData, Recipe, Ship } from './types'
 import { isRecipeCompleted } from './domain/crafting'
 export { estimatedSupplyDays, materialSupply } from './domain/supply'
@@ -13,7 +14,11 @@ const recipeHull = (ship: Ship, recipe: Recipe) =>
 export const shipRecipes = (ship: Ship) =>
   recipes.filter(
     (recipe) =>
-      recipe.hulls.includes(recipeHull(ship, recipe)) && recipe.stage === ship.activeStage,
+      recipe.hulls.includes(recipeHull(ship, recipe)) &&
+      recipe.stage === ship.activeStage &&
+      (ship.hull !== 'bartali' ||
+        recipe.resultHull ===
+          epheriaHullForCarrackTarget(ship.upgradeHull || defaultCarrackTargetForHull(ship.hull))),
   )
 export const recipeProgress = (recipe: Recipe, inventory: Record<string, number>) =>
   recipe.requirements.length

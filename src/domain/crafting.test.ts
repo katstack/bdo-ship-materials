@@ -135,7 +135,7 @@ describe('crafting domain', () => {
       hull: 'sailboat',
       name: '경범선 A',
       activeStage: 1,
-      upgradeHull: undefined,
+      upgradeHull: 'advance',
     }
     data.inventory = Object.fromEntries(
       expansion.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
@@ -148,10 +148,10 @@ describe('crafting domain', () => {
 
     const restored = undoRecipeCompletion(completed, shipId, expansion.id)
     expect(restored.ships[0].hull).toBe('sailboat')
-    expect(restored.ships[0].upgradeHull).toBeUndefined()
+    expect(restored.ships[0].upgradeHull).toBe('advance')
   })
 
-  it('can branch a Bartali sailboat into an Epheria frigate', () => {
+  it('carries a Bartali sailboat final target into the matching Epheria route', () => {
     const data = freshSample()
     const expansion = recipes.find((item) => item.id === 'upgrade-bartali-frigate')!
     data.ships[0] = {
@@ -159,7 +159,7 @@ describe('crafting domain', () => {
       hull: 'bartali',
       name: '바탈리 범선 A',
       activeStage: 1,
-      upgradeHull: undefined,
+      upgradeHull: 'volante',
     }
     data.inventory = Object.fromEntries(
       expansion.requirements.map((requirement) => [requirement.materialId, requirement.quantity]),
@@ -167,7 +167,7 @@ describe('crafting domain', () => {
 
     const completed = completeRecipe(data, shipId, expansion, '2026-01-01T00:00:00.000Z')
     expect(completed.ships[0].hull).toBe('frigate')
-    expect(completed.ships[0].upgradeHull).toBeUndefined()
+    expect(completed.ships[0].upgradeHull).toBe('volante')
 
     const restored = undoRecipeCompletion(completed, shipId, expansion.id)
     expect(restored.ships[0].hull).toBe('bartali')

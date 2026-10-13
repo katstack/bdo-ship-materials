@@ -472,10 +472,27 @@ export const upgradeTargets: Record<'trade' | 'warship', CarrackHull[]> = {
   trade: ['balance', 'advance'],
   warship: ['volante', 'valor'],
 }
+export const carrackTargets: CarrackHull[] = ['balance', 'advance', 'volante', 'valor']
 export const defaultUpgradeHull: Record<'trade' | 'warship', CarrackHull> = {
   trade: 'advance',
   warship: 'valor',
 }
+export const defaultCarrackTargetForHull = (hull: Hull): CarrackHull => {
+  if (hull === 'frigate' || hull === 'improved-frigate' || hull === 'warship') return 'valor'
+  if (hull === 'balance' || hull === 'advance' || hull === 'volante' || hull === 'valor')
+    return hull
+  return 'advance'
+}
+export const carrackTargetsForHull = (hull: Hull): CarrackHull[] => {
+  if (hull === 'bartali') return carrackTargets
+  if (hull === 'sailboat' || hull === 'improved-sailboat' || hull === 'trade')
+    return upgradeTargets.trade
+  if (hull === 'frigate' || hull === 'improved-frigate' || hull === 'warship')
+    return upgradeTargets.warship
+  return []
+}
+export const epheriaHullForCarrackTarget = (target: CarrackHull) =>
+  target === 'balance' || target === 'advance' ? 'sailboat' : 'frigate'
 export const defaultEquipmentOrder: Record<Hull, EquipmentSlot[]> = {
   bartali: ['plating', 'cannon', 'figurehead', 'sail'],
   sailboat: ['plating', 'cannon', 'figurehead', 'sail'],

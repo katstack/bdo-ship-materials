@@ -1,4 +1,4 @@
-import { defaultEquipmentOrder, defaultUpgradeHull } from '../catalog'
+import { defaultCarrackTargetForHull, defaultEquipmentOrder } from '../catalog'
 import type { AppData, Recipe } from '../types'
 
 const quantity = (value: number) => Math.max(0, Math.floor(Number(value) || 0))
@@ -62,10 +62,7 @@ export function completeRecipe(
               ...candidate,
               hull: recipe.resultHull!,
               activeStage: 1 as const,
-              upgradeHull:
-                recipe.resultHull === 'trade' || recipe.resultHull === 'warship'
-                  ? defaultUpgradeHull[recipe.resultHull]
-                  : undefined,
+              upgradeHull: candidate.upgradeHull || defaultCarrackTargetForHull(recipe.resultHull!),
               equipmentOrder: [...defaultEquipmentOrder[recipe.resultHull!]],
             }
           : candidate,

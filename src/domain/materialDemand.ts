@@ -1,4 +1,4 @@
-import { materialById } from '../catalog'
+import { defaultCarrackTargetForHull, epheriaHullForCarrackTarget, materialById } from '../catalog'
 import { recipes } from '../data/recipes'
 import type { AggregateMaterial, AppData, Ship } from '../types'
 import { isRecipeCompleted } from './crafting'
@@ -44,6 +44,11 @@ export function aggregateMaterialDemand(
       .filter(
         (recipe) =>
           recipe.hulls.includes(recipeHull(ship, recipe)) &&
+          (ship.hull !== 'bartali' ||
+            recipe.resultHull ===
+              epheriaHullForCarrackTarget(
+                ship.upgradeHull || defaultCarrackTargetForHull(ship.hull),
+              )) &&
           (scope.range === 'all'
             ? recipe.stage >= ship.activeStage
             : recipe.stage === ship.activeStage) &&

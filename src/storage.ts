@@ -3,7 +3,7 @@ import { materialExchangeKey } from './data/materialExchanges'
 import type { AppData, MaterialExchangeSortKey, MaterialSortKey } from './types'
 import { clamp } from './utils'
 import type { Hull, Stage } from './types'
-import { defaultEquipmentOrder, defaultUpgradeHull, upgradeTargets } from './catalog'
+import { carrackTargets, defaultCarrackTargetForHull, defaultEquipmentOrder } from './catalog'
 
 const STORAGE_KEY = 'bdo-ship-materials:v1'
 
@@ -128,7 +128,13 @@ export function normalize(input: unknown): AppData {
                         1,
                         Math.min(4, Number(previous.activeStage) || 1),
                       ) as Stage,
-                      upgradeHull: previous.upgradeHull,
+                      upgradeHull: carrackTargets.includes(
+                        previous.upgradeHull as (typeof carrackTargets)[number],
+                      )
+                        ? (previous.upgradeHull as (typeof carrackTargets)[number])
+                        : (previous as { branchHull?: unknown }).branchHull === 'frigate'
+                          ? 'valor'
+                          : defaultCarrackTargetForHull(hull),
                       equipmentOrder:
                         Array.isArray(previous.equipmentOrder) &&
                         previous.equipmentOrder.length === 4
@@ -221,15 +227,15 @@ export function normalize(input: unknown): AppData {
         const savedStage = Math.max(1, Math.min(5, Number(item.activeStage) || 1))
         // 이전 3단계는 무역선/구축함의 중범선 증축 단계였다. 이제 에페리아 함선 장비 제작과 같은 2단계다.
         const stage = (sourceHull && savedStage >= 3 ? 2 : Math.min(4, savedStage)) as Stage
-        const upgradeHull =
-          sourceHull &&
-          upgradeTargets[sourceHull].includes(
-            item.upgradeHull as (typeof upgradeTargets)[typeof sourceHull][number],
-          )
-            ? (item.upgradeHull as (typeof upgradeTargets)[typeof sourceHull][number])
-            : sourceHull
-              ? defaultUpgradeHull[sourceHull]
-              : undefined
+        // 이전 바탈리 분기(경범선/호위함)는 새 최종 중범선 목표로 한 번만 변환한다.
+        const legacyShip = item as Partial<AppData['ships'][number]> & { branchHull?: unknown }
+        const upgradeHull = carrackTargets.includes(
+          item.upgradeHull as (typeof carrackTargets)[number],
+        )
+          ? (item.upgradeHull as (typeof carrackTargets)[number])
+          : legacyShip.branchHull === 'frigate'
+            ? 'valor'
+            : defaultCarrackTargetForHull(hull)
         return {
           id: String(item.id || crypto.randomUUID()),
           name: String(item.name || hull).trim(),

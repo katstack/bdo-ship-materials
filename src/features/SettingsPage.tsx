@@ -1,10 +1,10 @@
 import type { ChangeEvent, RefObject } from 'react'
 import {
+  carrackTargetsForHull,
+  defaultCarrackTargetForHull,
   defaultEquipmentOrder,
-  defaultUpgradeHull,
   hullLabel,
   shortHullLabel,
-  upgradeTargets,
 } from '../catalog'
 import type { AppData, Hull, Ship } from '../types'
 import type { DriveStatus } from '../useDriveSync'
@@ -45,7 +45,7 @@ export function SettingsPage({
     <section className="settings">
       <div className="panel">
         <h2>내 함대</h2>
-        <p>선박 이름·종류와 무역선/구축함의 중범선 목표를 미리 관리합니다.</p>
+        <p>선박 이름·종류와 증축 경로의 최종 목표를 미리 관리합니다.</p>
         {data.ships.map((ship) => (
           <div className="ship-manage" key={ship.id}>
             <div className="ship-edit">
@@ -57,6 +57,7 @@ export function SettingsPage({
                 value={ship.hull}
                 onChange={(event) => {
                   const hull = event.target.value as Hull
+                  const targetOptions = carrackTargetsForHull(hull)
                   onEditShip({
                     ...ship,
                     hull,
@@ -68,7 +69,9 @@ export function SettingsPage({
                         ? 3
                         : 1,
                     upgradeHull:
-                      hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
+                      ship.upgradeHull && targetOptions.includes(ship.upgradeHull)
+                        ? ship.upgradeHull
+                        : defaultCarrackTargetForHull(hull),
                     equipmentOrder: [...defaultEquipmentOrder[hull]],
                   })
                 }}
@@ -83,16 +86,19 @@ export function SettingsPage({
                 제거
               </button>
             </div>
-            {(ship.hull === 'trade' || ship.hull === 'warship') && (
+            {carrackTargetsForHull(ship.hull).length > 0 && (
               <label className="ship-upgrade-target">
-                중범선 목표
+                최종 중범선 목표
                 <select
-                  value={ship.upgradeHull || defaultUpgradeHull[ship.hull]}
+                  value={ship.upgradeHull || defaultCarrackTargetForHull(ship.hull)}
                   onChange={(event) =>
-                    onEditShip({ ...ship, upgradeHull: event.target.value as Ship['upgradeHull'] })
+                    onEditShip({
+                      ...ship,
+                      upgradeHull: event.target.value as Ship['upgradeHull'],
+                    })
                   }
                 >
-                  {upgradeTargets[ship.hull].map((hull) => (
+                  {carrackTargetsForHull(ship.hull).map((hull) => (
                     <option key={hull} value={hull}>
                       {shortHullLabel[hull]}
                     </option>

@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   dailyTasks,
+  defaultCarrackTargetForHull,
   defaultEquipmentOrder,
-  defaultUpgradeHull,
   hullLabel,
   materials,
   materialById,
@@ -122,7 +122,7 @@ const newShip = (hull: Hull): Ship => ({
   hull,
   activeStage:
     hull === 'balance' || hull === 'advance' || hull === 'volante' || hull === 'valor' ? 3 : 1,
-  upgradeHull: hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
+  upgradeHull: defaultCarrackTargetForHull(hull),
   equipmentOrder: [...defaultEquipmentOrder[hull]],
 })
 const sortMaterials = (

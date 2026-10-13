@@ -47,6 +47,7 @@ export interface Ship {
   name: string
   hull: Hull
   activeStage: Stage
+  /** 함선 생성 시점부터 유지하는 최종 중범선 목표. */
   upgradeHull?: CarrackHull
   equipmentOrder: EquipmentSlot[]
 }

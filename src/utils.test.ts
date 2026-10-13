@@ -25,4 +25,14 @@ describe('combined blue gear and carrack upgrade stage', () => {
       ]),
     )
   })
+
+  it('chooses the Epheria route from the final carrack target for a Bartali sailboat', () => {
+    const bartali = {
+      ...sampleData.ships[0],
+      hull: 'bartali' as const,
+      activeStage: 1 as const,
+      upgradeHull: 'volante' as const,
+    }
+    expect(shipRecipes(bartali).map((recipe) => recipe.id)).toEqual(['upgrade-bartali-frigate'])
+  })
 })
