@@ -6,10 +6,8 @@ import {
   hullLabel,
   materials,
   materialById,
-  shortHullLabel,
   stageLabelForHull,
   stagesForHull,
-  upgradeTargets,
 } from './catalog'
 import { clearData, freshSample, hasStoredData, loadData, normalize, saveData } from './storage'
 import { useDriveSync } from './useDriveSync'
@@ -619,29 +617,6 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {(currentShip.hull === 'trade' || currentShip.hull === 'warship') && (
-                <label className="upgrade-choice">
-                  중범선 증축 목표
-                  <select
-                    value={currentShip.upgradeHull || defaultUpgradeHull[currentShip.hull]}
-                    onChange={(e) =>
-                      editShip({
-                        ...currentShip,
-                        upgradeHull: e.target.value as Ship['upgradeHull'],
-                      })
-                    }
-                  >
-                    {upgradeTargets[currentShip.hull].map((hull) => (
-                      <option key={hull} value={hull}>
-                        {shortHullLabel[hull]}
-                      </option>
-                    ))}
-                  </select>
-                  <small>
-                    2단계에서 에페리아 함선 장비와 선택한 중범선 증축 재료를 함께 집계합니다.
-                  </small>
-                </label>
-              )}
               <p className="muted">
                 단계를 클릭하면 해당 단계의 고정 제작식만 봅니다. 재료 보유량은 함대 전체에서
                 공유됩니다.

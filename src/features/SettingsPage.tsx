@@ -1,5 +1,11 @@
 import type { ChangeEvent, RefObject } from 'react'
-import { defaultEquipmentOrder, defaultUpgradeHull, hullLabel } from '../catalog'
+import {
+  defaultEquipmentOrder,
+  defaultUpgradeHull,
+  hullLabel,
+  shortHullLabel,
+  upgradeTargets,
+} from '../catalog'
 import type { AppData, Hull, Ship } from '../types'
 import type { DriveStatus } from '../useDriveSync'
 
@@ -39,42 +45,61 @@ export function SettingsPage({
     <section className="settings">
       <div className="panel">
         <h2>내 함대</h2>
-        <p>게임 제작식은 고정입니다. 선박 이름, 종류, 현재 진행 단계와 보유 수량만 관리합니다.</p>
+        <p>선박 이름·종류와 무역선/구축함의 중범선 목표를 미리 관리합니다.</p>
         {data.ships.map((ship) => (
-          <div className="ship-edit" key={ship.id}>
-            <input
-              value={ship.name}
-              onChange={(event) => onEditShip({ ...ship, name: event.target.value })}
-            />
-            <select
-              value={ship.hull}
-              onChange={(event) => {
-                const hull = event.target.value as Hull
-                onEditShip({
-                  ...ship,
-                  hull,
-                  activeStage:
-                    hull === 'balance' ||
-                    hull === 'advance' ||
-                    hull === 'volante' ||
-                    hull === 'valor'
-                      ? 3
-                      : 1,
-                  upgradeHull:
-                    hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
-                  equipmentOrder: [...defaultEquipmentOrder[hull]],
-                })
-              }}
-            >
-              {(Object.keys(hullLabel) as Hull[]).map((hull) => (
-                <option value={hull} key={hull}>
-                  {hullLabel[hull]}
-                </option>
-              ))}
-            </select>
-            <button className="danger" onClick={() => onRemoveShip(ship)}>
-              제거
-            </button>
+          <div className="ship-manage" key={ship.id}>
+            <div className="ship-edit">
+              <input
+                value={ship.name}
+                onChange={(event) => onEditShip({ ...ship, name: event.target.value })}
+              />
+              <select
+                value={ship.hull}
+                onChange={(event) => {
+                  const hull = event.target.value as Hull
+                  onEditShip({
+                    ...ship,
+                    hull,
+                    activeStage:
+                      hull === 'balance' ||
+                      hull === 'advance' ||
+                      hull === 'volante' ||
+                      hull === 'valor'
+                        ? 3
+                        : 1,
+                    upgradeHull:
+                      hull === 'trade' || hull === 'warship' ? defaultUpgradeHull[hull] : undefined,
+                    equipmentOrder: [...defaultEquipmentOrder[hull]],
+                  })
+                }}
+              >
+                {(Object.keys(hullLabel) as Hull[]).map((hull) => (
+                  <option value={hull} key={hull}>
+                    {hullLabel[hull]}
+                  </option>
+                ))}
+              </select>
+              <button className="danger" onClick={() => onRemoveShip(ship)}>
+                제거
+              </button>
+            </div>
+            {(ship.hull === 'trade' || ship.hull === 'warship') && (
+              <label className="ship-upgrade-target">
+                중범선 목표
+                <select
+                  value={ship.upgradeHull || defaultUpgradeHull[ship.hull]}
+                  onChange={(event) =>
+                    onEditShip({ ...ship, upgradeHull: event.target.value as Ship['upgradeHull'] })
+                  }
+                >
+                  {upgradeTargets[ship.hull].map((hull) => (
+                    <option key={hull} value={hull}>
+                      {shortHullLabel[hull]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
           </div>
         ))}
         <div className="add-ships">

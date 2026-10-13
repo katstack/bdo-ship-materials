@@ -677,6 +677,21 @@ tr:last-child td {
   border-radius: 6px;
   padding: 8px;
 }
+.ship-upgrade-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  color: #9fb6bd;
+  font-size: 12px;
+}
+.ship-upgrade-target select {
+  color: #dff7f1;
+  border: 1px solid #4a7875;
+  border-radius: 6px;
+  background: #122025;
+  padding: 6px 9px;
+}
 .add-ships {
   display: flex;
   flex-wrap: wrap;
@@ -755,31 +770,6 @@ tr:last-child td {
 .sort-button:hover {
   background: transparent;
   color: #d9f3ef;
-}
-.upgrade-choice {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 14px 0;
-  color: #b9c9ce;
-  font-size: 13px;
-}
-.upgrade-choice select {
-  color: #e8edf2;
-  background: #11191e;
-  border: 1px solid #4b6670;
-  border-radius: 6px;
-  padding: 7px;
-}
-.upgrade-choice small {
-  color: #91a7af;
-}
-@media (max-width: 560px) {
-  .upgrade-choice {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
 }
 .task-grid {
   display: grid;
