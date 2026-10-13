@@ -260,6 +260,33 @@ nav button.active {
   font-size: 13px;
   color: #bdc9cd;
 }
+.material-toolbar {
+  flex-wrap: wrap;
+}
+.demand-scope {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.scope-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #344650;
+  border-radius: 8px;
+  background: #11191e;
+}
+.scope-group > span {
+  padding: 0 5px 0 3px;
+  color: #91a7af;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.scope-group button {
+  margin: 0;
+  white-space: nowrap;
+}
 .table-wrap {
   overflow: auto;
   border: 1px solid #34434c;

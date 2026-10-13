@@ -758,47 +758,55 @@ export default function App() {
               <h2>{tab === 'materials' ? '전체 재료 현황' : '물교 우선순위'}</h2>
             </div>
           </div>
-          <div className="toolbar">
-            <button
-              className={scope.target === 'fleet' && scope.range === 'all' ? 'primary' : ''}
-              onClick={() => setScope(fleetDemandScope('all'))}
-            >
-              함대 전체 목표
-            </button>
-            <button
-              className={scope.target === 'fleet' && scope.range === 'current' ? 'primary' : ''}
-              onClick={() => setScope(fleetDemandScope('current'))}
-            >
-              함대 현재 단계
-            </button>
-            {currentShip && (
-              <>
+          <div className="toolbar material-toolbar">
+            <div className="demand-scope" aria-label="재료 계산 대상과 범위">
+              <div className="scope-group">
+                <span>대상</span>
                 <button
-                  className={
-                    scope.target === 'ship' &&
-                    scope.shipId === currentShip.id &&
-                    scope.range === 'all'
-                      ? 'primary'
-                      : ''
-                  }
-                  onClick={() => setScope(shipDemandScope(currentShip.id, 'all'))}
+                  className={scope.target === 'fleet' ? 'primary' : ''}
+                  onClick={() => setScope(fleetDemandScope(scope.range))}
                 >
-                  {currentShip.name} 전체 목표
+                  함대 전체
+                </button>
+                {currentShip && (
+                  <button
+                    className={
+                      scope.target === 'ship' && scope.shipId === currentShip.id ? 'primary' : ''
+                    }
+                    onClick={() => setScope(shipDemandScope(currentShip.id, scope.range))}
+                  >
+                    {currentShip.name}
+                  </button>
+                )}
+              </div>
+              <div className="scope-group">
+                <span>범위</span>
+                <button
+                  className={scope.range === 'all' ? 'primary' : ''}
+                  onClick={() =>
+                    setScope(
+                      scope.target === 'fleet'
+                        ? fleetDemandScope('all')
+                        : shipDemandScope(scope.shipId, 'all'),
+                    )
+                  }
+                >
+                  완료까지
                 </button>
                 <button
-                  className={
-                    scope.target === 'ship' &&
-                    scope.shipId === currentShip.id &&
-                    scope.range === 'current'
-                      ? 'primary'
-                      : ''
+                  className={scope.range === 'current' ? 'primary' : ''}
+                  onClick={() =>
+                    setScope(
+                      scope.target === 'fleet'
+                        ? fleetDemandScope('current')
+                        : shipDemandScope(scope.shipId, 'current'),
+                    )
                   }
-                  onClick={() => setScope(shipDemandScope(currentShip.id, 'current'))}
                 >
-                  {currentShip.name} 현재 단계
+                  현재 단계만
                 </button>
-              </>
-            )}
+              </div>
+            </div>
             {tab === 'materials' && (
               <input
                 placeholder="재료명 검색"

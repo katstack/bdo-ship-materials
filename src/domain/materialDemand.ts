@@ -20,7 +20,7 @@ export const shipDemandScope = (shipId: string, range: 'current' | 'all'): Deman
 })
 
 export const demandScopeLabel = (data: AppData, scope: DemandScope) => {
-  const range = scope.range === 'current' ? '현재 단계' : '전체 목표'
+  const range = scope.range === 'current' ? '현재 단계만' : '완료까지'
   if (scope.target === 'fleet') return `함대 · ${range}`
   return `${data.ships.find((ship) => ship.id === scope.shipId)?.name || '선택 선박'} · ${range}`
 }
