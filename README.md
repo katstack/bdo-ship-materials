@@ -6,6 +6,27 @@
 
 함대·단계·고정 게임 데이터의 의도와 다음 작업자가 따라야 할 기준은 [앱 설계 문서](docs/APP_INTENT.md)를 참고하세요.
 
+## 제작 노트 원본 데이터 추출 (Windows)
+
+검은사막 클라이언트 설치본에서 아이템·제작식·의뢰·NPC 데이터를 읽어 올 때는 Windows PowerShell에서 아래 스크립트를 실행합니다. 게임 설치 폴더는 읽기만 하며, 결과는 `%LOCALAPPDATA%\bdo-ship-materials\extracted\<실행시각>`에 생성됩니다.
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\extract-bdo-client.ps1
+```
+
+Windows 탐색기에서 `scripts\extract-bdo-client.cmd`를 더블클릭해도 같은 작업을 실행할 수 있습니다.
+
+기본 게임 경로는 `C:\Pearlabyss\BlackDesert`입니다. 다른 경로라면 다음처럼 지정합니다.
+
+```powershell
+.\scripts\extract-bdo-client.ps1 -GameDir 'D:\Games\BlackDesert'
+```
+
+처음 실행할 때만 사용자 로컬 도구 폴더에 Go와 `bdo-data-extractor`를 설치합니다. 이후 실행은 추출기 갱신과 JSON 생성만 수행합니다.
+
+`Auto`가 기본값입니다. 현재 한국 서비스 클라이언트처럼 `locales\ko.pak` 형식인 설치본에서는 공개 추출기가 요구하는 `ads\languagedata_en.loc`가 없어, 완성된 이름 포함 카탈로그 대신 PAZ 파일 인덱스와 `manufacture.bss`·`itemenchant.dbss` 원시 테이블을 저장합니다. 이는 실패가 아니라 후속 한국어 디코더의 입력 스냅샷입니다. 영문 LOC 형식을 가진 지원 클라이언트에서만 전체 JSON을 만들려면 `-Mode Full`을, 원시 스냅샷을 강제하려면 `-Mode Raw`를 사용합니다.
+
 ## 로컬 실행
 
 이 프로젝트는 Node.js 24 LTS를 사용합니다. nvm이 설치되어 있다면 저장소에서 아래 명령으로 맞춥니다.
