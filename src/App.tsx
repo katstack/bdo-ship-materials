@@ -48,6 +48,7 @@ import { BarterPriorityTable, type BarterRow } from './features/BarterPriorityTa
 import { MaterialTable } from './features/MaterialTable'
 import { QuestPlanCard } from './features/QuestPlanCard'
 import { RecipeRows } from './features/RecipeRows'
+import { CraftingTree } from './features/CraftingTree'
 import { SettingsPage } from './features/SettingsPage'
 import { hashForRoute, normalizeRouteForShips, routeFromHash, type AppTab } from './routing'
 
@@ -1119,6 +1120,7 @@ export default function App() {
                     ))}
                   </section>
                 ) : null}
+                <CraftingTree materialId={material.id} />
                 <section className="acquisition-detail" aria-label="기타 획득처">
                   <h3>기타 획득처</h3>
                   <ul>

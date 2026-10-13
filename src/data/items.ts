@@ -48,6 +48,46 @@ export const latestCrowCoinPricesByName: Record<string, number> = {
 
 // 앱에서 다루는 모든 재료의 이름·Codex ID·까마귀 주화 가격의 단일 기준 데이터.
 export const items: ItemRecord[] = [
+  // 제작 노트 트리의 중간·원재료. 함선 재료 표에는 노출하지 않지만, 이름 대신
+  // materialId로 가공 단계를 연결해 최종 재료부터 원재료까지 추적할 수 있게 한다.
+  {
+    materialId: 'usable-timber',
+    name: '쓸만한 각목',
+    processingRecipes: [
+      {
+        method: '장작패기',
+        ingredients: [{ materialId: 'log', name: '통나무', quantity: 10 }],
+        result: '1~4개 (가공 숙련도·대성공에 따라 변동)',
+      },
+    ],
+  },
+  { materialId: 'log', name: '통나무' },
+  { materialId: 'pine-log', name: '소나무 원목' },
+  {
+    materialId: 'flax-thread',
+    name: '아마실',
+    processingRecipes: [
+      {
+        method: '빻기',
+        ingredients: [{ materialId: 'flax-plant', name: '아마', quantity: 5 }],
+        result: '1~4개 (가공 숙련도·대성공에 따라 변동)',
+      },
+    ],
+  },
+  { materialId: 'flax-plant', name: '아마' },
+  {
+    materialId: 'melted-iron-shard',
+    name: '녹아내린 철 조각',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [{ materialId: 'iron-ore', name: '철광석', quantity: 5 }],
+        result: '1~4개 (가공 숙련도·대성공에 따라 변동)',
+      },
+    ],
+  },
+  { materialId: 'iron-ore', name: '철광석' },
+  { materialId: 'coal', name: '석탄' },
   {
     materialId: 'sailboat-permit',
     name: '선박 증축 허가증 : 에페리아 경범선',
@@ -69,7 +109,7 @@ export const items: ItemRecord[] = [
     processingRecipes: [
       {
         method: '장작패기',
-        ingredients: [{ name: '쓸만한 각목', quantity: 10 }],
+        ingredients: [{ materialId: 'usable-timber', name: '쓸만한 각목', quantity: 10 }],
         knowledge: '장작패기 - 수련 지식',
       },
     ],
@@ -82,8 +122,8 @@ export const items: ItemRecord[] = [
       {
         method: '가열하기',
         ingredients: [
-          { name: '녹아내린 철 조각', quantity: 5 },
-          { name: '석탄', quantity: 5 },
+          { materialId: 'melted-iron-shard', name: '녹아내린 철 조각', quantity: 5 },
+          { materialId: 'coal', name: '석탄', quantity: 5 },
         ],
         knowledge: '가열하기 - 수련 지식',
         note: '하이델 플라비아노의 「실험에 쓰일 순수한 물」 의뢰로 관련 지식을 얻을 수 있습니다.',
@@ -95,7 +135,10 @@ export const items: ItemRecord[] = [
     name: '소나무 합판',
     codexItemId: '4658',
     processingRecipes: [
-      { method: '장작패기', ingredients: [{ name: '소나무 원목', quantity: 5 }] },
+      {
+        method: '장작패기',
+        ingredients: [{ materialId: 'pine-log', name: '소나무 원목', quantity: 5 }],
+      },
     ],
   },
   {
@@ -105,7 +148,7 @@ export const items: ItemRecord[] = [
     processingRecipes: [
       {
         method: '빻기',
-        ingredients: [{ name: '아마실', quantity: 10 }],
+        ingredients: [{ materialId: 'flax-thread', name: '아마실', quantity: 10 }],
         knowledge: '빻기 - 수련 지식',
         note: '하이델 오르넬라의 「장비 수리에 필요한 재료」 의뢰로 관련 지식을 얻을 수 있습니다.',
       },
@@ -616,3 +659,8 @@ export const items: ItemRecord[] = [
 export const itemByMaterialId = Object.fromEntries(
   items.map((item) => [item.materialId, item]),
 ) as Record<string, ItemRecord>
+
+export const itemByName = Object.fromEntries(items.map((item) => [item.name, item])) as Record<
+  string,
+  ItemRecord
+>

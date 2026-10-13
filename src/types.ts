@@ -23,6 +23,8 @@ export interface MaterialDefinition {
   processingRecipes?: ProcessingRecipe[]
 }
 export interface ProcessingIngredient {
+  /** 앱의 안정 ID. 이름만 있는 기존·미확인 데이터와 호환하기 위해 선택값이다. */
+  materialId?: string
   name: string
   quantity: number
 }

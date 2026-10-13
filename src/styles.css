@@ -430,6 +430,49 @@ tr:last-child td {
   color: #91a6ac;
   line-height: 1.5;
 }
+.crafting-tree > p {
+  margin: 0 0 10px;
+}
+.crafting-tree > ul,
+.crafting-tree-recipe > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.crafting-tree-node {
+  margin-top: 8px;
+  border-left: 2px solid #49636a;
+  padding-left: 10px;
+}
+.crafting-tree-item {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+}
+.crafting-tree-item b {
+  color: #e7f0f1;
+}
+.crafting-tree-item span {
+  color: #77d8c7;
+  font-size: 13px;
+}
+.crafting-tree-item small,
+.crafting-tree-recipe > small {
+  color: #91a6ac;
+  font-size: 12px;
+}
+.crafting-tree-recipe {
+  margin: 7px 0 2px;
+  border-radius: 7px;
+  background: #152126;
+  padding: 8px 10px;
+}
+.crafting-tree-recipe > b {
+  color: #80dbc9;
+  font-size: 13px;
+  margin-right: 8px;
+}
 .modal-actions {
   display: flex;
   align-items: center;
