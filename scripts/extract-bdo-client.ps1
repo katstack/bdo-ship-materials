@@ -101,10 +101,27 @@ if ($effectiveMode -eq 'Full') {
     $extractRaw = Start-Process -FilePath $extractorExe -ArgumentList @('extract', '--game', $GameDir, $table, $rawDir) -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
     if ($extractRaw.ExitCode -ne 0) { throw "Raw table extraction failed for $table with exit code $($extractRaw.ExitCode)." }
   }
-  $resultFiles = @('paz-index\\paz_files.json', 'paz-index\\paz_dirs.json', 'raw\\gamecommondata\\binary\\manufacture.bss', 'raw\\gamecommondata\\binary\\itemenchant.dbss')
+
+  # Decode the client-side portion of manufacture.bss to JSON. The probe is
+  # compiled inside an upstream source checkout because Go's internal packages
+  # intentionally cannot be imported by a program outside that module.
+  $sourceDir = Join-Path $toolRoot "bdo-data-extractor-$($ExtractorVersion.TrimStart('v'))"
+  if (-not (Test-Path -LiteralPath (Join-Path $sourceDir 'go.mod'))) {
+    $clone = Start-Process -FilePath 'git.exe' -ArgumentList @('clone', '--depth', '1', '--branch', $ExtractorVersion, 'https://github.com/idevelopthings/bdo-data-extractor.git', $sourceDir) -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+    if ($clone.ExitCode -ne 0) { throw "Extractor source checkout failed with exit code $($clone.ExitCode)." }
+  }
+  $probeDir = Join-Path $sourceDir 'cmd\\kr-manufacture-probe'
+  New-Item -ItemType Directory -Force -Path $probeDir | Out-Null
+  Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'kr-manufacture-probe.go') -Destination (Join-Path $probeDir 'main.go') -Force
+  $decodedManufacture = Join-Path $outputDir 'data\\manufacture.raw.json'
+  New-Item -ItemType Directory -Force -Path (Split-Path $decodedManufacture) | Out-Null
+  $decode = Start-Process -FilePath $goExe -ArgumentList @('run', '.\\cmd\\kr-manufacture-probe', $GameDir, $decodedManufacture) -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
+  if ($decode.ExitCode -ne 0) { throw "Manufacture table decoding failed with exit code $($decode.ExitCode)." }
+
+  $resultFiles = @('paz-index\\paz_files.json', 'paz-index\\paz_dirs.json', 'raw\\gamecommondata\\binary\\manufacture.bss', 'raw\\gamecommondata\\binary\\itemenchant.dbss', 'data\\manufacture.raw.json')
   $missing = $resultFiles | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir $_)) }
   if ($missing) { throw "The raw extraction result is missing files: $($missing -join ', ')" }
-  $note = 'Raw Korean-client snapshot. The current upstream extractor cannot decode this client into named items because it expects ads\\languagedata_en.loc, while this installation uses locales\\ko.pak.'
+  $note = 'Raw Korean-client snapshot. manufacture.raw.json contains client-side input item IDs, counts, processing type, and success rate. Its result group is server-resolved, so item names and output-item links require a separately versioned catalog. The installation has no ads\\languagedata_en.loc; locales\\ko.pak is launcher UI data and is not compatible with the game localization decoder.'
 }
 
 $manifest = [ordered]@{

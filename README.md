@@ -25,7 +25,7 @@ Windows 탐색기에서 `scripts\extract-bdo-client.cmd`를 더블클릭해도 �
 
 처음 실행할 때만 사용자 로컬 도구 폴더에 Go와 `bdo-data-extractor`를 설치합니다. 이후 실행은 추출기 갱신과 JSON 생성만 수행합니다.
 
-`Auto`가 기본값입니다. 현재 한국 서비스 클라이언트처럼 `locales\ko.pak` 형식인 설치본에서는 공개 추출기가 요구하는 `ads\languagedata_en.loc`가 없어, 완성된 이름 포함 카탈로그 대신 PAZ 파일 인덱스와 `manufacture.bss`·`itemenchant.dbss` 원시 테이블을 저장합니다. 이는 실패가 아니라 후속 한국어 디코더의 입력 스냅샷입니다. 영문 LOC 형식을 가진 지원 클라이언트에서만 전체 JSON을 만들려면 `-Mode Full`을, 원시 스냅샷을 강제하려면 `-Mode Raw`를 사용합니다.
+`Auto`가 기본값입니다. 현재 한국 서비스 클라이언트는 공개 추출기가 요구하는 `ads\languagedata_en.loc`가 없으며, 설치된 `locales\ko.pak`은 게임 아이템 로컬라이즈가 아닌 런처 UI 리소스입니다. 따라서 완성된 이름 포함 카탈로그 대신 PAZ 파일 인덱스, `manufacture.bss`·`itemenchant.dbss` 원시 테이블, 그리고 ID 기반 `data\manufacture.raw.json`을 저장합니다. 이 JSON에는 가공 입력 아이템 ID·수량·종류·성공률이 들어가며 결과물은 서버 드롭 그룹이라 별도 카탈로그와 병합해야 합니다. 영문 LOC 형식을 가진 지원 클라이언트에서만 전체 JSON을 만들려면 `-Mode Full`을, 원시 스냅샷을 강제하려면 `-Mode Raw`를 사용합니다.
 
 ## 로컬 실행
 
