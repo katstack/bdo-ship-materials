@@ -74,7 +74,22 @@ export const items: ItemRecord[] = [
       },
     ],
   },
-  { materialId: 'basic-steel', name: '강철' },
+  {
+    materialId: 'basic-steel',
+    name: '강철',
+    codexItemId: '4077',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '녹아내린 철 조각', quantity: 5 },
+          { name: '석탄', quantity: 5 },
+        ],
+        knowledge: '가열하기 - 수련 지식',
+        note: '하이델 플라비아노의 「실험에 쓰일 순수한 물」 의뢰로 관련 지식을 얻을 수 있습니다.',
+      },
+    ],
+  },
   {
     materialId: 'pine-plywood',
     name: '소나무 합판',
@@ -83,9 +98,52 @@ export const items: ItemRecord[] = [
       { method: '장작패기', ingredients: [{ name: '소나무 원목', quantity: 5 }] },
     ],
   },
-  { materialId: 'flax-fabric', name: '아마포' },
-  { materialId: 'hard-pillar', name: '단단한 기둥', codexItemId: '4687' },
-  { materialId: 'jade-coral', name: '비취 산호 주괴' },
+  {
+    materialId: 'flax-fabric',
+    name: '아마포',
+    codexItemId: '5856',
+    processingRecipes: [
+      {
+        method: '빻기',
+        ingredients: [{ name: '아마실', quantity: 10 }],
+        knowledge: '빻기 - 수련 지식',
+        note: '하이델 오르넬라의 「장비 수리에 필요한 재료」 의뢰로 관련 지식을 얻을 수 있습니다.',
+      },
+    ],
+  },
+  {
+    materialId: 'hard-pillar',
+    name: '단단한 기둥',
+    codexItemId: '4687',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '통나무', quantity: 10 },
+          { name: '목재 강화제', quantity: 10 },
+        ],
+        knowledge: '가열하기 - 숙련 지식',
+        note: '케플란 바투둔의 「기술 습득을 위한 재료」 의뢰로 관련 지식을 얻을 수 있습니다.',
+      },
+    ],
+  },
+  {
+    materialId: 'jade-coral',
+    name: '비취 산호 주괴',
+    codexItemId: '4269',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '녹아내린 티타늄 조각', quantity: 25 },
+          { name: '초원빛 산호 또는 동급 산호', quantity: 5 },
+        ],
+        knowledge: '가열하기 - 숙련 지식',
+        result: '5~7개 (가공 숙련도에 따라)',
+        note: '케플란 바투둔의 「기술 습득을 위한 재료」 의뢰로 관련 지식을 얻을 수 있습니다.',
+      },
+    ],
+  },
   {
     materialId: 'pine-coated-plywood',
     name: '소나무 증착합판',
@@ -116,11 +174,54 @@ export const items: ItemRecord[] = [
       },
     ],
   },
-  { materialId: 'graphite', name: '증축용 흑연 주괴' },
-  { materialId: 'timber', name: '증축용 목재' },
-  { materialId: 'glue', name: '증축용 접착제' },
-  { materialId: 'island', name: '섬나무 증착합판' },
-  { materialId: 'salt', name: '암염 주괴' },
+  {
+    materialId: 'graphite',
+    name: '증축용 흑연 주괴',
+    codexItemId: '45508',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '해양 괴수의 진액', quantity: 1 },
+          { name: '아연 주괴', quantity: 100 },
+        ],
+      },
+    ],
+  },
+  {
+    materialId: 'timber',
+    name: '증축용 목재',
+    codexItemId: '45509',
+    processingRecipes: [
+      {
+        method: '장작패기',
+        ingredients: [
+          { name: '해양 괴수의 진액', quantity: 1 },
+          { name: '붉은 나무혹', quantity: 100 },
+          { name: '오래된 나무 껍질', quantity: 100 },
+        ],
+      },
+    ],
+  },
+  {
+    materialId: 'glue',
+    name: '증축용 접착제',
+    codexItemId: '45510',
+    processingRecipes: [
+      {
+        method: '가열하기',
+        ingredients: [
+          { name: '해양 괴수의 진액', quantity: 1 },
+          { name: '백향목 수액', quantity: 100 },
+          { name: '아카시아 수액', quantity: 100 },
+          { name: '고목나무 수액', quantity: 100 },
+        ],
+        note: '세 종류 수액을 각각 300개로 대체해도 됩니다.',
+      },
+    ],
+  },
+  { materialId: 'island', name: '섬나무 증착합판', codexItemId: '5805' },
+  { materialId: 'salt', name: '암염 주괴', codexItemId: '5806' },
   {
     materialId: 'deep-glue',
     name: '심해의 기억이 담긴 아교',
@@ -134,7 +235,12 @@ export const items: ItemRecord[] = [
     codexItemId: '5814',
     crowCoinPrice: 40,
   },
-  { materialId: 'steel', name: '대양의 견고한 현철', crowCoinPrice: 130 },
+  {
+    materialId: 'steel',
+    name: '대양의 견고한 현철',
+    codexItemId: '5832',
+    crowCoinPrice: 130,
+  },
   {
     materialId: 'low',
     name: '콕스해적단의 유물 (협상 하급)',
@@ -144,14 +250,31 @@ export const items: ItemRecord[] = [
   { materialId: 'reef', name: '순수한 암초 조각', codexItemId: '5828', crowCoinPrice: 30 },
   { materialId: 'pearl', name: '순수한 진주 결정', codexItemId: '5820', crowCoinPrice: 200 },
   { materialId: 'moon', name: '달의 비늘이 새겨진 합판', codexItemId: '5827', crowCoinPrice: 15 },
-  { materialId: 'wave', name: '파도빛이 감도는 규격 각목', codexItemId: '5810', crowCoinPrice: 80 },
+  {
+    materialId: 'wave',
+    name: '파도빛이 감도는 규격 각목',
+    codexItemId: '5810',
+    crowCoinPrice: 80,
+    processingRecipes: [
+      {
+        method: '장작패기',
+        ingredients: [{ name: '난파된 유령선 잔해', quantity: 1 }],
+        result: '1개',
+      },
+    ],
+  },
   {
     materialId: 'high',
     name: '콕스해적단의 유물 (협상 상급)',
     codexItemId: '5823',
     crowCoinPrice: 400,
   },
-  { materialId: 'cobalt', name: '빛나는 코발트 주괴', crowCoinPrice: 400 },
+  {
+    materialId: 'cobalt',
+    name: '빛나는 코발트 주괴',
+    codexItemId: '5830',
+    crowCoinPrice: 400,
+  },
   {
     materialId: 'combat',
     name: '콕스해적단의 유물 (전투)',
@@ -165,6 +288,13 @@ export const items: ItemRecord[] = [
     name: '짙은 파도빛이 감도는 규격 각목',
     codexItemId: '5812',
     crowCoinPrice: 80,
+    processingRecipes: [
+      {
+        method: '장작패기',
+        ingredients: [{ name: '쓸만한 해적선의 파편', quantity: 1 }],
+        result: '1개',
+      },
+    ],
   },
   { materialId: 'brilliant-salt', name: '화려한 암염 주괴', crowCoinPrice: 400 },
   { materialId: 'brilliant-pearl', name: '화려한 진주 결정', crowCoinPrice: 400 },

@@ -1096,12 +1096,9 @@ export default function App() {
             <div className="modal">
               <div>
                 <h2>{material.name} · 획득처</h2>
-                <p>
-                  까마귀 주화 단가:{' '}
-                  {material.crowCoinPrice === undefined
-                    ? '확인 필요'
-                    : `${number(material.crowCoinPrice)}개 / 1개`}
-                </p>
+                {material.crowCoinPrice !== undefined ? (
+                  <p>까마귀 주화 단가: {number(material.crowCoinPrice)}개 / 1개</p>
+                ) : null}
                 {material.processingRecipes?.length ? (
                   <section className="acquisition-detail" aria-label="제작 노트 가공식">
                     <h3>제작 노트 가공식</h3>
@@ -1115,6 +1112,7 @@ export default function App() {
                             )
                             .join(' + ')}
                         </p>
+                        {recipe.result ? <small>제작 결과 · {recipe.result}</small> : null}
                         {recipe.knowledge ? <small>필요 지식 · {recipe.knowledge}</small> : null}
                         {recipe.note ? <small>{recipe.note}</small> : null}
                       </div>

@@ -31,6 +31,7 @@ export interface ProcessingRecipe {
   ingredients: ProcessingIngredient[]
   knowledge?: string
   note?: string
+  result?: string
 }
 export interface Requirement {
   materialId: string
