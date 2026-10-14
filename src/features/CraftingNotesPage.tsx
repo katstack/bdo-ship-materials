@@ -4,6 +4,7 @@ import { displayItemName, searchCatalog } from '../crafting/search'
 import { EnhancementTable } from './EnhancementTable'
 import { AcquisitionMethods } from './AcquisitionMethods'
 import { IngredientBranch } from './CraftingIngredientBranch'
+import { QuantityInput } from './QuantityInput'
 import { craftingMethods as methods } from '../crafting/methods'
 import { defaultRecipeIndex, recipeLabel } from '../crafting/recipeSelection'
 import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/types'
@@ -144,17 +145,10 @@ export function CraftingNotesPage({
                 <div className="crafting-plan-toolbar">
                   <label>
                     목표 수량{' '}
-                    <input
-                      type="number"
-                      min="1"
-                      step="1"
+                    <QuantityInput
                       aria-label="제작 목표 수량"
                       value={quantity}
-                      onChange={(event) => {
-                        const value = Number(event.target.value)
-                        if (Number.isSafeInteger(value) && value > 0 && value <= 1e9)
-                          setQuantity(value)
-                      }}
+                      onValueChange={setQuantity}
                     />
                   </label>
                   <button

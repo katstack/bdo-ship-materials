@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calculateCraftingPlan, planItemName } from './planCalculation'
+import { calculateCraftingPlan, planItemName, samePlanDependencyGraph } from './planCalculation'
 import { emptyCraftingPlan } from './planTypes'
 import type { ItemDetail, SourceRecipe } from './types'
 import { loadPlanDetails } from './loadPlanDetails'
@@ -30,6 +30,23 @@ const plan = () => ({
   inventory: { '3': 1, '4': 1 },
 })
 describe('multi-goal crafting calculation', () => {
+  it('keeps the same dependency graph when only quantities, yields or equivalent choices change', () => {
+    const a = { ...plan(), view: 'raw' as const }
+    const b = {
+      ...a,
+      goals: [{ ...a.goals[0], quantity: 600 }, a.goals[1]],
+      choices: { '3': { mode: 'craft' as const, recipeIndex: 0, outputPerCraft: 2.5 } },
+    }
+    expect(samePlanDependencyGraph(a, b, details, names)).toBe(true)
+    expect(
+      samePlanDependencyGraph(
+        a,
+        { ...b, choices: { '3': { mode: 'obtain', recipeIndex: 0, outputPerCraft: 2.5 } } },
+        details,
+        names,
+      ),
+    ).toBe(false)
+  })
   it('aggregates shared direct material demand and subtracts stock once', () => {
     const result = calculateCraftingPlan(plan(), details, names)
     expect(result.rows.find((row) => row.id === '3')).toMatchObject({

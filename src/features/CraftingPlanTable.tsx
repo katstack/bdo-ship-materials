@@ -2,6 +2,7 @@ import { referenceForPlan, type PlanRow } from '../crafting/planCalculation'
 import type { CraftingPlan } from '../crafting/planTypes'
 import type { ItemDetail } from '../crafting/types'
 import { recipeLabel } from '../crafting/recipeSelection'
+import { QuantityInput } from './QuantityInput'
 const n = (value: number) => value.toLocaleString('ko-KR')
 export function CraftingPlanTable({
   rows,
@@ -67,17 +68,13 @@ export function CraftingPlanTable({
                 </td>
                 <td>{n(row.required)}</td>
                 <td>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
+                  <QuantityInput
+                    min={0}
                     aria-label={`${row.name} 제작 재고`}
                     value={row.owned}
-                    onChange={(event) => {
-                      const value = Number(event.target.value)
-                      if (Number.isSafeInteger(value) && value >= 0 && value <= 1e9)
-                        update({ ...plan, inventory: { ...plan.inventory, [row.id]: value } })
-                    }}
+                    onValueChange={(value) =>
+                      update({ ...plan, inventory: { ...plan.inventory, [row.id]: value } })
+                    }
                   />
                 </td>
                 <td className={row.shortage ? 'short' : 'save'}>{n(row.shortage)}</td>
@@ -117,18 +114,14 @@ export function CraftingPlanTable({
                       </select>
                     </td>
                     <td>
-                      <input
-                        type="number"
-                        min="0.000001"
-                        max="1000000000"
-                        step="any"
+                      <QuantityInput
+                        min={0.000001}
+                        integer={false}
                         aria-label={`${row.name} 1회 예상 생산량`}
                         value={row.outputPerCraft}
-                        onChange={(event) => {
-                          const value = Number(event.target.value)
-                          if (Number.isFinite(value) && value > 0 && value <= 1e9)
-                            changeChoice(row, { outputPerCraft: value, yieldConfirmed: true })
-                        }}
+                        onValueChange={(value) =>
+                          changeChoice(row, { outputPerCraft: value, yieldConfirmed: true })
+                        }
                       />
                       <small className="save">
                         {row.assumedYield ? '미확보 · 1개 가정' : '사용자 가정값'}

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useCraftingCalculation } from '../crafting/useCraftingCalculation'
 import { CraftingPlanTable } from './CraftingPlanTable'
+import { QuantityInput } from './QuantityInput'
 import { parseCraftingPlan } from '../crafting/planStorage'
 import { emptyCraftingPlan, type CraftingPlan } from '../crafting/planTypes'
 import { defaultRecipeIndex } from '../crafting/recipeSelection'
@@ -89,21 +90,16 @@ export function CraftingPlanPage({
                 </button>
                 <label>
                   목표 수량{' '}
-                  <input
-                    type="number"
-                    min="1"
-                    step="1"
+                  <QuantityInput
                     aria-label={`${goal.name} 목표 수량`}
                     value={goal.quantity}
-                    onChange={(event) => {
-                      const value = Number(event.target.value)
-                      if (Number.isSafeInteger(value) && value > 0 && value <= 1e9)
-                        update({
-                          ...plan,
-                          goals: plan.goals.map((item) =>
-                            item.itemId === goal.itemId ? { ...item, quantity: value } : item,
-                          ),
-                        })
+                    onValueChange={(value) => {
+                      update({
+                        ...plan,
+                        goals: plan.goals.map((item) =>
+                          item.itemId === goal.itemId ? { ...item, quantity: value } : item,
+                        ),
+                      })
                     }}
                   />
                 </label>

@@ -39,6 +39,37 @@ export function shouldExpandPlanItem(
   )
 }
 
+/** Compare actual selected dependencies, not quantities, yields or redundant default choices. */
+export function samePlanDependencyGraph(
+  a: CraftingPlan,
+  b: CraftingPlan,
+  details: ReadonlyMap<string, ItemDetail>,
+  names: ReadonlyMap<string, string>,
+) {
+  const signature = (plan: CraftingPlan) => {
+    const paths = new Map<string, string>()
+    let missing = false
+    const visit = (id: string, depth: number) => {
+      if (paths.has(id)) return
+      const detail = details.get(referenceForPlan(id, names).id)
+      if (!detail) {
+        missing = true
+        return
+      }
+      const expand = depth < 20 && shouldExpandPlanItem(plan, id, detail, names)
+      const index = plan.choices[id]?.recipeIndex ?? defaultRecipeIndex(detail)
+      paths.set(id, expand ? `craft:${index}` : 'obtain')
+      if (expand)
+        for (const input of detail.recipes[index]?.inputs ?? [])
+          visit(sourceItemId(input.item), depth + 1)
+    }
+    for (const goal of plan.goals) visit(goal.itemId, 0)
+    return missing ? undefined : JSON.stringify([...paths].sort(([a], [b]) => a.localeCompare(b)))
+  }
+  const first = signature(a)
+  return first !== undefined && first === signature(b)
+}
+
 /** Sum demand before rounding craft counts or allocating stock. Shared inputs are consumed once. */
 export function calculateCraftingPlan(
   plan: CraftingPlan,

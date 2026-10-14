@@ -1,5 +1,51 @@
 import { test, expect } from '@playwright/test'
 
+test('quantity editing replaces defaults and permits clearing before typing', async ({ page }) => {
+  await page.goto('./#/crafting/item/4051')
+  const quantity = page.getByRole('spinbutton', { name: '제작 목표 수량', exact: true })
+  await expect(quantity).toHaveValue('1')
+  await quantity.click()
+  await quantity.pressSequentially('600')
+  await expect(quantity).toHaveValue('600')
+  await quantity.blur()
+  await quantity.click()
+  await quantity.press('Backspace')
+  await expect(quantity).toHaveValue('')
+  await quantity.pressSequentially('800')
+  await expect(quantity).toHaveValue('800')
+  await page.getByRole('button', { name: '제작 계획에 추가', exact: true }).click()
+  await page
+    .getByRole('navigation', { name: '제작 시뮬레이터 메뉴' })
+    .getByRole('link', { name: '제작 계획 (1)', exact: true })
+    .click()
+  const goal = page.getByRole('spinbutton', { name: '녹아내린 철 조각 목표 수량', exact: true })
+  await goal.click()
+  await goal.pressSequentially('600')
+  await expect(goal).toHaveValue('600')
+  await goal.blur()
+  const yieldInput = page.getByRole('spinbutton', {
+    name: '녹아내린 철 조각 1회 예상 생산량',
+    exact: true,
+  })
+  await yieldInput.click()
+  await yieldInput.pressSequentially('2.5')
+  await expect(yieldInput).toHaveValue('2.5')
+  await yieldInput.blur()
+  const stock = page.getByRole('spinbutton', { name: '철 광석 제작 재고', exact: true })
+  await stock.click()
+  await stock.pressSequentially('800')
+  await expect(stock).toHaveValue('800')
+  await stock.blur()
+  await goal.click()
+  await goal.press('Backspace')
+  await expect(goal).toHaveValue('')
+  await goal.blur()
+  await expect(goal).toHaveValue('600')
+  await page.reload()
+  await expect(goal).toHaveValue('600')
+  await expect(stock).toHaveValue('800')
+})
+
 test('multiple crafting goals aggregate materials, persist independently and restore tool routes', async ({
   page,
 }) => {
