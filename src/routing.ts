@@ -9,7 +9,7 @@ export type AppRoute = {
   shipId?: string
   scope?: DemandScope
   itemId?: string
-  craftingScreen?: 'plan'
+  craftingScreen?: 'plan' | 'settings'
 }
 
 const tabs: AppTab[] = ['dashboard', 'ship', 'materials', 'barter', 'daily', 'guide', 'settings']
@@ -38,8 +38,8 @@ export function routeFromHash(hash: string): AppRoute {
   const [screen, target, third, fourth, fifth] = segments
 
   if (screen === 'crafting')
-    return target === 'plan'
-      ? { tab: 'crafting', craftingScreen: 'plan' }
+    return target === 'plan' || target === 'settings'
+      ? { tab: 'crafting', craftingScreen: target }
       : { tab: 'crafting', itemId: target === 'item' ? third : undefined }
 
   if (screen === 'fleet') return { tab: 'ship', shipId: target }
@@ -56,8 +56,8 @@ export function routeFromHash(hash: string): AppRoute {
 
 export function hashForRoute({ tab, shipId, scope, itemId, craftingScreen }: AppRoute): string {
   if (tab === 'crafting')
-    return craftingScreen === 'plan'
-      ? '#/crafting/plan'
+    return craftingScreen
+      ? `#/crafting/${craftingScreen}`
       : itemId
         ? `#/crafting/item/${encodeURIComponent(itemId)}`
         : '#/crafting'

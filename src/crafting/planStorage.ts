@@ -1,4 +1,6 @@
 import { emptyCraftingPlan, type CraftingPlan } from './planTypes'
+import { yieldModels } from './planTypes'
+import { parseEnvironment } from './environment'
 
 export const craftingPlanStorageKey = 'bdo-crafting-plan-v1'
 const object = (value: unknown): value is Record<string, unknown> =>
@@ -52,7 +54,28 @@ export function parseCraftingPlan(value: unknown): CraftingPlan {
       recipeIndex: choice.recipeIndex,
       outputPerCraft: choice.outputPerCraft,
       yieldConfirmed: choice.yieldConfirmed === true,
+      ...(choice.yieldModel !== undefined
+        ? { yieldModel: choice.yieldModel as CraftingPlan['choices'][string]['yieldModel'] }
+        : {}),
+      ...(choice.yieldMin !== undefined ? { yieldMin: choice.yieldMin as number } : {}),
+      ...(choice.yieldMax !== undefined ? { yieldMax: choice.yieldMax as number } : {}),
     }
+    if (
+      (choice.yieldModel !== undefined &&
+        !yieldModels.includes(choice.yieldModel as (typeof yieldModels)[number])) ||
+      (choice.yieldMin !== undefined &&
+        (!finite(choice.yieldMin, 0) ||
+          !Number.isInteger(choice.yieldMin) ||
+          choice.yieldMin > 100)) ||
+      (choice.yieldMax !== undefined &&
+        (!finite(choice.yieldMax, 1) ||
+          !Number.isInteger(choice.yieldMax) ||
+          choice.yieldMax > 100)) ||
+      ((choice.yieldMin as number | undefined) !== undefined &&
+        (choice.yieldMax as number | undefined) !== undefined &&
+        Number(choice.yieldMin) > Number(choice.yieldMax))
+    )
+      throw Error('생산량 예측 모델 또는 범위가 올바르지 않습니다.')
   }
   const inventory: Record<string, number> = {}
   for (const [id, count] of Object.entries(value.inventory)) {
@@ -60,7 +83,17 @@ export function parseCraftingPlan(value: unknown): CraftingPlan {
       throw new Error('제작 재고가 올바르지 않습니다.')
     inventory[id] = count
   }
-  return { version: 1, goals, choices, inventory, view: value.view, sort: value.sort }
+  return {
+    version: 1,
+    goals,
+    choices,
+    inventory,
+    view: value.view,
+    sort: value.sort,
+    ...(value.environment !== undefined
+      ? { environment: parseEnvironment(value.environment) }
+      : {}),
+  }
 }
 export function loadCraftingPlan(): { plan: CraftingPlan; error?: string } {
   try {

@@ -176,6 +176,13 @@ export function CraftingPlanPage({
             선택할 수 있습니다. 결과 수량 미확보 시 1회당 1개를 가정하므로 예상 생산량을 수정하세요.
             대성공·생산량 변동은 보장하지 않습니다.
           </p>
+          <p className="save">
+            예측 기준:{' '}
+            {plan.environment?.confidence && plan.environment.confidence !== 'mean'
+              ? `${plan.environment.confidence}% 조건부 모형 하한 · 실제 게임 성공 보장 아님`
+              : '평균 생산량'}{' '}
+            · <a href="#/crafting/settings">숙련도·생활 등급 설정</a>
+          </p>
           {!current && <p role="status">제작 경로 불러오는 중…</p>}
           {current?.error && (
             <p role="alert">
@@ -244,12 +251,22 @@ export function CraftingPlanPage({
             <p>
               현재 제작 목표·제작 전용 재고·계산 설정을{' '}
               {confirm.type === 'clear' ? '초기화합니다' : '가져온 파일로 교체합니다'}. 함선 진행
-              데이터는 변경하지 않습니다.
+              데이터는 변경하지 않습니다. 파일에 제작 환경이 없으면 현재 생활 등급·숙련도를
+              유지합니다.
             </p>
             <div className="actions">
               <button
                 onClick={() => {
-                  if (update(confirm.plan ?? emptyCraftingPlan())) setConfirm(undefined)
+                  const next = confirm.plan ?? emptyCraftingPlan()
+                  if (
+                    update({
+                      ...next,
+                      ...(!next.environment && plan.environment
+                        ? { environment: plan.environment }
+                        : {}),
+                    })
+                  )
+                    setConfirm(undefined)
                 }}
               >
                 확인

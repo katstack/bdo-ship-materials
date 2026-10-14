@@ -3,6 +3,10 @@ import { hashForRoute, normalizeRouteForShips, routeFromHash } from './routing'
 
 describe('semantic hash routes', () => {
   it('keeps independent crafting plan bookmarks', () => {
+    expect(routeFromHash(hashForRoute({ tab: 'crafting', craftingScreen: 'settings' }))).toEqual({
+      tab: 'crafting',
+      craftingScreen: 'settings',
+    })
     const route = { tab: 'crafting' as const, craftingScreen: 'plan' as const }
     expect(hashForRoute(route)).toBe('#/crafting/plan')
     expect(normalizeRouteForShips(routeFromHash('#/crafting/plan'), [])).toEqual(route)

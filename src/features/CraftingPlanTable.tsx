@@ -3,6 +3,8 @@ import type { CraftingPlan } from '../crafting/planTypes'
 import type { ItemDetail } from '../crafting/types'
 import { recipeLabel } from '../crafting/recipeSelection'
 import { QuantityInput } from './QuantityInput'
+import { yieldModels } from '../crafting/planTypes'
+import { yieldModelLabels } from '../crafting/yieldPrediction'
 const n = (value: number) => value.toLocaleString('ko-KR')
 export function CraftingPlanTable({
   rows,
@@ -119,15 +121,69 @@ export function CraftingPlanTable({
                         integer={false}
                         aria-label={`${row.name} 1회 예상 생산량`}
                         value={row.outputPerCraft}
+                        readOnly={(plan.choices[row.id]?.yieldModel ?? 'manual') !== 'manual'}
                         onValueChange={(value) =>
                           changeChoice(row, { outputPerCraft: value, yieldConfirmed: true })
                         }
                       />
                       <small className="save">
-                        {row.assumedYield ? '미확보 · 1개 가정' : '사용자 가정값'}
+                        {row.prediction
+                          ? `숙련도 모형 · 평균 ${row.outputPerCraft.toFixed(4)}`
+                          : row.assumedYield
+                            ? '미확보 · 1개 가정'
+                            : '사용자 가정값'}
                       </small>
+                      <select
+                        aria-label={`${row.name} 생산량 모형`}
+                        value={plan.choices[row.id]?.yieldModel ?? 'manual'}
+                        onChange={(event) =>
+                          changeChoice(row, {
+                            yieldModel: event.target.value as (typeof yieldModels)[number],
+                          })
+                        }
+                      >
+                        {yieldModels.map((model) => (
+                          <option key={model} value={model}>
+                            {yieldModelLabels[model]}
+                          </option>
+                        ))}
+                      </select>
+                      {(plan.choices[row.id]?.yieldModel ?? 'manual') !== 'manual' && (
+                        <div className="yield-range">
+                          <label>
+                            최소{' '}
+                            <QuantityInput
+                              aria-label={`${row.name} 모형 최소 생산량`}
+                              min={0}
+                              max={100}
+                              value={plan.choices[row.id]?.yieldMin ?? 1}
+                              onValueChange={(yieldMin) => changeChoice(row, { yieldMin })}
+                            />
+                          </label>
+                          <label>
+                            최대{' '}
+                            <QuantityInput
+                              aria-label={`${row.name} 모형 최대 생산량`}
+                              min={1}
+                              max={100}
+                              value={
+                                plan.choices[row.id]?.yieldMax ??
+                                (plan.choices[row.id]?.yieldModel === 'rare-cooking' ? 2 : 4)
+                              }
+                              onValueChange={(yieldMax) => changeChoice(row, { yieldMax })}
+                            />
+                          </label>
+                        </div>
+                      )}
                     </td>
-                    <td>{n(row.crafts)}회</td>
+                    <td>
+                      {n(row.crafts)}회
+                      {row.prediction && (
+                        <small className="save">
+                          평균 기준 {n(row.meanCrafts ?? row.crafts)}회
+                        </small>
+                      )}
+                    </td>
                   </>
                 )}
               </tr>

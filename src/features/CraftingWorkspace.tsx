@@ -5,6 +5,7 @@ import type { SearchItem } from '../crafting/types'
 import type { AppRoute } from '../routing'
 import { CraftingNotesPage } from './CraftingNotesPage'
 import { CraftingPlanPage } from './CraftingPlanPage'
+import { CraftingEnvironmentPage } from './CraftingEnvironmentPage'
 
 export default function CraftingWorkspace({ route }: { route: AppRoute }) {
   const { plan, update, error } = useCraftingPlan()
@@ -59,6 +60,7 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
       choices: {
         ...plan.choices,
         [itemId]: {
+          ...plan.choices[itemId],
           mode,
           recipeIndex,
           outputPerCraft: plan.choices[itemId]?.outputPerCraft ?? 1,
@@ -85,6 +87,12 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
         <a href="#/crafting/plan" className={route.craftingScreen === 'plan' ? 'active' : ''}>
           제작 계획 ({plan.goals.length})
         </a>
+        <a
+          href="#/crafting/settings"
+          className={route.craftingScreen === 'settings' ? 'active' : ''}
+        >
+          제작 환경
+        </a>
       </nav>
       {error && <p role="alert">{error} · 기존 함선 저장 데이터는 변경되지 않았습니다.</p>}
       {catalogError && (
@@ -100,7 +108,9 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
           </button>
         </p>
       )}
-      {route.craftingScreen === 'plan' ? (
+      {route.craftingScreen === 'settings' ? (
+        <CraftingEnvironmentPage plan={plan} update={update} />
+      ) : route.craftingScreen === 'plan' ? (
         <CraftingPlanPage plan={plan} update={update} names={names} onSelect={select} />
       ) : (
         <CraftingNotesPage

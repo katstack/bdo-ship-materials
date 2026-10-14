@@ -1,6 +1,8 @@
 import { resolveIngredientReference, sourceItemId, type ItemDetail } from './types'
 import type { CraftingPlan } from './planTypes'
 import { defaultRecipeIndex } from './recipeSelection'
+import { defaultEnvironment } from './environment'
+import { predictYield, predictedCrafts, type YieldPrediction } from './yieldPrediction'
 
 export type PlanRow = {
   id: string
@@ -15,6 +17,8 @@ export type PlanRow = {
   isGoal: boolean
   recipeIndex: number
   enhancementLevel: number
+  prediction?: YieldPrediction
+  meanCrafts?: number
 }
 export type PlanResult = { rows: PlanRow[]; warnings: string[] }
 export const referenceForPlan = (id: string, names: ReadonlyMap<string, string>) =>
@@ -89,7 +93,7 @@ export function calculateCraftingPlan(
     const detail = details.get(reference.id)
     const choice = plan.choices[id]
     const expand = !!detail && shouldExpandPlanItem(plan, id, detail, names)
-    const node = {
+    const node: { row: PlanRow; inputs: { id: string; count: number }[]; incoming: number } = {
       row: {
         id,
         name,
@@ -122,6 +126,15 @@ export function calculateCraftingPlan(
       warnings.add(`${name}: 선택한 제작식이 없어 직접 수급으로 표시합니다.`)
       return
     }
+    const estimate = predictYield(choice, recipe, plan.environment)
+    if (estimate.prediction) {
+      node.row.prediction = estimate.prediction
+      node.row.outputPerCraft = estimate.prediction.mean
+      node.row.assumedYield = false
+      warnings.add(
+        `${name}: ${estimate.prediction.explanation}. 레시피 생산 범위·기본 분포·등급 충족은 사용자 가정이며 실제 게임 확률을 보증하지 않습니다.`,
+      )
+    } else if (estimate.error) warnings.add(`${name}: ${estimate.error} 수동 수율로 계산합니다.`)
     if (!choice && detail!.recipes.length > 1)
       warnings.add(
         `${name}: 제작식 ${node.row.recipeIndex + 1}을 기본 선택했습니다. 다른 제작식이 있으면 변경하세요.`,
@@ -149,6 +162,8 @@ export function calculateCraftingPlan(
   for (const goal of plan.goals) nodes.get(goal.itemId)!.row.required += goal.quantity
   const ready = [...nodes.values()].filter((node) => !node.incoming)
   const rows: PlanRow[] = []
+  const confidence = plan.environment?.confidence ?? defaultEnvironment().confidence
+  const familySize = [...nodes.values()].filter((node) => node.row.prediction).length
   for (let position = 0; position < ready.length; position++) {
     const node = ready[position]
     const row = node.row
@@ -158,7 +173,16 @@ export function calculateCraftingPlan(
       )
     row.shortage = Math.max(row.required - row.owned, 0)
     if (row.mode === 'craft') {
-      row.crafts = Math.ceil(row.shortage / row.outputPerCraft)
+      row.meanCrafts = Math.ceil(row.shortage / row.outputPerCraft)
+      row.crafts = row.prediction
+        ? predictedCrafts(row.shortage, row.prediction, confidence, familySize)
+        : row.meanCrafts
+      if (!Number.isSafeInteger(row.crafts))
+        throw Error('예측 제작 횟수가 너무 큽니다. 확률·생산 범위·목표 수량을 확인하세요.')
+      if (confidence !== 'mean' && !row.prediction && row.crafts > 0)
+        warnings.add(
+          `${row.name}: 확률 분포가 없는 수동 수율이므로 ${confidence}% 하한 계산에서 제외됩니다.`,
+        )
       if (row.assumedYield && row.crafts > 0)
         warnings.add(`${row.name}: 결과 수량 미확보 · 1회당 1개 가정입니다.`)
     }

@@ -1881,6 +1881,80 @@ tr:last-child td {
   outline: 2px solid #64c8b5;
   outline-offset: 2px;
 }
+.crafting-environment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.crafting-environment-grid > :last-child {
+  grid-column: 1 / -1;
+}
+.crafting-environment-card {
+  padding: 18px;
+  border: 1px solid #344b50;
+  border-radius: 9px;
+  background: #14272a;
+  min-width: 0;
+}
+.crafting-environment-card label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.crafting-environment-card input:not([type='checkbox']) {
+  width: 105px;
+}
+.crafting-environment-card .processing-mass-toggle {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.processing-mass-toggle input {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.crafting-environment-card a {
+  color: #91e4d5;
+}
+.processing-profile-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 8px;
+}
+.processing-profile-fields label {
+  align-items: start;
+  flex-direction: column;
+}
+.processing-profile-fields small {
+  color: #9badb4;
+}
+.crafting-workspace input[type='checkbox'] {
+  min-height: auto;
+  width: auto;
+  padding: 0;
+  accent-color: #52b6a6;
+}
+.yield-range {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.yield-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+.yield-range input {
+  width: 65px;
+}
+@media (max-width: 760px) {
+  .crafting-environment-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 @media (max-width: 760px) {
   .tool-bar {
     padding: 8px 12px;

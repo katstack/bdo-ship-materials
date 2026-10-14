@@ -1,0 +1,986 @@
+{
+  "checkedAt": "2026-10-14T19:29:48.418Z",
+  "source": "https://bdocodex.com/kr/cookingmastery/",
+  "officialSource": "https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=13398",
+  "cooking": [
+    {
+      "mastery": 0,
+      "maxProc": 0,
+      "rareMaxProc": 0,
+      "rareBonus": 0,
+      "massChance": 0
+    },
+    {
+      "mastery": 50,
+      "maxProc": 0.0064,
+      "rareMaxProc": 0.0064,
+      "rareBonus": 0.0025,
+      "massChance": 0.10890000000000001
+    },
+    {
+      "mastery": 100,
+      "maxProc": 0.0096,
+      "rareMaxProc": 0.0096,
+      "rareBonus": 0.0036,
+      "massChance": 0.1176
+    },
+    {
+      "mastery": 150,
+      "maxProc": 0.013500000000000002,
+      "rareMaxProc": 0.013500000000000002,
+      "rareBonus": 0.0049,
+      "massChance": 0.1267
+    },
+    {
+      "mastery": 200,
+      "maxProc": 0.018000000000000002,
+      "rareMaxProc": 0.018000000000000002,
+      "rareBonus": 0.0064,
+      "massChance": 0.1362
+    },
+    {
+      "mastery": 250,
+      "maxProc": 0.0231,
+      "rareMaxProc": 0.0231,
+      "rareBonus": 0.008100000000000001,
+      "massChance": 0.1459
+    },
+    {
+      "mastery": 300,
+      "maxProc": 0.028900000000000002,
+      "rareMaxProc": 0.028900000000000002,
+      "rareBonus": 0.01,
+      "massChance": 0.156
+    },
+    {
+      "mastery": 350,
+      "maxProc": 0.0353,
+      "rareMaxProc": 0.0353,
+      "rareBonus": 0.0121,
+      "massChance": 0.16649999999999998
+    },
+    {
+      "mastery": 400,
+      "maxProc": 0.0424,
+      "rareMaxProc": 0.0424,
+      "rareBonus": 0.0144,
+      "massChance": 0.1772
+    },
+    {
+      "mastery": 450,
+      "maxProc": 0.050199999999999995,
+      "rareMaxProc": 0.050199999999999995,
+      "rareBonus": 0.0169,
+      "massChance": 0.1884
+    },
+    {
+      "mastery": 500,
+      "maxProc": 0.058600000000000006,
+      "rareMaxProc": 0.058600000000000006,
+      "rareBonus": 0.0196,
+      "massChance": 0.1998
+    },
+    {
+      "mastery": 550,
+      "maxProc": 0.0676,
+      "rareMaxProc": 0.0676,
+      "rareBonus": 0.0225,
+      "massChance": 0.2116
+    },
+    {
+      "mastery": 600,
+      "maxProc": 0.07730000000000001,
+      "rareMaxProc": 0.07730000000000001,
+      "rareBonus": 0.0256,
+      "massChance": 0.2237
+    },
+    {
+      "mastery": 650,
+      "maxProc": 0.0876,
+      "rareMaxProc": 0.0876,
+      "rareBonus": 0.028900000000000002,
+      "massChance": 0.23620000000000002
+    },
+    {
+      "mastery": 700,
+      "maxProc": 0.0986,
+      "rareMaxProc": 0.0986,
+      "rareBonus": 0.032400000000000005,
+      "massChance": 0.249
+    },
+    {
+      "mastery": 750,
+      "maxProc": 0.11019999999999999,
+      "rareMaxProc": 0.11019999999999999,
+      "rareBonus": 0.0361,
+      "massChance": 0.2621
+    },
+    {
+      "mastery": 800,
+      "maxProc": 0.1225,
+      "rareMaxProc": 0.1225,
+      "rareBonus": 0.04,
+      "massChance": 0.2756
+    },
+    {
+      "mastery": 850,
+      "maxProc": 0.1354,
+      "rareMaxProc": 0.1354,
+      "rareBonus": 0.0441,
+      "massChance": 0.2894
+    },
+    {
+      "mastery": 900,
+      "maxProc": 0.149,
+      "rareMaxProc": 0.149,
+      "rareBonus": 0.0484,
+      "massChance": 0.30579999999999996
+    },
+    {
+      "mastery": 950,
+      "maxProc": 0.1632,
+      "rareMaxProc": 0.1632,
+      "rareBonus": 0.0529,
+      "massChance": 0.3226
+    },
+    {
+      "mastery": 1000,
+      "maxProc": 0.17809999999999998,
+      "rareMaxProc": 0.17809999999999998,
+      "rareBonus": 0.0576,
+      "massChance": 0.33990000000000004
+    },
+    {
+      "mastery": 1050,
+      "maxProc": 0.1936,
+      "rareMaxProc": 0.1936,
+      "rareBonus": 0.0625,
+      "massChance": 0.3576
+    },
+    {
+      "mastery": 1100,
+      "maxProc": 0.20980000000000001,
+      "rareMaxProc": 0.20980000000000001,
+      "rareBonus": 0.0676,
+      "massChance": 0.37579999999999997
+    },
+    {
+      "mastery": 1150,
+      "maxProc": 0.2266,
+      "rareMaxProc": 0.2266,
+      "rareBonus": 0.0729,
+      "massChance": 0.3944
+    },
+    {
+      "mastery": 1200,
+      "maxProc": 0.244,
+      "rareMaxProc": 0.244,
+      "rareBonus": 0.0784,
+      "massChance": 0.41340000000000005
+    },
+    {
+      "mastery": 1250,
+      "maxProc": 0.2621,
+      "rareMaxProc": 0.2621,
+      "rareBonus": 0.08410000000000001,
+      "massChance": 0.4422
+    },
+    {
+      "mastery": 1300,
+      "maxProc": 0.2809,
+      "rareMaxProc": 0.2809,
+      "rareBonus": 0.09,
+      "massChance": 0.47200000000000003
+    },
+    {
+      "mastery": 1350,
+      "maxProc": 0.3003,
+      "rareMaxProc": 0.3003,
+      "rareBonus": 0.09609999999999999,
+      "massChance": 0.5027
+    },
+    {
+      "mastery": 1400,
+      "maxProc": 0.3204,
+      "rareMaxProc": 0.3204,
+      "rareBonus": 0.1024,
+      "massChance": 0.5344
+    },
+    {
+      "mastery": 1450,
+      "maxProc": 0.3411,
+      "rareMaxProc": 0.3411,
+      "rareBonus": 0.10890000000000001,
+      "massChance": 0.5670000000000001
+    },
+    {
+      "mastery": 1500,
+      "maxProc": 0.3624,
+      "rareMaxProc": 0.3624,
+      "rareBonus": 0.11560000000000001,
+      "massChance": 0.6006
+    },
+    {
+      "mastery": 1550,
+      "maxProc": 0.38439999999999996,
+      "rareMaxProc": 0.38439999999999996,
+      "rareBonus": 0.1225,
+      "massChance": 0.6352
+    },
+    {
+      "mastery": 1600,
+      "maxProc": 0.40700000000000003,
+      "rareMaxProc": 0.40700000000000003,
+      "rareBonus": 0.12960000000000002,
+      "massChance": 0.6708
+    },
+    {
+      "mastery": 1650,
+      "maxProc": 0.4303,
+      "rareMaxProc": 0.4303,
+      "rareBonus": 0.1369,
+      "massChance": 0.7073
+    },
+    {
+      "mastery": 1700,
+      "maxProc": 0.4543,
+      "rareMaxProc": 0.4543,
+      "rareBonus": 0.1444,
+      "massChance": 0.7448
+    },
+    {
+      "mastery": 1750,
+      "maxProc": 0.4789,
+      "rareMaxProc": 0.4789,
+      "rareBonus": 0.1521,
+      "massChance": 0.7831999999999999
+    },
+    {
+      "mastery": 1800,
+      "maxProc": 0.5041,
+      "rareMaxProc": 0.5041,
+      "rareBonus": 0.16,
+      "massChance": 0.8226
+    },
+    {
+      "mastery": 1850,
+      "maxProc": 0.53,
+      "rareMaxProc": 0.53,
+      "rareBonus": 0.1681,
+      "massChance": 0.863
+    },
+    {
+      "mastery": 1900,
+      "maxProc": 0.5565,
+      "rareMaxProc": 0.5565,
+      "rareBonus": 0.1764,
+      "massChance": 0.9044
+    },
+    {
+      "mastery": 1950,
+      "maxProc": 0.5837,
+      "rareMaxProc": 0.5837,
+      "rareBonus": 0.18489999999999998,
+      "massChance": 0.995
+    },
+    {
+      "mastery": 2000,
+      "maxProc": 0.6114999999999999,
+      "rareMaxProc": 0.6114999999999999,
+      "rareBonus": 0.1936,
+      "massChance": 1
+    },
+    {
+      "mastery": 2050,
+      "maxProc": 0.6192,
+      "rareMaxProc": 0.6192,
+      "rareBonus": 0.196,
+      "massChance": 1
+    },
+    {
+      "mastery": 2100,
+      "maxProc": 0.6268,
+      "rareMaxProc": 0.6268,
+      "rareBonus": 0.1984,
+      "massChance": 1
+    },
+    {
+      "mastery": 2150,
+      "maxProc": 0.6345000000000001,
+      "rareMaxProc": 0.6345000000000001,
+      "rareBonus": 0.2009,
+      "massChance": 1
+    },
+    {
+      "mastery": 2200,
+      "maxProc": 0.6420999999999999,
+      "rareMaxProc": 0.6420999999999999,
+      "rareBonus": 0.20329999999999998,
+      "massChance": 1
+    },
+    {
+      "mastery": 2250,
+      "maxProc": 0.6498,
+      "rareMaxProc": 0.6498,
+      "rareBonus": 0.2057,
+      "massChance": 1
+    },
+    {
+      "mastery": 2300,
+      "maxProc": 0.6574,
+      "rareMaxProc": 0.6574,
+      "rareBonus": 0.20809999999999998,
+      "massChance": 1
+    },
+    {
+      "mastery": 2350,
+      "maxProc": 0.6651,
+      "rareMaxProc": 0.6651,
+      "rareBonus": 0.21050000000000002,
+      "massChance": 1
+    },
+    {
+      "mastery": 2400,
+      "maxProc": 0.6727,
+      "rareMaxProc": 0.6727,
+      "rareBonus": 0.213,
+      "massChance": 1
+    },
+    {
+      "mastery": 2450,
+      "maxProc": 0.6804000000000001,
+      "rareMaxProc": 0.6804000000000001,
+      "rareBonus": 0.21539999999999998,
+      "massChance": 1
+    },
+    {
+      "mastery": 2500,
+      "maxProc": 0.688,
+      "rareMaxProc": 0.688,
+      "rareBonus": 0.21780000000000002,
+      "massChance": 1
+    },
+    {
+      "mastery": 2550,
+      "maxProc": 0.6957,
+      "rareMaxProc": 0.6957,
+      "rareBonus": 0.2202,
+      "massChance": 1
+    },
+    {
+      "mastery": 2600,
+      "maxProc": 0.7033,
+      "rareMaxProc": 0.7033,
+      "rareBonus": 0.22260000000000002,
+      "massChance": 1
+    },
+    {
+      "mastery": 2650,
+      "maxProc": 0.7109000000000001,
+      "rareMaxProc": 0.7109000000000001,
+      "rareBonus": 0.22510000000000002,
+      "massChance": 1
+    },
+    {
+      "mastery": 2700,
+      "maxProc": 0.7186,
+      "rareMaxProc": 0.7186,
+      "rareBonus": 0.2275,
+      "massChance": 1
+    },
+    {
+      "mastery": 2750,
+      "maxProc": 0.7262000000000001,
+      "rareMaxProc": 0.7262000000000001,
+      "rareBonus": 0.2299,
+      "massChance": 1
+    },
+    {
+      "mastery": 2800,
+      "maxProc": 0.7339,
+      "rareMaxProc": 0.7339,
+      "rareBonus": 0.2323,
+      "massChance": 1
+    },
+    {
+      "mastery": 2850,
+      "maxProc": 0.7415,
+      "rareMaxProc": 0.7415,
+      "rareBonus": 0.2347,
+      "massChance": 1
+    },
+    {
+      "mastery": 2900,
+      "maxProc": 0.7492,
+      "rareMaxProc": 0.7492,
+      "rareBonus": 0.2372,
+      "massChance": 1
+    },
+    {
+      "mastery": 2950,
+      "maxProc": 0.7568,
+      "rareMaxProc": 0.7568,
+      "rareBonus": 0.2396,
+      "massChance": 1
+    },
+    {
+      "mastery": 3000,
+      "maxProc": 0.7645000000000001,
+      "rareMaxProc": 0.7645000000000001,
+      "rareBonus": 0.242,
+      "massChance": 1
+    }
+  ],
+  "alchemy": [
+    {
+      "mastery": 0,
+      "maxProc": 0
+    },
+    {
+      "mastery": 50,
+      "maxProc": 0.0576
+    },
+    {
+      "mastery": 100,
+      "maxProc": 0.0635
+    },
+    {
+      "mastery": 150,
+      "maxProc": 0.0697
+    },
+    {
+      "mastery": 200,
+      "maxProc": 0.0762
+    },
+    {
+      "mastery": 250,
+      "maxProc": 0.08289999999999999
+    },
+    {
+      "mastery": 300,
+      "maxProc": 0.09
+    },
+    {
+      "mastery": 350,
+      "maxProc": 0.0973
+    },
+    {
+      "mastery": 400,
+      "maxProc": 0.105
+    },
+    {
+      "mastery": 450,
+      "maxProc": 0.11289999999999999
+    },
+    {
+      "mastery": 500,
+      "maxProc": 0.1211
+    },
+    {
+      "mastery": 550,
+      "maxProc": 0.12960000000000002
+    },
+    {
+      "mastery": 600,
+      "maxProc": 0.1384
+    },
+    {
+      "mastery": 650,
+      "maxProc": 0.1475
+    },
+    {
+      "mastery": 700,
+      "maxProc": 0.1568
+    },
+    {
+      "mastery": 750,
+      "maxProc": 0.16649999999999998
+    },
+    {
+      "mastery": 800,
+      "maxProc": 0.1764
+    },
+    {
+      "mastery": 850,
+      "maxProc": 0.1866
+    },
+    {
+      "mastery": 900,
+      "maxProc": 0.1971
+    },
+    {
+      "mastery": 950,
+      "maxProc": 0.2079
+    },
+    {
+      "mastery": 1000,
+      "maxProc": 0.21899999999999997
+    },
+    {
+      "mastery": 1050,
+      "maxProc": 0.2304
+    },
+    {
+      "mastery": 1100,
+      "maxProc": 0.2421
+    },
+    {
+      "mastery": 1150,
+      "maxProc": 0.254
+    },
+    {
+      "mastery": 1200,
+      "maxProc": 0.2663
+    },
+    {
+      "mastery": 1250,
+      "maxProc": 0.2788
+    },
+    {
+      "mastery": 1300,
+      "maxProc": 0.2916
+    },
+    {
+      "mastery": 1350,
+      "maxProc": 0.30469999999999997
+    },
+    {
+      "mastery": 1400,
+      "maxProc": 0.3181
+    },
+    {
+      "mastery": 1450,
+      "maxProc": 0.3318
+    },
+    {
+      "mastery": 1500,
+      "maxProc": 0.3457
+    },
+    {
+      "mastery": 1550,
+      "maxProc": 0.36
+    },
+    {
+      "mastery": 1600,
+      "maxProc": 0.37450000000000006
+    },
+    {
+      "mastery": 1650,
+      "maxProc": 0.38939999999999997
+    },
+    {
+      "mastery": 1700,
+      "maxProc": 0.4045
+    },
+    {
+      "mastery": 1750,
+      "maxProc": 0.4199
+    },
+    {
+      "mastery": 1800,
+      "maxProc": 0.43560000000000004
+    },
+    {
+      "mastery": 1850,
+      "maxProc": 0.45159999999999995
+    },
+    {
+      "mastery": 1900,
+      "maxProc": 0.4679
+    },
+    {
+      "mastery": 1950,
+      "maxProc": 0.4844
+    },
+    {
+      "mastery": 2000,
+      "maxProc": 0.5
+    },
+    {
+      "mastery": 2050,
+      "maxProc": 0.5063
+    },
+    {
+      "mastery": 2100,
+      "maxProc": 0.5125
+    },
+    {
+      "mastery": 2150,
+      "maxProc": 0.5188
+    },
+    {
+      "mastery": 2200,
+      "maxProc": 0.525
+    },
+    {
+      "mastery": 2250,
+      "maxProc": 0.5313
+    },
+    {
+      "mastery": 2300,
+      "maxProc": 0.5375
+    },
+    {
+      "mastery": 2350,
+      "maxProc": 0.5438000000000001
+    },
+    {
+      "mastery": 2400,
+      "maxProc": 0.55
+    },
+    {
+      "mastery": 2450,
+      "maxProc": 0.5563
+    },
+    {
+      "mastery": 2500,
+      "maxProc": 0.5625
+    },
+    {
+      "mastery": 2550,
+      "maxProc": 0.5688
+    },
+    {
+      "mastery": 2600,
+      "maxProc": 0.575
+    },
+    {
+      "mastery": 2650,
+      "maxProc": 0.5813
+    },
+    {
+      "mastery": 2700,
+      "maxProc": 0.5875
+    },
+    {
+      "mastery": 2750,
+      "maxProc": 0.5938
+    },
+    {
+      "mastery": 2800,
+      "maxProc": 0.6
+    },
+    {
+      "mastery": 2850,
+      "maxProc": 0.6063000000000001
+    },
+    {
+      "mastery": 2900,
+      "maxProc": 0.6125
+    },
+    {
+      "mastery": 2950,
+      "maxProc": 0.6188
+    },
+    {
+      "mastery": 3000,
+      "maxProc": 0.625
+    }
+  ],
+  "processing": [
+    {
+      "mastery": 0,
+      "batch": 10
+    },
+    {
+      "mastery": 20,
+      "batch": 11
+    },
+    {
+      "mastery": 40,
+      "batch": 12
+    },
+    {
+      "mastery": 60,
+      "batch": 13
+    },
+    {
+      "mastery": 80,
+      "batch": 14
+    },
+    {
+      "mastery": 100,
+      "batch": 15
+    },
+    {
+      "mastery": 120,
+      "batch": 16
+    },
+    {
+      "mastery": 140,
+      "batch": 17
+    },
+    {
+      "mastery": 160,
+      "batch": 18
+    },
+    {
+      "mastery": 180,
+      "batch": 19
+    },
+    {
+      "mastery": 200,
+      "batch": 20
+    },
+    {
+      "mastery": 220,
+      "batch": 21
+    },
+    {
+      "mastery": 240,
+      "batch": 22
+    },
+    {
+      "mastery": 260,
+      "batch": 23
+    },
+    {
+      "mastery": 280,
+      "batch": 24
+    },
+    {
+      "mastery": 300,
+      "batch": 25
+    },
+    {
+      "mastery": 320,
+      "batch": 26
+    },
+    {
+      "mastery": 340,
+      "batch": 27
+    },
+    {
+      "mastery": 360,
+      "batch": 28
+    },
+    {
+      "mastery": 380,
+      "batch": 29
+    },
+    {
+      "mastery": 400,
+      "batch": 30
+    },
+    {
+      "mastery": 420,
+      "batch": 31
+    },
+    {
+      "mastery": 440,
+      "batch": 32
+    },
+    {
+      "mastery": 460,
+      "batch": 33
+    },
+    {
+      "mastery": 480,
+      "batch": 34
+    },
+    {
+      "mastery": 500,
+      "batch": 35
+    },
+    {
+      "mastery": 520,
+      "batch": 36
+    },
+    {
+      "mastery": 540,
+      "batch": 37
+    },
+    {
+      "mastery": 560,
+      "batch": 38
+    },
+    {
+      "mastery": 580,
+      "batch": 39
+    },
+    {
+      "mastery": 600,
+      "batch": 40
+    },
+    {
+      "mastery": 620,
+      "batch": 41
+    },
+    {
+      "mastery": 640,
+      "batch": 42
+    },
+    {
+      "mastery": 660,
+      "batch": 43
+    },
+    {
+      "mastery": 680,
+      "batch": 45
+    },
+    {
+      "mastery": 700,
+      "batch": 47
+    },
+    {
+      "mastery": 720,
+      "batch": 49
+    },
+    {
+      "mastery": 740,
+      "batch": 51
+    },
+    {
+      "mastery": 760,
+      "batch": 53
+    },
+    {
+      "mastery": 780,
+      "batch": 57
+    },
+    {
+      "mastery": 810,
+      "batch": 60
+    },
+    {
+      "mastery": 840,
+      "batch": 64
+    },
+    {
+      "mastery": 870,
+      "batch": 68
+    },
+    {
+      "mastery": 900,
+      "batch": 72
+    },
+    {
+      "mastery": 930,
+      "batch": 76
+    },
+    {
+      "mastery": 960,
+      "batch": 80
+    },
+    {
+      "mastery": 990,
+      "batch": 85
+    },
+    {
+      "mastery": 1020,
+      "batch": 90
+    },
+    {
+      "mastery": 1060,
+      "batch": 96
+    },
+    {
+      "mastery": 1100,
+      "batch": 112
+    },
+    {
+      "mastery": 1140,
+      "batch": 118
+    },
+    {
+      "mastery": 1180,
+      "batch": 124
+    },
+    {
+      "mastery": 1220,
+      "batch": 130
+    },
+    {
+      "mastery": 1260,
+      "batch": 137
+    },
+    {
+      "mastery": 1300,
+      "batch": 144
+    },
+    {
+      "mastery": 1350,
+      "batch": 154
+    },
+    {
+      "mastery": 1400,
+      "batch": 162
+    },
+    {
+      "mastery": 1450,
+      "batch": 170
+    },
+    {
+      "mastery": 1500,
+      "batch": 178
+    },
+    {
+      "mastery": 1550,
+      "batch": 186
+    },
+    {
+      "mastery": 1600,
+      "batch": 194
+    },
+    {
+      "mastery": 1650,
+      "batch": 203
+    },
+    {
+      "mastery": 1700,
+      "batch": 212
+    },
+    {
+      "mastery": 1800,
+      "batch": 222
+    },
+    {
+      "mastery": 1900,
+      "batch": 235
+    },
+    {
+      "mastery": 2000,
+      "batch": 250
+    },
+    {
+      "mastery": 2100,
+      "batch": 260
+    },
+    {
+      "mastery": 2200,
+      "batch": 270
+    },
+    {
+      "mastery": 2300,
+      "batch": 280
+    },
+    {
+      "mastery": 2400,
+      "batch": 285
+    },
+    {
+      "mastery": 2500,
+      "batch": 290
+    },
+    {
+      "mastery": 2600,
+      "batch": 295
+    },
+    {
+      "mastery": 2700,
+      "batch": 300
+    },
+    {
+      "mastery": 2800,
+      "batch": 305
+    },
+    {
+      "mastery": 2900,
+      "batch": 310
+    },
+    {
+      "mastery": 3000,
+      "batch": 315
+    }
+  ]
+}

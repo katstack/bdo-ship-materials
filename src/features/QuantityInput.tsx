@@ -4,7 +4,7 @@ type Props = Omit<
   ComponentProps<'input'>,
   'type' | 'value' | 'onChange' | 'min' | 'max' | 'step' | 'onFocus' | 'onBlur' | 'onMouseUp'
 > & {
-  value: number
+  value?: number
   onValueChange: (value: number) => void
   min?: number
   max?: number
@@ -20,7 +20,7 @@ export function QuantityInput({
   integer = true,
   ...props
 }: Props) {
-  const [draft, setDraft] = useState<{ source: number; text: string }>()
+  const [draft, setDraft] = useState<{ source: number | undefined; text: string }>()
   const selectOnMouseUp = useRef(false)
   return (
     <input
@@ -29,7 +29,9 @@ export function QuantityInput({
       min={min}
       max={max}
       step={integer ? 1 : 'any'}
-      value={draft?.source === value ? draft.text : String(value)}
+      value={
+        draft && draft.source === value ? draft.text : value === undefined ? '' : String(value)
+      }
       onFocus={(event) => {
         event.currentTarget.select()
         selectOnMouseUp.current = true
