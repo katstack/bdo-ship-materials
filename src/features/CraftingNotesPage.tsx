@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadItemDetail, loadManifest, loadSearchIndex } from '../crafting/catalogClient'
 import { displayItemName, searchCatalog } from '../crafting/search'
-import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/types'
+import { EnhancementTable } from './EnhancementTable'
+import {
+  sourceItemId,
+  resolveIngredientReference,
+  type ItemDetail,
+  type SearchItem,
+} from '../crafting/types'
 
 const methods: Record<string, string> = {
   HOUSE: '공방 제작',
@@ -40,7 +46,8 @@ function IngredientBranch({
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const cycle = ancestors.includes(id)
+  const reference = resolveIngredientReference(id, names)
+  const cycle = ancestors.includes(reference.id)
   const toggle = async () => {
     if (cycle) return
     setOpen(!open)
@@ -48,7 +55,7 @@ function IngredientBranch({
       setLoading(true)
       setError('')
       try {
-        setDetail(await loadItemDetail(id))
+        setDetail(await loadItemDetail(reference.id))
       } catch (e) {
         setError(e instanceof Error ? e.message : '불러오기 실패')
       } finally {
@@ -62,14 +69,18 @@ function IngredientBranch({
         <button onClick={toggle} disabled={cycle} aria-expanded={open}>
           {cycle ? '↻' : open ? '−' : '+'}
         </button>
-        <button className="crafting-item-link" onClick={() => onSelect(id)}>
-          {names.get(id) ?? `아이템 ${id}`}
+        <button className="crafting-item-link" onClick={() => onSelect(reference.id)}>
+          {reference.enhancementLevel ? `+${reference.enhancementLevel} ` : ''}
+          {names.get(reference.id) ?? `아이템 ${id}`}
         </button>
         <span>{count === undefined ? '수량 미제공' : `${count.toLocaleString('ko-KR')}개`}</span>
       </div>
       {cycle && <small>순환 제작식 · 상위 재료에 이미 포함됨</small>}
       {open && (
         <div className="crafting-branch">
+          {reference.enhancementLevel > 0 && (
+            <p className="save">제작 후 +{reference.enhancementLevel} 강화가 필요한 재료입니다.</p>
+          )}
           {loading && <p>재료 불러오는 중…</p>}
           {error && (
             <p role="alert">
@@ -99,7 +110,7 @@ function IngredientBranch({
                     key={position}
                     id={sourceItemId(input.item)}
                     count={input.count}
-                    ancestors={[...ancestors, id]}
+                    ancestors={[...ancestors, reference.id]}
                     names={names}
                     onSelect={onSelect}
                   />
@@ -230,11 +241,16 @@ export function CraftingNotesPage({
               <p className="save">
                 ID {itemId} · {current.detail.item.nameEn} · {current.detail.item.grade}
               </p>
+              {current.detail.item.descriptionLocale === 'en' &&
+                current.detail.item.description && (
+                  <p className="save">영문 원문 · 한국어 설명 미확보</p>
+                )}
               {current.detail.item.description && (
                 <p className="crafting-description">
-                  {current.detail.item.description.replace(/<[^>]*>/g, '')}
+                  {current.detail.item.description.replace(/<[^>]*>/g, '').replace(/\\n/g, '\n')}
                 </p>
               )}
+              <EnhancementTable item={current.detail.item} />
               <h3>제작식 · {current.detail.recipes.length}개</h3>
               <p className="save">
                 각 수량은 해당 제작식 1회 입력 기준입니다. 생산 수량·대성공에 따라 실제 소모량은

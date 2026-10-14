@@ -3,3 +3,4 @@ dist
 package-lock.json
 tools/
 public/crafting/
+e2e/.results/

@@ -4,7 +4,8 @@ param(
   [string]$GlobalGameDir = 'C:\Pearlabyss\BlackDesert_NAEU\BlackDesert',
   [string]$OutputRoot = "$env:LOCALAPPDATA\bdo-ship-materials\crafting-notes",
   [string]$NodeExe = 'node.exe',
-  [string]$WebOutputDir = ''
+  [string]$WebOutputDir = '',
+  [switch]$SkipCodexDescriptions
 )
 
 $ErrorActionPreference = 'Stop'
@@ -29,6 +30,23 @@ $outputFile = Join-Path $normalized 'manufacture.ko.json'
 $args = @("`"$script`"", '--snapshot', "`"$koreanSnapshot`"", '--catalog', "`"$globalCatalog`"", '--output', "`"$outputFile`"")
 $process = Start-Process -FilePath $nodePath -ArgumentList $args -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
 if ($process.ExitCode -ne 0) { throw "Catalog normalization failed: $($process.ExitCode)" }
+if (-not $SkipCodexDescriptions) {
+  # Linux pnpm symlinks cannot be resolved by Windows Node through a WSL UNC
+  # checkout. Keep this small, pure-JS extractor dependency in a Windows cache.
+  $fetchDir = Join-Path $env:LOCALAPPDATA 'bdo-ship-materials\tools\codex-text-fetch'
+  New-Item -ItemType Directory -Force -Path $fetchDir | Out-Null
+  $fetchScript = Join-Path $fetchDir 'fetch-ship-descriptions.mjs'
+  Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fetch-ship-descriptions.mjs') -Destination $fetchScript -Force
+  if (-not (Test-Path -LiteralPath (Join-Path $fetchDir 'node_modules\cheerio\package.json'))) {
+    $installArgs = "/d /c npm.cmd install --prefix `"$fetchDir`" --ignore-scripts --no-audit --no-fund cheerio@1.2.0"
+    $dependencyProcess = Start-Process -FilePath "$env:WINDIR\System32\cmd.exe" -ArgumentList $installArgs -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+    if ($dependencyProcess.ExitCode -ne 0) { throw 'Codex HTML parser installation failed.' }
+  }
+  $fetchProcess = Start-Process -FilePath $nodePath -ArgumentList @("`"$fetchScript`"", "`"$normalized`"") -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+  if ($fetchProcess.ExitCode -ne 0) { throw 'Ship description lookup failed; local extraction results remain available. Use -SkipCodexDescriptions for client-only extraction.' }
+  $mergeProcess = Start-Process -FilePath $nodePath -ArgumentList $args -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+  if ($mergeProcess.ExitCode -ne 0) { throw 'Ship description merge failed.' }
+}
 if ($WebOutputDir) {
   $chunkScript = Join-Path $PSScriptRoot 'build-crafting-chunks.mjs'
   $chunkArgs = @("`"$chunkScript`"", '--catalog', "`"$normalized`"", '--output', "`"$WebOutputDir`"")

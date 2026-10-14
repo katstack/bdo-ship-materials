@@ -92,6 +92,13 @@ if ($effectiveMode -eq 'Full') {
   $missing = $required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir $_)) }
   if ($missing) { throw "The extraction result is missing required files: $($missing -join ', ')" }
   $resultFiles = $required
+  $textProbeDir = Join-Path $sourceDir 'cmd\global-korean-text-probe'
+  New-Item -ItemType Directory -Force -Path $textProbeDir | Out-Null
+  Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'global-korean-text-probe.go') -Destination (Join-Path $textProbeDir 'main.go') -Force
+  $textOutput = Join-Path $outputDir 'item-texts.ko.json'
+  $textProcess = Start-Process -FilePath $goExe -ArgumentList @('run', '.\cmd\global-korean-text-probe', "`"$GameDir`"", "`"$textOutput`"") -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
+  if ($textProcess.ExitCode -ne 0) { throw 'Korean source XML text extraction failed.' }
+  $resultFiles += 'item-texts.ko.json'
   $note = 'Full catalog generated from a client layout supported by bdo-data-extractor.'
 } else {
   Write-Step "Indexing Korean client raw data -> $outputDir"
@@ -130,8 +137,15 @@ if ($effectiveMode -eq 'Full') {
   $koreanItemNames = Join-Path $outputDir 'data\\item-names.ko.json'
   $decodeNames = Start-Process -FilePath $goExe -ArgumentList @('run', '.\\cmd\\kr-item-name-probe', $GameDir, $koreanItemNames) -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
   if ($decodeNames.ExitCode -ne 0) { throw "Korean item-name decoding failed with exit code $($decodeNames.ExitCode)." }
+  $detailProbeDir = Join-Path $sourceDir 'cmd\kr-item-details-probe'
+  New-Item -ItemType Directory -Force -Path $detailProbeDir | Out-Null
+  Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'kr-item-details-probe.go') -Destination (Join-Path $detailProbeDir 'main.go') -Force
+  $detailOutput = Join-Path $outputDir 'data\item-details.ko.json'
+  $detailProcess = Start-Process -FilePath $goExe -ArgumentList @('run', '.\cmd\kr-item-details-probe', "`"$GameDir`"", "`"$detailOutput`"") -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
+  if ($detailProcess.ExitCode -ne 0) { throw 'Korean item detail extraction failed.' }
 
   $resultFiles = @('paz-index\\paz_files.json', 'paz-index\\paz_dirs.json', 'raw\\gamecommondata\\binary\\manufacture.bss', 'raw\\gamecommondata\\binary\\itemenchant.dbss', 'data\\manufacture.raw.json', 'data\\item-names.ko.json')
+  $resultFiles += 'data\item-details.ko.json'
   $missing = $resultFiles | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir $_)) }
   if ($missing) { throw "The raw extraction result is missing files: $($missing -join ', ')" }
   $note = 'Raw Korean-client snapshot. manufacture.raw.json contains client-side input item IDs, counts, processing type, and success rate. item-names.ko.json supplies Korean display names decoded from itemenchant.dbss. Manufacture result groups remain server-resolved, so output-item links require a separately versioned full recipe catalog. The installation has no ads\\languagedata_en.loc; locales\\ko.pak is launcher UI data and is not compatible with the game localization decoder.'

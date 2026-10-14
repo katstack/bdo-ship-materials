@@ -1662,3 +1662,10 @@ tr:last-child td {
     max-height: 260px;
   }
 }
+.enhancement-table th,
+.enhancement-table td {
+  white-space: nowrap;
+}
+.enhancement-table {
+  margin: 20px 0;
+}

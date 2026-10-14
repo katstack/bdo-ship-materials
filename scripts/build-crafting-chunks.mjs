@@ -33,7 +33,20 @@ for (const recipe of recipes) {
   records.get(outputId).recipes.push(recipe)
   for (const input of recipe.inputs ?? []) {
     const inputId = idOf(input.item)
-    const record = records.get(inputId)
+    let record = records.get(inputId)
+    if (!record) {
+      const packed = Number(inputId)
+      const level = Math.floor(packed / 0x1000000)
+      const base = records.get(String(packed % 0x1000000))
+      if (
+        Number.isSafeInteger(packed) &&
+        level >= 1 &&
+        level <= 20 &&
+        base &&
+        level <= Number(base.item.maxEnhance)
+      )
+        record = base
+    }
     if (record && !record.usedIn.includes(outputId)) record.usedIn.push(outputId)
   }
 }

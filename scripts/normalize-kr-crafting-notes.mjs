@@ -127,6 +127,19 @@ async function main() {
   const catalogItems = JSON.parse(itemsText)
   const catalogRecipes = JSON.parse(recipesText)
   const koreanNames = JSON.parse(namesText).names
+  const optionalJson = async (path) => {
+    try {
+      return JSON.parse(await readFile(path, 'utf8'))
+    } catch (error) {
+      if (error.code === 'ENOENT') return { items: {} }
+      throw error
+    }
+  }
+  const [koreanDetails, koreanTexts, shipDescriptions] = await Promise.all([
+    optionalJson(join(resolve(snapshot), 'data', 'item-details.ko.json')),
+    optionalJson(join(resolve(catalog), 'item-texts.ko.json')),
+    optionalJson(join(dirname(resolve(output)), 'ship-descriptions.ko.json')),
+  ])
   const normalized = normalizeKoreanManufacture(
     JSON.parse(rawText),
     catalogItems,
@@ -138,11 +151,37 @@ async function main() {
   await writeFile(destination, `${JSON.stringify(normalized, null, 2)}\n`, 'utf8')
   const localizedItems = catalogItems.map((item) => {
     const id = itemId(item.id ?? item.urn)
+    const detail = koreanDetails.items[id]
+    const text = koreanTexts.items[id]
+    const codex = shipDescriptions.items[id]
+    const description = detail?.description || text?.description || codex?.description
     return {
       ...item,
       name: koreanNames[id] ?? item.name,
       nameEn: item.name,
       nameLocale: koreanNames[id] ? 'ko' : 'en',
+      ...(description
+        ? {
+            descriptionEn: item.description,
+            description,
+            descriptionLocale: 'ko',
+            descriptionSource: detail?.description
+              ? 'KR enchantstaticstatus'
+              : text?.description
+                ? text.sourcePath
+                : `bdocodex:${id}`,
+            ...(codex && !detail?.description && !text?.description
+              ? { descriptionCheckedAt: codex.checkedAt }
+              : {}),
+          }
+        : { descriptionLocale: 'en' }),
+      ...(detail?.enhancement
+        ? {
+            globalEnhancement: item.enhancement,
+            enhancement: detail.enhancement,
+            enhancementSource: 'KR enchantstaticstatus',
+          }
+        : {}),
     }
   })
   const counts = {
@@ -150,6 +189,8 @@ async function main() {
     koreanNames: localizedItems.filter((item) => item.nameLocale === 'ko').length,
     englishFallbacks: localizedItems.filter((item) => item.nameLocale === 'en').length,
     recipes: catalogRecipes.length,
+    koreanDescriptions: localizedItems.filter((item) => item.descriptionLocale === 'ko').length,
+    koreanEnhancements: localizedItems.filter((item) => item.enhancementSource).length,
     manufacture: normalized.counts,
   }
   await Promise.all([
@@ -163,7 +204,7 @@ async function main() {
           sources: { koreanSnapshot: resolve(snapshot), globalCatalog: resolve(catalog) },
           counts,
           limitations: [
-            'Descriptions and station names retain the global catalog language.',
+            'Korean descriptions come from KR enhancement text or global common item XML; missing descriptions and station names retain English.',
             'Global XML recipes are not all verified against Korean manufacture rows; consult matchState.',
           ],
         },
