@@ -1,5 +1,24 @@
 import { test, expect } from '@playwright/test'
 
+test('Korean composing text and initials keep the Valencia meal searchable', async ({ page }) => {
+  await page.goto('./#/crafting')
+  const search = page.getByRole('textbox', { name: '제작노트 아이템 검색' })
+  await expect(page.locator('.crafting-results button').first()).toBeVisible()
+  const meal = page.getByRole('button', { name: '특제 발렌시아 정식 9610 · Cook', exact: true })
+  for (const query of [
+    '특제 발렌시아 정',
+    '특제 발렌시아 정ㅅ',
+    '특제 발렌시아 정시',
+    '특제 발렌시아 정식',
+    'ㅌㅈ ㅂㄹㅅㅇ ㅈㅅ',
+  ]) {
+    await search.fill(query)
+    await expect(meal).toBeVisible()
+  }
+  await search.fill('특제 발렌시아 정ㅁ')
+  await expect(meal).toHaveCount(0)
+})
+
 test('acquisition methods distinguish vendors, special currency, variable barter and rentals', async ({
   page,
 }) => {
