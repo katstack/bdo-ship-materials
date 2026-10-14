@@ -118,10 +118,20 @@ if ($effectiveMode -eq 'Full') {
   $decode = Start-Process -FilePath $goExe -ArgumentList @('run', '.\\cmd\\kr-manufacture-probe', $GameDir, $decodedManufacture) -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
   if ($decode.ExitCode -ne 0) { throw "Manufacture table decoding failed with exit code $($decode.ExitCode)." }
 
-  $resultFiles = @('paz-index\\paz_files.json', 'paz-index\\paz_dirs.json', 'raw\\gamecommondata\\binary\\manufacture.bss', 'raw\\gamecommondata\\binary\\itemenchant.dbss', 'data\\manufacture.raw.json')
+  # Korean display names are embedded as UTF-16 strings in itemenchant.dbss,
+  # even though this client has no languagedata_ko.loc. Keep the ID -> Korean
+  # name map as a small, reusable localization layer for a full foreign catalog.
+  $probeNamesDir = Join-Path $sourceDir 'cmd\\kr-item-name-probe'
+  New-Item -ItemType Directory -Force -Path $probeNamesDir | Out-Null
+  Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'kr-item-name-probe.go') -Destination (Join-Path $probeNamesDir 'main.go') -Force
+  $koreanItemNames = Join-Path $outputDir 'data\\item-names.ko.json'
+  $decodeNames = Start-Process -FilePath $goExe -ArgumentList @('run', '.\\cmd\\kr-item-name-probe', $GameDir, $koreanItemNames) -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
+  if ($decodeNames.ExitCode -ne 0) { throw "Korean item-name decoding failed with exit code $($decodeNames.ExitCode)." }
+
+  $resultFiles = @('paz-index\\paz_files.json', 'paz-index\\paz_dirs.json', 'raw\\gamecommondata\\binary\\manufacture.bss', 'raw\\gamecommondata\\binary\\itemenchant.dbss', 'data\\manufacture.raw.json', 'data\\item-names.ko.json')
   $missing = $resultFiles | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir $_)) }
   if ($missing) { throw "The raw extraction result is missing files: $($missing -join ', ')" }
-  $note = 'Raw Korean-client snapshot. manufacture.raw.json contains client-side input item IDs, counts, processing type, and success rate. Its result group is server-resolved, so item names and output-item links require a separately versioned catalog. The installation has no ads\\languagedata_en.loc; locales\\ko.pak is launcher UI data and is not compatible with the game localization decoder.'
+  $note = 'Raw Korean-client snapshot. manufacture.raw.json contains client-side input item IDs, counts, processing type, and success rate. item-names.ko.json supplies Korean display names decoded from itemenchant.dbss. Manufacture result groups remain server-resolved, so output-item links require a separately versioned full recipe catalog. The installation has no ads\\languagedata_en.loc; locales\\ko.pak is launcher UI data and is not compatible with the game localization decoder.'
 }
 
 $manifest = [ordered]@{
