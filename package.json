@@ -13,10 +13,13 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "codex:index": "node scripts/codex-index.mjs"
+    "codex:index": "node scripts/codex-index.mjs",
+    "crafting:chunks": "node scripts/build-crafting-chunks.mjs",
+    "crafting:verify": "node scripts/verify-crafting-chunks.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "fzstd": "^0.1.1",
     "react": "latest",
     "react-dom": "latest",
     "vite": "latest"

@@ -1,12 +1,14 @@
 import type { DemandScope } from './domain/materialDemand'
 import type { Ship } from './types'
 
-export type AppTab = 'dashboard' | 'ship' | 'materials' | 'barter' | 'daily' | 'guide' | 'settings'
+export type AppTab =
+  'dashboard' | 'ship' | 'materials' | 'barter' | 'daily' | 'guide' | 'settings' | 'crafting'
 
 export type AppRoute = {
   tab: AppTab
   shipId?: string
   scope?: DemandScope
+  itemId?: string
 }
 
 const tabs: AppTab[] = ['dashboard', 'ship', 'materials', 'barter', 'daily', 'guide', 'settings']
@@ -29,6 +31,9 @@ export function routeFromHash(hash: string): AppRoute {
   const segments = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent)
   const [screen, target, third, fourth, fifth] = segments
 
+  if (screen === 'crafting')
+    return { tab: 'crafting', itemId: target === 'item' ? third : undefined }
+
   if (screen === 'fleet') return { tab: 'ship', shipId: target }
   if (screen === 'materials') {
     // 기존 하위 탭 URL도 새 물물교환 화면으로 자연스럽게 연결한다.
@@ -41,7 +46,9 @@ export function routeFromHash(hash: string): AppRoute {
   return { tab: 'dashboard' }
 }
 
-export function hashForRoute({ tab, shipId, scope }: AppRoute): string {
+export function hashForRoute({ tab, shipId, scope, itemId }: AppRoute): string {
+  if (tab === 'crafting')
+    return itemId ? `#/crafting/item/${encodeURIComponent(itemId)}` : '#/crafting'
   if (tab === 'ship') return shipId ? `#/fleet/${encodeURIComponent(shipId)}` : '#/fleet'
   if (tab === 'materials' || tab === 'barter') {
     const screen = tab

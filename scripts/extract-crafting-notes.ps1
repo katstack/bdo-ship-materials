@@ -3,7 +3,8 @@ param(
   [string]$KoreanGameDir = 'C:\Pearlabyss\BlackDesert',
   [string]$GlobalGameDir = 'C:\Pearlabyss\BlackDesert_NAEU\BlackDesert',
   [string]$OutputRoot = "$env:LOCALAPPDATA\bdo-ship-materials\crafting-notes",
-  [string]$NodeExe = 'node.exe'
+  [string]$NodeExe = 'node.exe',
+  [string]$WebOutputDir = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -28,5 +29,11 @@ $outputFile = Join-Path $normalized 'manufacture.ko.json'
 $args = @("`"$script`"", '--snapshot', "`"$koreanSnapshot`"", '--catalog', "`"$globalCatalog`"", '--output', "`"$outputFile`"")
 $process = Start-Process -FilePath $nodePath -ArgumentList $args -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
 if ($process.ExitCode -ne 0) { throw "Catalog normalization failed: $($process.ExitCode)" }
+if ($WebOutputDir) {
+  $chunkScript = Join-Path $PSScriptRoot 'build-crafting-chunks.mjs'
+  $chunkArgs = @("`"$chunkScript`"", '--catalog', "`"$normalized`"", '--output', "`"$WebOutputDir`"")
+  $chunkProcess = Start-Process -FilePath $nodePath -ArgumentList $chunkArgs -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+  if ($chunkProcess.ExitCode -ne 0) { throw 'Web chunk generation failed. Node.js 24 LTS or newer is required.' }
+}
 Write-Host "Korean crafting catalog: $normalized" -ForegroundColor Green
 Write-Host 'See report.json for Korean name coverage and recipe verification counts.'

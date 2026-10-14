@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-14T13:36:47.090Z",
+  "codec": "zstd",
+  "itemCount": 74889,
+  "recipeCount": 13316,
+  "searchIndex": {
+    "file": "index-520077e1f1777130.json.zst",
+    "sha256": "520077e1f177713019469b6814e9415e0701f6c54966ca1ca8196cc5d4f9f32c",
+    "bytes": 960073,
+    "decodedBytes": 10316407
+  },
+  "chunks": [
+    {
+      "file": "items-000-fca06cdaeaeaa7ec.json.zst",
+      "sha256": "fca06cdaeaeaa7eca6e1b3fc7c69d510fe7f05e1a0184465241f64a71f2691ed",
+      "bytes": 49476,
+      "decodedBytes": 1048472
+    },
+    {
+      "file": "items-001-58c49398209c0d7a.json.zst",
+      "sha256": "58c49398209c0d7ad2b84d5b3847e486c4e570cb5dfb43e02e249840fb2729a7",
+      "bytes": 59629,
+      "decodedBytes": 1048068
+    },
+    {
+      "file": "items-002-ab07091d15483c02.json.zst",
+      "sha256": "ab07091d15483c02666ca885e136e8c481276f396a8e71c880fe5b9beaa5ba0d",
+      "bytes": 67671,
+      "decodedBytes": 1048112
+    },
+    {
+      "file": "items-003-cca54262942dceee.json.zst",
+      "sha256": "cca54262942dceeef858db93ae84d4472ba7e5508501d8e54657878341bda8a7",
+      "bytes": 78424,
+      "decodedBytes": 1033795
+    },
+    {
+      "file": "items-004-20ebd6adf3c867ba.json.zst",
+      "sha256": "20ebd6adf3c867ba9d24b6d41a60b45ac592aabd01e8e7f3b1f3780799e34c10",
+      "bytes": 52445,
+      "decodedBytes": 1048436
+    },
+    {
+      "file": "items-005-e10a116ab694e8eb.json.zst",
+      "sha256": "e10a116ab694e8eb0ba0ca7a4dd5ac22883d05dfdfb81e6261f66a1efaac8a04",
+      "bytes": 53043,
+      "decodedBytes": 1047653
+    },
+    {
+      "file": "items-006-31cac5f33a12d20c.json.zst",
+      "sha256": "31cac5f33a12d20c3ef2d525fa9821ff78231d8f203a7ecd8818c51bd37dd205",
+      "bytes": 54663,
+      "decodedBytes": 1048456
+    },
+    {
+      "file": "items-007-a71b1bf3923aea51.json.zst",
+      "sha256": "a71b1bf3923aea519b042fde224b1017086b62e698290bccb6561bfe5fcb4265",
+      "bytes": 51659,
+      "decodedBytes": 1048161
+    },
+    {
+      "file": "items-008-460b719092cf8ce3.json.zst",
+      "sha256": "460b719092cf8ce3b932eaf8fc9ba01aed1e00f7725da475f7fd2eefbb1df94b",
+      "bytes": 35861,
+      "decodedBytes": 1048199
+    },
+    {
+      "file": "items-009-7c1b569cdc5fa9f6.json.zst",
+      "sha256": "7c1b569cdc5fa9f6275412247b4b9c59edb8f0e966401c9d2fea5ea888df41f5",
+      "bytes": 47948,
+      "decodedBytes": 1048019
+    },
+    {
+      "file": "items-010-c4a8db563ee22b61.json.zst",
+      "sha256": "c4a8db563ee22b618b68b4f2bcac81bc9756de870a2429241ec5418c87fbb913",
+      "bytes": 33326,
+      "decodedBytes": 1048339
+    },
+    {
+      "file": "items-011-79e1a9710352785c.json.zst",
+      "sha256": "79e1a9710352785c7e3182859740c978506b1144fa4f12387aaf25f8df1ebe22",
+      "bytes": 36032,
+      "decodedBytes": 1048075
+    },
+    {
+      "file": "items-012-9325d983247a8f86.json.zst",
+      "sha256": "9325d983247a8f8651426ada7917d1a090a88d307eb7a48fb74844be47019ce3",
+      "bytes": 40184,
+      "decodedBytes": 1047684
+    },
+    {
+      "file": "items-013-ca051e324cdddbc7.json.zst",
+      "sha256": "ca051e324cdddbc7c6ba4dc35a2255925ce00ed6bda8764031063e78b4b901d3",
+      "bytes": 63472,
+      "decodedBytes": 1047746
+    },
+    {
+      "file": "items-014-c239a734558e06d1.json.zst",
+      "sha256": "c239a734558e06d1d062c0570d27f06a4fa51803026b46f7158e150dfd374354",
+      "bytes": 60172,
+      "decodedBytes": 1048033
+    },
+    {
+      "file": "items-015-fe365c5b7058c179.json.zst",
+      "sha256": "fe365c5b7058c1799b221645cb5cb127395f649fef76e04f908984012dde3658",
+      "bytes": 53018,
+      "decodedBytes": 1047367
+    },
+    {
+      "file": "items-016-fb8db21f7ea8edc7.json.zst",
+      "sha256": "fb8db21f7ea8edc72fa7bb95dce824ccae6f82e5318b04d94814887d5302e118",
+      "bytes": 38529,
+      "decodedBytes": 1047951
+    },
+    {
+      "file": "items-017-262626d7c18dccf6.json.zst",
+      "sha256": "262626d7c18dccf6038d091736a170e79a1a39c8eba68cf1bcee1b86ea329c57",
+      "bytes": 38952,
+      "decodedBytes": 1047628
+    },
+    {
+      "file": "items-018-768a3c895420f948.json.zst",
+      "sha256": "768a3c895420f94804a1881a7a8e7cdee41d2c859c5346955f91682723513aac",
+      "bytes": 31045,
+      "decodedBytes": 1047810
+    },
+    {
+      "file": "items-019-9c8e18ef93db00a9.json.zst",
+      "sha256": "9c8e18ef93db00a9eae7d57dc4f73fca59e68c30bcbccadbc004db9e9dfa6b3c",
+      "bytes": 60092,
+      "decodedBytes": 1047679
+    },
+    {
+      "file": "items-020-81bc6bb6794e701a.json.zst",
+      "sha256": "81bc6bb6794e701ac9138cc92949f9d618774017c0ba9197f32489276b677b87",
+      "bytes": 45550,
+      "decodedBytes": 1047628
+    },
+    {
+      "file": "items-021-a62f4938c80263eb.json.zst",
+      "sha256": "a62f4938c80263eb2ea18a40d4c5ef46f9c75ddfa9b85b93ee59907d829b3867",
+      "bytes": 41899,
+      "decodedBytes": 1047825
+    },
+    {
+      "file": "items-022-7d94a549d2e7479d.json.zst",
+      "sha256": "7d94a549d2e7479d6c61b87c488a4447011b87e9adf38b80c12f9250e45dfa50",
+      "bytes": 40005,
+      "decodedBytes": 1047454
+    },
+    {
+      "file": "items-023-50b15ffdef21daca.json.zst",
+      "sha256": "50b15ffdef21daca2cd186c0a096938a156fe4c9e680e3c2c7ad6a96a45e60c5",
+      "bytes": 51640,
+      "decodedBytes": 1048152
+    },
+    {
+      "file": "items-024-4fba3dbe802c66a5.json.zst",
+      "sha256": "4fba3dbe802c66a517e52c0b49287c8b9352360b08d23f70b1306f7149456f50",
+      "bytes": 49172,
+      "decodedBytes": 1048423
+    },
+    {
+      "file": "items-025-ceec0fc02be2faa3.json.zst",
+      "sha256": "ceec0fc02be2faa304845290128579ff9cf0e636154af1909edf05ab6f1741d1",
+      "bytes": 44989,
+      "decodedBytes": 1048150
+    },
+    {
+      "file": "items-026-9931c218a5802673.json.zst",
+      "sha256": "9931c218a580267318390297d45aca713d2d121447dade015bc428b4ef401fe9",
+      "bytes": 54749,
+      "decodedBytes": 1048541
+    },
+    {
+      "file": "items-027-78e42e1511520c9f.json.zst",
+      "sha256": "78e42e1511520c9fd326d90bce94daf0823cf1ced374d983e0cea41d2ae98bc0",
+      "bytes": 69160,
+      "decodedBytes": 1048280
+    },
+    {
+      "file": "items-028-4c9775cf97a83b8b.json.zst",
+      "sha256": "4c9775cf97a83b8b6f3c72c152baafbffed855bfd493d2033913281a3ecec14f",
+      "bytes": 76273,
+      "decodedBytes": 1047429
+    },
+    {
+      "file": "items-029-3a9cc6c96a4ee08c.json.zst",
+      "sha256": "3a9cc6c96a4ee08c212e2a88776569b973326cacae822af0e8010400c1177d42",
+      "bytes": 69210,
+      "decodedBytes": 1048433
+    },
+    {
+      "file": "items-030-bc1a77bace0acab4.json.zst",
+      "sha256": "bc1a77bace0acab4893207730cf6bab5e3c7a1417ce1faff3386389ebde338e3",
+      "bytes": 27988,
+      "decodedBytes": 1046701
+    },
+    {
+      "file": "items-031-2dc124ee2f96fa47.json.zst",
+      "sha256": "2dc124ee2f96fa4772695dfa2209ac4e98ba5aee41b3b7faa8d29fc771dabe03",
+      "bytes": 52961,
+      "decodedBytes": 1047374
+    },
+    {
+      "file": "items-032-f8e8c874067a8d72.json.zst",
+      "sha256": "f8e8c874067a8d72d9398549ef8fbc891a02b206114f9bb003175e9220287f29",
+      "bytes": 48272,
+      "decodedBytes": 1048350
+    },
+    {
+      "file": "items-033-ed15ae99d64e4d08.json.zst",
+      "sha256": "ed15ae99d64e4d088b6c72e8382eb8c9b007ced49291025d62405453a1163d98",
+      "bytes": 56912,
+      "decodedBytes": 1048377
+    },
+    {
+      "file": "items-034-ac79ff076b86004b.json.zst",
+      "sha256": "ac79ff076b86004b1e7c3934ba6534d73f4d361587e9b57f9a93909e2dcd3bc0",
+      "bytes": 92569,
+      "decodedBytes": 1048544
+    },
+    {
+      "file": "items-035-32a10f94377b96fd.json.zst",
+      "sha256": "32a10f94377b96fdf92c8d0f4cb28562ca76038cb5d3131402b7507481beb617",
+      "bytes": 56897,
+      "decodedBytes": 1048559
+    },
+    {
+      "file": "items-036-e45e3d2f5e6e5eff.json.zst",
+      "sha256": "e45e3d2f5e6e5effa7edab4a25b78bd8cd7de93b2515b2978115611f1cb1a368",
+      "bytes": 30970,
+      "decodedBytes": 1048561
+    },
+    {
+      "file": "items-037-76cf28a299157733.json.zst",
+      "sha256": "76cf28a29915773379d8934b5e573ac75344fae2fa185db75403f01965248580",
+      "bytes": 65968,
+      "decodedBytes": 1047698
+    },
+    {
+      "file": "items-038-63187f89915779f5.json.zst",
+      "sha256": "63187f89915779f59d6d282b76eb8ee9a27553a8aa9ba5b0ffca25ba687bcb07",
+      "bytes": 79343,
+      "decodedBytes": 1048162
+    },
+    {
+      "file": "items-039-77b1b2aedc58f291.json.zst",
+      "sha256": "77b1b2aedc58f291fd59f86a517a782882ccddadba99e7a50d05344daac9dd45",
+      "bytes": 49013,
+      "decodedBytes": 1047495
+    },
+    {
+      "file": "items-040-ce6f00e8cc0ce341.json.zst",
+      "sha256": "ce6f00e8cc0ce3415c75eed3ed5b2d2fdd9fc6d3664356a9fb861f63026b7e02",
+      "bytes": 35073,
+      "decodedBytes": 1047711
+    },
+    {
+      "file": "items-041-16eef91215a62ba4.json.zst",
+      "sha256": "16eef91215a62ba45670d759ebe6b3d90a192cffd8521b623de8acce8e7ff339",
+      "bytes": 35793,
+      "decodedBytes": 1047457
+    },
+    {
+      "file": "items-042-14a179ff8fda8351.json.zst",
+      "sha256": "14a179ff8fda835153969b57a7495d45691f5f4f55180aaba28bc8c2a429ebeb",
+      "bytes": 37594,
+      "decodedBytes": 1048255
+    },
+    {
+      "file": "items-043-845bbfa4ae841d5f.json.zst",
+      "sha256": "845bbfa4ae841d5f19a90467a74eb42f148cbfbeec5fc7a627b5cf1280c3036d",
+      "bytes": 38640,
+      "decodedBytes": 1048014
+    },
+    {
+      "file": "items-044-b1c8a266eee16565.json.zst",
+      "sha256": "b1c8a266eee1656559438e6447b7eb6e85a892dac1708c72da843b8eb2bcab3b",
+      "bytes": 37980,
+      "decodedBytes": 1048468
+    },
+    {
+      "file": "items-045-f205b27c6f033787.json.zst",
+      "sha256": "f205b27c6f033787f0b13de23432baca15906a43e54036e5bd722584e301c4fa",
+      "bytes": 37347,
+      "decodedBytes": 1048408
+    },
+    {
+      "file": "items-046-e1530af7a4652f18.json.zst",
+      "sha256": "e1530af7a4652f187365bdb133382b72e78ff3aecd05ede2c5de2039a286f216",
+      "bytes": 37669,
+      "decodedBytes": 1048465
+    },
+    {
+      "file": "items-047-992a2e0b846b5a7a.json.zst",
+      "sha256": "992a2e0b846b5a7a7ef883573076120aa4386feb00741f74296a6df2576a3b5f",
+      "bytes": 38932,
+      "decodedBytes": 1047113
+    },
+    {
+      "file": "items-048-3f43f30f0088e507.json.zst",
+      "sha256": "3f43f30f0088e50763909ed1aeeee8f1211ab819a97355b3f9148ee2c2964846",
+      "bytes": 37071,
+      "decodedBytes": 1047918
+    },
+    {
+      "file": "items-049-364f572dccdce931.json.zst",
+      "sha256": "364f572dccdce9312581c8cffa924f3ecb794edbdd9e6556e0415c12f3a495c7",
+      "bytes": 36424,
+      "decodedBytes": 1047302
+    },
+    {
+      "file": "items-050-17d5921f07a58e13.json.zst",
+      "sha256": "17d5921f07a58e13d1542ceb3b66870cf100f772dcb09429c261a88cc58bc671",
+      "bytes": 33552,
+      "decodedBytes": 1048350
+    },
+    {
+      "file": "items-051-4e0d1102caee31ea.json.zst",
+      "sha256": "4e0d1102caee31eaa1bba4f6387c0a0698ca30744c01c091b0751eb286522dcd",
+      "bytes": 34381,
+      "decodedBytes": 1048040
+    },
+    {
+      "file": "items-052-6cc69d834719f073.json.zst",
+      "sha256": "6cc69d834719f073d6a3ee5b74794e3ae682d67c723586cd58aa20f11066bc3f",
+      "bytes": 25464,
+      "decodedBytes": 1047111
+    },
+    {
+      "file": "items-053-55e12dd2770e6c3d.json.zst",
+      "sha256": "55e12dd2770e6c3d36f2ff5c1dea0ee6b6b99e5d3349af5d16fb2756c536f1e7",
+      "bytes": 25250,
+      "decodedBytes": 1047368
+    },
+    {
+      "file": "items-054-a4b12f2f5d4cf7b5.json.zst",
+      "sha256": "a4b12f2f5d4cf7b5ec26680606344a3b10fa0f629f6e285ac2b0db43aa47b1a5",
+      "bytes": 38215,
+      "decodedBytes": 1047482
+    },
+    {
+      "file": "items-055-d9af6a8ff8351100.json.zst",
+      "sha256": "d9af6a8ff83511003c9c74b60f3700cb104bb43383046fde81b4ede2b15395ff",
+      "bytes": 34859,
+      "decodedBytes": 1047562
+    },
+    {
+      "file": "items-056-ff87d01f1325d23c.json.zst",
+      "sha256": "ff87d01f1325d23cd6eb24498e707d0b841981ba74935b97750370f3deebbd21",
+      "bytes": 34109,
+      "decodedBytes": 1047620
+    },
+    {
+      "file": "items-057-39514713047056fd.json.zst",
+      "sha256": "39514713047056fdac7e4f93721d43ee5dc9a82b1b053df09045df927a92a52b",
+      "bytes": 29187,
+      "decodedBytes": 1047782
+    },
+    {
+      "file": "items-058-0a55d78bdf33f11b.json.zst",
+      "sha256": "0a55d78bdf33f11bef8f39a8584ba80a4250e550c885aa2b584de7a2a7686ed4",
+      "bytes": 32442,
+      "decodedBytes": 1047895
+    },
+    {
+      "file": "items-059-56893b806c9137d3.json.zst",
+      "sha256": "56893b806c9137d398b7a483612978176b88bfabdae5d90c99d7af7426d74fd5",
+      "bytes": 31700,
+      "decodedBytes": 1048113
+    },
+    {
+      "file": "items-060-8eee6bba3a87e6ea.json.zst",
+      "sha256": "8eee6bba3a87e6ea347af2119cd7052e91eea2cead815b7f77b11d36cdf4598a",
+      "bytes": 32366,
+      "decodedBytes": 1047750
+    },
+    {
+      "file": "items-061-029eaad0d4d8bb83.json.zst",
+      "sha256": "029eaad0d4d8bb833f1c20ecc47581d1c83eafaf44feb2a1efff9e672f850634",
+      "bytes": 31387,
+      "decodedBytes": 1048558
+    },
+    {
+      "file": "items-062-60c3f65fdbc4a388.json.zst",
+      "sha256": "60c3f65fdbc4a388ebd3fe588b330643f805fe617ba05062b408777d8efaf317",
+      "bytes": 41641,
+      "decodedBytes": 1047972
+    },
+    {
+      "file": "items-063-664418bfe81585b7.json.zst",
+      "sha256": "664418bfe81585b744a4e12f2aeea27b7468b7a3d8cb872dced641be12dcffa5",
+      "bytes": 36859,
+      "decodedBytes": 1047381
+    },
+    {
+      "file": "items-064-f3c17acf72bffe77.json.zst",
+      "sha256": "f3c17acf72bffe77e7a17dcb2cb49d51a293ced5675ee0fa5971a5d408777563",
+      "bytes": 44840,
+      "decodedBytes": 1047732
+    },
+    {
+      "file": "items-065-5898886b4ea0bfed.json.zst",
+      "sha256": "5898886b4ea0bfedef42e32be5dcba6cbbe7a45b3e16892b86046ac91757d691",
+      "bytes": 52355,
+      "decodedBytes": 1048085
+    },
+    {
+      "file": "items-066-2e68b94655b8fcff.json.zst",
+      "sha256": "2e68b94655b8fcff3530b04c6052761c181be3b7f226624502da84af63da88ca",
+      "bytes": 38255,
+      "decodedBytes": 1048505
+    },
+    {
+      "file": "items-067-5162f461fa625434.json.zst",
+      "sha256": "5162f461fa625434b9a1d1106dd247f250d7cacc0b968c72224105f61023b9f0",
+      "bytes": 24116,
+      "decodedBytes": 1047526
+    },
+    {
+      "file": "items-068-4a967b9376bc91c8.json.zst",
+      "sha256": "4a967b9376bc91c819993ec9ff90df2419f8f448c506cc6ee1bdd06b06406b1a",
+      "bytes": 22426,
+      "decodedBytes": 1047384
+    },
+    {
+      "file": "items-069-641d715dc618d731.json.zst",
+      "sha256": "641d715dc618d731135ba8f12f960e227df525f9fef245b02aae94dcf7923502",
+      "bytes": 32626,
+      "decodedBytes": 1046854
+    },
+    {
+      "file": "items-070-3cd8d98bf6a9cb98.json.zst",
+      "sha256": "3cd8d98bf6a9cb986e425707791471025a8fd3f747a6dc3c2f675a53f3454d36",
+      "bytes": 40687,
+      "decodedBytes": 1047380
+    },
+    {
+      "file": "items-071-687fcc81c54b01f2.json.zst",
+      "sha256": "687fcc81c54b01f246b80f0be7b2570dcbc80cc3350b167e19bc041c32b47747",
+      "bytes": 33317,
+      "decodedBytes": 1048151
+    },
+    {
+      "file": "items-072-539684ba71c99a0d.json.zst",
+      "sha256": "539684ba71c99a0d9a57762fa29e1bce85cca5a752f186211079d46485e83b97",
+      "bytes": 38808,
+      "decodedBytes": 1048535
+    },
+    {
+      "file": "items-073-615c2b9385ff51a1.json.zst",
+      "sha256": "615c2b9385ff51a1e13ead4b7426f1497acdeb89be56f438f119b0caaaed1d42",
+      "bytes": 73029,
+      "decodedBytes": 1048008
+    },
+    {
+      "file": "items-074-89532fbc6a89ec0d.json.zst",
+      "sha256": "89532fbc6a89ec0d5c6c96a1f40bc4cdefa57fd212fba6bea5a347123d55bfe0",
+      "bytes": 88361,
+      "decodedBytes": 1047855
+    },
+    {
+      "file": "items-075-cf45c1224e00cc25.json.zst",
+      "sha256": "cf45c1224e00cc2504a9f5b046f077ad0c1bf3d96a4c85f561159e33c34b49b5",
+      "bytes": 40114,
+      "decodedBytes": 1047060
+    },
+    {
+      "file": "items-076-4f932ddcb9235103.json.zst",
+      "sha256": "4f932ddcb9235103e72acae808f4407f45a649850eb3301dfc575b4f08413442",
+      "bytes": 64248,
+      "decodedBytes": 1048396
+    },
+    {
+      "file": "items-077-d7dc8f549a2283c1.json.zst",
+      "sha256": "d7dc8f549a2283c197fa95532270119599c2983e2f6cba23a581be293b724c80",
+      "bytes": 51196,
+      "decodedBytes": 1048097
+    },
+    {
+      "file": "items-078-81924a1e9b239b8c.json.zst",
+      "sha256": "81924a1e9b239b8c4a9ff1259d71e8f851eb6b1a8a9f0c95debf913fa28f973b",
+      "bytes": 66821,
+      "decodedBytes": 1047006
+    },
+    {
+      "file": "items-079-cc5625f8ed34e552.json.zst",
+      "sha256": "cc5625f8ed34e55278909f4fe98e23ea4fa985280d7e3e56672b03d1a853cb6a",
+      "bytes": 57074,
+      "decodedBytes": 1047083
+    },
+    {
+      "file": "items-080-995baab8a8eac66c.json.zst",
+      "sha256": "995baab8a8eac66cf0a74540cb1c0f4aa284ee23ff43662cce15bc1ffcd66ce6",
+      "bytes": 26705,
+      "decodedBytes": 1047724
+    },
+    {
+      "file": "items-081-3dcbe80fda7698f7.json.zst",
+      "sha256": "3dcbe80fda7698f77e6282dce04d2963b04395046c0ec04797e55e1319b73c22",
+      "bytes": 81515,
+      "decodedBytes": 1048256
+    },
+    {
+      "file": "items-082-6e4a4ef4b41a85be.json.zst",
+      "sha256": "6e4a4ef4b41a85beaa5e038b8bf7798828fbbef07ae8e66101bfc3027fefd68f",
+      "bytes": 76601,
+      "decodedBytes": 1048206
+    },
+    {
+      "file": "items-083-36f00d1fdf23f5ae.json.zst",
+      "sha256": "36f00d1fdf23f5ae859c608f1249e1ffafb762b4488c0c649843ff1c2f29f5aa",
+      "bytes": 63124,
+      "decodedBytes": 1046990
+    },
+    {
+      "file": "items-084-cbcc25a11092870b.json.zst",
+      "sha256": "cbcc25a11092870b1cf05959333108957d083eb674af79952c0e07968e39685c",
+      "bytes": 42976,
+      "decodedBytes": 1047406
+    },
+    {
+      "file": "items-085-b2615dfa53533782.json.zst",
+      "sha256": "b2615dfa535337824379a7c103724600ccda3d4c6ab53ea0c3cefc07f47ef0e0",
+      "bytes": 38080,
+      "decodedBytes": 1048458
+    },
+    {
+      "file": "items-086-e22af314e8bd1a35.json.zst",
+      "sha256": "e22af314e8bd1a35bd29646151ea57b9578219053ad1bcd1bb239c2b07ca615e",
+      "bytes": 62423,
+      "decodedBytes": 807893
+    }
+  ],
+  "provenance": {
+    "generatedAt": "2026-10-14T12:30:29.518Z",
+    "counts": {
+      "items": 74869,
+      "koreanNames": 70231,
+      "englishFallbacks": 4638,
+      "recipes": 13316,
+      "manufacture": {
+        "rawManufactureRecipes": 7077,
+        "matched": 2022,
+        "ambiguous": 207,
+        "unmatched": 4848
+      }
+    },
+    "limitations": [
+      "Descriptions and station names retain the global catalog language.",
+      "Global XML recipes are not all verified against Korean manufacture rows; consult matchState."
+    ]
+  },
+  "originalBytes": 101228911,
+  "compressedBytes": 5062886
+}

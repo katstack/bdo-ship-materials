@@ -50,6 +50,7 @@ import { MaterialTable } from './features/MaterialTable'
 import { QuestPlanCard } from './features/QuestPlanCard'
 import { RecipeRows } from './features/RecipeRows'
 import { CraftingTree } from './features/CraftingTree'
+import { CraftingNotesPage } from './features/CraftingNotesPage'
 import { SettingsPage } from './features/SettingsPage'
 import { hashForRoute, normalizeRouteForShips, routeFromHash, type AppTab } from './routing'
 
@@ -149,6 +150,7 @@ export default function App() {
   const [hasLocalProgress, setHasLocalProgress] = useState(hasStoredData)
   const initialRoute = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
   const [tab, setTab] = useState<AppTab>(initialRoute.tab)
+  const [craftingItemId, setCraftingItemId] = useState(initialRoute.itemId)
   const [selected, setSelected] = useState(() => {
     const shipId =
       initialRoute.shipId ??
@@ -177,13 +179,14 @@ export default function App() {
   const [manualAdds, setManualAdds] = useState<Record<string, string>>({})
   const importRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    const hash = hashForRoute({ tab, shipId: selected, scope })
+    const hash = hashForRoute({ tab, shipId: selected, scope, itemId: craftingItemId })
     if (window.location.hash !== hash) window.history.replaceState(null, '', hash)
-  }, [tab, selected, scope])
+  }, [tab, selected, scope, craftingItemId])
   useEffect(() => {
     const restoreRouteState = () => {
       const route = normalizeRouteForShips(routeFromHash(window.location.hash), data.ships)
       setTab(route.tab)
+      setCraftingItemId(route.itemId)
       if (route.scope) setScope(route.scope)
       const shipId =
         route.shipId ?? (route.scope?.target === 'ship' ? route.scope.shipId : undefined)
@@ -509,6 +512,7 @@ export default function App() {
             ['barter', '물물교환'],
             ['daily', '일일 수급'],
             ['guide', '수급 도감'],
+            ['crafting', '제작노트'],
             ['settings', '함대·백업'],
           ] as [AppTab, string][]
         ).map(([k, l]) => (
@@ -517,6 +521,9 @@ export default function App() {
           </button>
         ))}
       </nav>
+      {tab === 'crafting' && (
+        <CraftingNotesPage itemId={craftingItemId} onSelect={setCraftingItemId} />
+      )}
       {tab === 'dashboard' && (
         <section>
           <div className="hero">
