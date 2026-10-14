@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { hashForRoute, normalizeRouteForShips, routeFromHash } from './routing'
 
 describe('semantic hash routes', () => {
+  it('keeps independent crafting plan bookmarks', () => {
+    const route = { tab: 'crafting' as const, craftingScreen: 'plan' as const }
+    expect(hashForRoute(route)).toBe('#/crafting/plan')
+    expect(normalizeRouteForShips(routeFromHash('#/crafting/plan'), [])).toEqual(route)
+  })
   it('restores crafting item links independently of the selected ship', () => {
     const route = { tab: 'crafting' as const, itemId: '768190' }
     expect(hashForRoute(route)).toBe('#/crafting/item/768190')
@@ -18,6 +23,7 @@ describe('semantic hash routes', () => {
   })
 
   it('uses safe defaults for missing or invalid sections', () => {
+    expect(routeFromHash('#/crafting/item/%ZZ')).toEqual({ tab: 'dashboard' })
     expect(routeFromHash('')).toEqual({ tab: 'dashboard' })
     expect(routeFromHash('#/materials/fleet')).toEqual({
       tab: 'materials',

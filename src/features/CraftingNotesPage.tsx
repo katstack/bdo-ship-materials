@@ -3,135 +3,25 @@ import { loadItemDetail, loadManifest, loadSearchIndex } from '../crafting/catal
 import { displayItemName, searchCatalog } from '../crafting/search'
 import { EnhancementTable } from './EnhancementTable'
 import { AcquisitionMethods } from './AcquisitionMethods'
-import {
-  sourceItemId,
-  resolveIngredientReference,
-  type ItemDetail,
-  type SearchItem,
-} from '../crafting/types'
-
-const methods: Record<string, string> = {
-  HOUSE: '공방 제작',
-  FIREWOOD: '장작패기',
-  THINNING: '솎아내기',
-  SIMPLE_ALCHEMY: '간이 연금',
-  SIMPLE_COOK: '간이 요리',
-  CRAFT: '공작',
-  ROYALGIFT_COOK: '황실 요리 포장',
-  ROYALGIFT_ALCHEMY: '황실 연금 포장',
-  GUILD: '길드 제작',
-  HEAT: '가열하기',
-  CHOP: '장작패기',
-  GRIND: '빻기',
-  DRY: '말리기',
-  SHAKE: '흔들어 섞기',
-  FILTER: '솎아내기',
-  COOK: '요리',
-  ALCHEMY: '연금',
-}
-
-function IngredientBranch({
-  id,
-  count,
-  ancestors,
-  names,
-  onSelect,
-}: {
-  id: string
-  count?: number
-  ancestors: string[]
-  names: Map<string, string>
-  onSelect: (id: string) => void
-}) {
-  const [detail, setDetail] = useState<ItemDetail>()
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const reference = resolveIngredientReference(id, names)
-  const cycle = ancestors.includes(reference.id)
-  const toggle = async () => {
-    if (cycle) return
-    setOpen(!open)
-    if (!open && !detail) {
-      setLoading(true)
-      setError('')
-      try {
-        setDetail(await loadItemDetail(reference.id))
-      } catch (e) {
-        setError(e instanceof Error ? e.message : '불러오기 실패')
-      } finally {
-        setLoading(false)
-      }
-    }
-  }
-  return (
-    <li>
-      <div className="crafting-ingredient">
-        <button onClick={toggle} disabled={cycle} aria-expanded={open}>
-          {cycle ? '↻' : open ? '−' : '+'}
-        </button>
-        <button className="crafting-item-link" onClick={() => onSelect(reference.id)}>
-          {reference.enhancementLevel ? `+${reference.enhancementLevel} ` : ''}
-          {names.get(reference.id) ?? `아이템 ${id}`}
-        </button>
-        <span>{count === undefined ? '수량 미제공' : `${count.toLocaleString('ko-KR')}개`}</span>
-      </div>
-      {cycle && <small>순환 제작식 · 상위 재료에 이미 포함됨</small>}
-      {open && (
-        <div className="crafting-branch">
-          {reference.enhancementLevel > 0 && (
-            <p className="save">제작 후 +{reference.enhancementLevel} 강화가 필요한 재료입니다.</p>
-          )}
-          {loading && <p>재료 불러오는 중…</p>}
-          {error && (
-            <p role="alert">
-              {error}{' '}
-              <button
-                onClick={() => {
-                  setOpen(false)
-                  setError('')
-                }}
-              >
-                닫기
-              </button>
-            </p>
-          )}
-          {detail && !detail.recipes.length && (
-            <p>등록된 제작식 없음 · 채집/구매 재료 또는 제작 정보 미제공</p>
-          )}
-          {detail && <AcquisitionMethods detail={detail} />}
-          {detail?.recipes.map((recipe, index) => (
-            <div key={index}>
-              <small>
-                {methods[recipe.type] ?? recipe.type}
-                {recipe.station ? ` · ${recipe.station}` : ''}
-              </small>
-              <ul>
-                {recipe.inputs.map((input, position) => (
-                  <IngredientBranch
-                    key={position}
-                    id={sourceItemId(input.item)}
-                    count={input.count}
-                    ancestors={[...ancestors, reference.id]}
-                    names={names}
-                    onSelect={onSelect}
-                  />
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
-    </li>
-  )
-}
+import { IngredientBranch } from './CraftingIngredientBranch'
+import { craftingMethods as methods } from '../crafting/methods'
+import { defaultRecipeIndex, recipeLabel } from '../crafting/recipeSelection'
+import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/types'
 
 export function CraftingNotesPage({
   itemId,
   onSelect,
+  onAddToPlan,
 }: {
   itemId?: string
   onSelect: (id: string) => void
+  onAddToPlan?: (
+    id: string,
+    name: string,
+    quantity: number,
+    recipeIndex: number,
+    mode: 'craft' | 'obtain',
+  ) => void
 }) {
   const [index, setIndex] = useState<SearchItem[]>([])
   const [query, setQuery] = useState('')
@@ -140,6 +30,11 @@ export function CraftingNotesPage({
   const [updatedAt, setUpdatedAt] = useState('')
   const [reload, setReload] = useState(0)
   const [selection, setSelection] = useState<{ id: string; detail?: ItemDetail; error?: string }>()
+  const [detailTab, setDetailTab] = useState<'materials' | 'acquisition' | 'stats' | 'usage'>(
+    'materials',
+  )
+  const [quantity, setQuantity] = useState(1)
+  const [selectedRecipeIndex, setRecipeIndex] = useState<number>()
   useEffect(() => {
     let active = true
     Promise.all([loadSearchIndex(), loadManifest()])
@@ -174,6 +69,8 @@ export function CraftingNotesPage({
   const names = useMemo(() => new Map(index.map((item) => [item.id, item.name])), [index])
   const results = useMemo(() => searchCatalog(index, query), [index, query])
   const current = selection?.id === itemId ? selection : undefined
+  const recipeIndex =
+    selectedRecipeIndex ?? (current?.detail ? defaultRecipeIndex(current.detail) : 0)
   return (
     <section className="crafting-notes">
       <div className="section-title">
@@ -243,55 +140,150 @@ export function CraftingNotesPage({
               <p className="save">
                 ID {itemId} · {current.detail.item.nameEn} · {current.detail.item.grade}
               </p>
-              {current.detail.item.descriptionLocale === 'en' &&
-                current.detail.item.description && (
-                  <p className="save">영문 원문 · 한국어 설명 미확보</p>
-                )}
-              {current.detail.item.description && (
-                <p className="crafting-description">
-                  {current.detail.item.description.replace(/<[^>]*>/g, '').replace(/\\n/g, '\n')}
-                </p>
-              )}
-              <EnhancementTable item={current.detail.item} />
-              <AcquisitionMethods detail={current.detail} />
-              <h3>제작식 · {current.detail.recipes.length}개</h3>
-              <p className="save">
-                각 수량은 해당 제작식 1회 입력 기준입니다. 생산 수량·대성공에 따라 실제 소모량은
-                달라집니다. 한국판과 해외판 패치 차이가 있을 수 있습니다.
-              </p>
-              {!current.detail.recipes.length && <p>제작식이 등록되지 않았습니다.</p>}
-              {current.detail.recipes.map((recipe, position) => (
-                <div className="crafting-recipe" key={`${itemId}-${position}`}>
-                  <h4>
-                    {methods[recipe.type] ?? recipe.type}
-                    {recipe.station ? ` · ${recipe.station}` : ''}
-                  </h4>
-                  <ul>
-                    {recipe.inputs.map((input, i) => (
-                      <IngredientBranch
-                        key={`${itemId}-${position}-${i}`}
-                        id={sourceItemId(input.item)}
-                        count={input.count}
-                        ancestors={[itemId!]}
-                        names={names}
-                        onSelect={onSelect}
-                      />
-                    ))}
-                  </ul>
+              {onAddToPlan && (
+                <div className="crafting-plan-toolbar">
+                  <label>
+                    목표 수량{' '}
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      aria-label="제작 목표 수량"
+                      value={quantity}
+                      onChange={(event) => {
+                        const value = Number(event.target.value)
+                        if (Number.isSafeInteger(value) && value > 0 && value <= 1e9)
+                          setQuantity(value)
+                      }}
+                    />
+                  </label>
+                  <button
+                    onClick={() =>
+                      onAddToPlan(
+                        itemId!,
+                        displayItemName(current.detail!.item, itemId!),
+                        quantity,
+                        recipeIndex,
+                        current.detail!.recipes.length ? 'craft' : 'obtain',
+                      )
+                    }
+                  >
+                    제작 계획에 추가
+                  </button>
                 </div>
-              ))}
-              <h3>이 재료를 사용하는 아이템</h3>
-              <div className="crafting-used-in">
-                {current.detail.usedIn.map((id) => (
-                  <button key={id} onClick={() => onSelect(id)}>
-                    {names.get(id) ?? id}
+              )}
+              <div className="crafting-detail-tabs" role="tablist" aria-label="아이템 상세">
+                {(
+                  [
+                    ['materials', '제작 재료'],
+                    ['acquisition', '획득처'],
+                    ['stats', '성능·설명'],
+                    ['usage', '사용처'],
+                  ] as const
+                ).map(([key, label]) => (
+                  <button
+                    role="tab"
+                    key={key}
+                    aria-selected={detailTab === key}
+                    className={detailTab === key ? 'active' : ''}
+                    onClick={() => setDetailTab(key)}
+                  >
+                    {label}
                   </button>
                 ))}
               </div>
-              <details>
-                <summary>전체 아이템 속성</summary>
-                <pre className="crafting-raw">{JSON.stringify(current.detail.item, null, 2)}</pre>
-              </details>
+              {detailTab === 'stats' && (
+                <div role="tabpanel" aria-label="성능·설명">
+                  {current.detail.item.descriptionLocale === 'en' &&
+                    current.detail.item.description && (
+                      <p className="save">영문 원문 · 한국어 설명 미확보</p>
+                    )}
+                  {current.detail.item.description && (
+                    <p className="crafting-description">
+                      {current.detail.item.description
+                        .replace(/<[^>]*>/g, '')
+                        .replace(/\\n/g, '\n')}
+                    </p>
+                  )}
+                  <EnhancementTable item={current.detail.item} />
+                  <details>
+                    <summary>전체 아이템 속성</summary>
+                    <pre className="crafting-raw">
+                      {JSON.stringify(current.detail.item, null, 2)}
+                    </pre>
+                  </details>
+                </div>
+              )}
+              {detailTab === 'acquisition' && (
+                <div role="tabpanel" aria-label="획득처">
+                  <AcquisitionMethods detail={current.detail} />
+                </div>
+              )}
+              {detailTab === 'materials' && (
+                <div role="tabpanel" aria-label="제작 재료">
+                  <h3>제작식 · {current.detail.recipes.length}개</h3>
+                  {!!current.detail.recipes.length && (
+                    <label>
+                      제작식 선택{' '}
+                      <select
+                        aria-label="제작노트 제작식 선택"
+                        value={recipeIndex}
+                        onChange={(event) => setRecipeIndex(Number(event.target.value))}
+                      >
+                        {current.detail.recipes.map((recipe, index) => (
+                          <option key={index} value={index}>
+                            {recipeLabel(recipe, index)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+                  <p className="save">
+                    각 수량은 해당 제작식 1회 입력 기준입니다. 생산 수량·대성공에 따라 실제 소모량은
+                    달라집니다. 한국판과 해외판 패치 차이가 있을 수 있습니다.
+                  </p>
+                  {!current.detail.recipes.length && (
+                    <p>제작식이 등록되지 않았습니다. 획득처 탭에서 구매·채집 정보를 확인하세요.</p>
+                  )}
+                  {current.detail.recipes
+                    .slice(recipeIndex, recipeIndex + 1)
+                    .map((recipe, position) => (
+                      <div className="crafting-recipe" key={`${itemId}-${position}`}>
+                        <h4>
+                          {methods[recipe.type] ?? recipe.type}
+                          {recipe.station ? ` · ${recipe.station}` : ''}
+                        </h4>
+                        <ul>
+                          {recipe.inputs.map((input, i) => (
+                            <IngredientBranch
+                              key={`${itemId}-${position}-${i}`}
+                              id={sourceItemId(input.item)}
+                              count={input.count}
+                              ancestors={[itemId!]}
+                              names={names}
+                              onSelect={onSelect}
+                            />
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                </div>
+              )}
+              {detailTab === 'usage' && (
+                <div role="tabpanel" aria-label="사용처">
+                  <h3>이 재료를 사용하는 아이템</h3>
+                  {!current.detail.usedIn.length && (
+                    <p className="save">확보한 제작식에 이 아이템을 사용하는 항목이 없습니다.</p>
+                  )}
+                  <div className="crafting-used-in">
+                    {current.detail.usedIn.map((id) => (
+                      <button key={id} onClick={() => onSelect(id)}>
+                        {names.get(id) ?? id}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </article>

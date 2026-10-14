@@ -30,6 +30,7 @@ export type SourceRecipe = {
   output: string
   type: string
   station?: string
+  byproductOf?: string
   inputs: { item: string; count?: number }[]
   [key: string]: unknown
 }

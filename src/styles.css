@@ -1703,3 +1703,197 @@ tr:last-child td {
 .acquisition-methods {
   margin: 20px 0;
 }
+.tool-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px max(18px, calc((100vw - 1400px) / 2));
+  background: #101a20;
+  border-bottom: 1px solid #34434c;
+}
+.tool-brand {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #a8b9bd;
+}
+.tool-bar nav {
+  margin: 0;
+}
+.tool-bar a,
+.crafting-workspace > nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  border: 1px solid #34434c;
+  border-radius: 7px;
+  text-decoration: none;
+  color: #c4d3d6;
+}
+.tool-bar a.active,
+.crafting-workspace > nav a.active,
+.crafting-detail-tabs button.active {
+  background: #1e655e;
+  border-color: #52b6a6;
+  color: #ecfffc;
+}
+.crafting-detail-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.crafting-plan-toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.crafting-plan-toolbar label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+}
+.crafting-plan-toolbar input {
+  width: 100px;
+}
+.crafting-plan-toolbar a,
+.crafting-plan-notice a {
+  color: #91e4d5;
+}
+.crafting-plan-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  background: #153a36;
+  border-radius: 7px;
+}
+.crafting-empty {
+  padding: 24px;
+  border: 1px dashed #344b50;
+  border-radius: 9px;
+}
+.crafting-goals {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+}
+.crafting-goal {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  background: #14272a;
+  border-radius: 8px;
+}
+.crafting-goal > .crafting-item-link {
+  flex-basis: 100%;
+}
+.crafting-goal label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+}
+.crafting-goal input {
+  width: 100px;
+}
+.crafting-plan-table {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+.crafting-plan-table table {
+  min-width: 800px;
+}
+.crafting-plan-table td,
+.crafting-plan-table th {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.crafting-plan-table td:first-child {
+  min-width: 220px;
+}
+.crafting-plan-table input {
+  width: 105px;
+}
+.crafting-plan-table small {
+  display: block;
+  margin-top: 5px;
+}
+.crafting-plan-table select {
+  max-width: 280px;
+}
+.crafting-calculation-warnings {
+  margin: 18px 0;
+  padding: 12px;
+  background: #302b20;
+  border: 1px solid #685737;
+  border-radius: 7px;
+}
+.crafting-calculation-warnings summary {
+  cursor: pointer;
+}
+.crafting-calculation-warnings ul {
+  max-height: 190px;
+  overflow-y: auto;
+  padding-left: 22px;
+}
+.crafting-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000a;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.crafting-confirm {
+  width: min(100%, 520px);
+  max-height: 90dvh;
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid #496069;
+  background: #1b2930;
+  border-radius: 12px;
+}
+.crafting-workspace input:not([type='file']),
+.crafting-workspace select {
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #435861;
+  border-radius: 6px;
+  background: #0f1c22;
+  color: #e1edf0;
+  font: inherit;
+}
+.crafting-workspace input:focus-visible,
+.crafting-workspace select:focus-visible {
+  outline: 2px solid #64c8b5;
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .tool-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
+  .tool-brand {
+    width: 100%;
+  }
+  .tool-bar nav {
+    width: 100%;
+  }
+  .tool-bar a {
+    flex: 1;
+    padding: 8px;
+  }
+}
