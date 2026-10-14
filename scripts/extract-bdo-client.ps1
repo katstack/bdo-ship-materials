@@ -2,7 +2,6 @@
 param(
   [string]$GameDir = 'C:\Pearlabyss\BlackDesert',
   [string]$OutputRoot = "$env:LOCALAPPDATA\bdo-ship-materials\extracted",
-  [string]$ExtractorVersion = 'v0.1.9',
   [ValidateSet('Auto', 'Full', 'Raw')]
   [string]$Mode = 'Auto'
 )
@@ -54,13 +53,22 @@ if (-not (Test-Path -LiteralPath $goExe) -or -not (Test-Path -LiteralPath $goStd
   }
 }
 
-Write-Step "Preparing bdo-data-extractor $ExtractorVersion"
+Write-Step 'Preparing pinned bdo-data-extractor submodule'
 $env:GOPATH = Join-Path $toolRoot 'gopath'
 $env:GOBIN = Join-Path $env:GOPATH 'bin'
 New-Item -ItemType Directory -Force -Path $env:GOBIN | Out-Null
 $extractorExe = Join-Path $env:GOBIN 'bdo-data-extractor.exe'
-$goInstall = Start-Process -FilePath $goExe -ArgumentList @('install', "github.com/idevelopthings/bdo-data-extractor@$ExtractorVersion") -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
-if ($goInstall.ExitCode -ne 0) { throw "Extractor installation failed with exit code $($goInstall.ExitCode)." }
+$submoduleDir = Join-Path $PSScriptRoot '..\tools\bdo-data-extractor'
+if (-not (Test-Path -LiteralPath (Join-Path $submoduleDir 'go.mod'))) {
+  throw 'Initialize the extractor with: git submodule update --init --recursive'
+}
+# Build from a Windows-native disposable source copy. Keep the submodule clean
+# and avoid Go internal-package restrictions when adding our probe commands.
+$sourceDir = Join-Path $toolRoot ('source-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Force -Path $sourceDir | Out-Null
+Get-ChildItem -LiteralPath $submoduleDir -Force | Where-Object { $_.Name -ne '.git' } | Copy-Item -Destination $sourceDir -Recurse -Force
+$goBuild = Start-Process -FilePath $goExe -ArgumentList @('build', '-o', "`"$extractorExe`"", '.') -WorkingDirectory $sourceDir -Wait -PassThru -NoNewWindow
+if ($goBuild.ExitCode -ne 0) { throw "Extractor build failed with exit code $($goBuild.ExitCode)." }
 if (-not (Test-Path -LiteralPath $extractorExe)) {
   throw "Extractor installation failed: $extractorExe"
 }
@@ -77,13 +85,13 @@ if ($effectiveMode -eq 'Full' -and -not $fullClientSupported) {
 if ($effectiveMode -eq 'Full') {
   Write-Step "Extracting full client data -> $outputDir"
   # The extractor never writes into GameDir. All generated files stay below OutputRoot.
-  $extract = Start-Process -FilePath $extractorExe -ArgumentList @('build', '--game', $GameDir, '--out', $outputDir, '--lang', 'en') -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
+  $extract = Start-Process -FilePath $extractorExe -ArgumentList @('build', '--game', "`"$GameDir`"", '--out', "`"$outputDir`"", '--lang', 'en') -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
   if ($extract.ExitCode -ne 0) { throw "Extractor returned exit code $($extract.ExitCode)." }
 
   $required = @('items.json', 'recipes.json', 'quests.json', 'npcs.json', 'world.json')
-  $missing = $required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir "data\$_")) }
+  $missing = $required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $outputDir $_)) }
   if ($missing) { throw "The extraction result is missing required files: $($missing -join ', ')" }
-  $resultFiles = $required | ForEach-Object { "data\\$_" }
+  $resultFiles = $required
   $note = 'Full catalog generated from a client layout supported by bdo-data-extractor.'
 } else {
   Write-Step "Indexing Korean client raw data -> $outputDir"
@@ -105,11 +113,6 @@ if ($effectiveMode -eq 'Full') {
   # Decode the client-side portion of manufacture.bss to JSON. The probe is
   # compiled inside an upstream source checkout because Go's internal packages
   # intentionally cannot be imported by a program outside that module.
-  $sourceDir = Join-Path $toolRoot "bdo-data-extractor-$($ExtractorVersion.TrimStart('v'))"
-  if (-not (Test-Path -LiteralPath (Join-Path $sourceDir 'go.mod'))) {
-    $clone = Start-Process -FilePath 'git.exe' -ArgumentList @('clone', '--depth', '1', '--branch', $ExtractorVersion, 'https://github.com/idevelopthings/bdo-data-extractor.git', $sourceDir) -WorkingDirectory $env:SystemDrive -Wait -PassThru -NoNewWindow
-    if ($clone.ExitCode -ne 0) { throw "Extractor source checkout failed with exit code $($clone.ExitCode)." }
-  }
   $probeDir = Join-Path $sourceDir 'cmd\\kr-manufacture-probe'
   New-Item -ItemType Directory -Force -Path $probeDir | Out-Null
   Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'kr-manufacture-probe.go') -Destination (Join-Path $probeDir 'main.go') -Force
@@ -136,7 +139,7 @@ if ($effectiveMode -eq 'Full') {
 
 $manifest = [ordered]@{
   generatedAt = (Get-Date).ToUniversalTime().ToString('o')
-  extractorVersion = $ExtractorVersion
+  extractorSource = 'tools/bdo-data-extractor (Git submodule pinned by parent repository)'
   mode = $effectiveMode
   gameDir = $GameDir
   outputDir = $outputDir

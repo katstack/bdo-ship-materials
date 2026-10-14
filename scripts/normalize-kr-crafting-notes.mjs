@@ -48,12 +48,18 @@ const recipeSignature = (type, inputs) => {
     .join(',')}`
 }
 
-export function normalizeKoreanManufacture(rawRecipes, catalogItems, catalogRecipes) {
+export function normalizeKoreanManufacture(
+  rawRecipes,
+  catalogItems,
+  catalogRecipes,
+  koreanNames = {},
+) {
   const names = new Map(
     catalogItems
-      .map((item) => [itemId(item.id), item.name])
+      .map((item) => [itemId(item.id ?? item.urn), item.name])
       .filter(([id, name]) => id && typeof name === 'string' && name.length > 0),
   )
+  for (const [id, name] of Object.entries(koreanNames)) names.set(id, name)
   const outputsBySignature = new Map()
   for (const recipe of catalogRecipes) {
     if (recipe.byproductOf) continue
@@ -112,19 +118,62 @@ export function normalizeKoreanManufacture(rawRecipes, catalogItems, catalogReci
 
 async function main() {
   const { snapshot, catalog, output } = parseArgs(process.argv.slice(2))
-  const [rawText, itemsText, recipesText] = await Promise.all([
+  const [rawText, itemsText, recipesText, namesText] = await Promise.all([
     readFile(join(resolve(snapshot), 'data', 'manufacture.raw.json'), 'utf8'),
     readFile(join(resolve(catalog), 'items.json'), 'utf8'),
     readFile(join(resolve(catalog), 'recipes.json'), 'utf8'),
+    readFile(join(resolve(snapshot), 'data', 'item-names.ko.json'), 'utf8'),
   ])
+  const catalogItems = JSON.parse(itemsText)
+  const catalogRecipes = JSON.parse(recipesText)
+  const koreanNames = JSON.parse(namesText).names
   const normalized = normalizeKoreanManufacture(
     JSON.parse(rawText),
-    JSON.parse(itemsText),
-    JSON.parse(recipesText),
+    catalogItems,
+    catalogRecipes,
+    koreanNames,
   )
   const destination = resolve(output)
   await mkdir(dirname(destination), { recursive: true })
   await writeFile(destination, `${JSON.stringify(normalized, null, 2)}\n`, 'utf8')
+  const localizedItems = catalogItems.map((item) => {
+    const id = itemId(item.id ?? item.urn)
+    return {
+      ...item,
+      name: koreanNames[id] ?? item.name,
+      nameEn: item.name,
+      nameLocale: koreanNames[id] ? 'ko' : 'en',
+    }
+  })
+  const counts = {
+    items: localizedItems.length,
+    koreanNames: localizedItems.filter((item) => item.nameLocale === 'ko').length,
+    englishFallbacks: localizedItems.filter((item) => item.nameLocale === 'en').length,
+    recipes: catalogRecipes.length,
+    manufacture: normalized.counts,
+  }
+  await Promise.all([
+    writeFile(join(dirname(destination), 'items.ko.json'), JSON.stringify(localizedItems), 'utf8'),
+    writeFile(join(dirname(destination), 'recipes.json'), recipesText, 'utf8'),
+    writeFile(
+      join(dirname(destination), 'report.json'),
+      JSON.stringify(
+        {
+          generatedAt: normalized.generatedAt,
+          sources: { koreanSnapshot: resolve(snapshot), globalCatalog: resolve(catalog) },
+          counts,
+          limitations: [
+            'Descriptions and station names retain the global catalog language.',
+            'Global XML recipes are not all verified against Korean manufacture rows; consult matchState.',
+          ],
+        },
+        null,
+        2,
+      ),
+      'utf8',
+    ),
+  ])
+  console.log(JSON.stringify(counts))
   console.log(
     `Wrote ${normalized.recipes.length.toLocaleString('en-US')} recipes: ` +
       `${normalized.counts.matched.toLocaleString('en-US')} matched, ` +

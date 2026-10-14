@@ -1,0 +1,3 @@
+[submodule "tools/bdo-data-extractor"]
+	path = tools/bdo-data-extractor
+	url = https://github.com/idevelopthings/bdo-data-extractor.git

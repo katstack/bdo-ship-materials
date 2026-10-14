@@ -6,6 +6,8 @@
 
 ## 실행 흐름
 
+한국판과 NA/EU판을 결합하는 현재 자동 실행법은 [한국어 제작노트 자동 추출](CRAFTING_NOTES_EXTRACTION.md)을 참고한다. `scripts/extract-crafting-notes.cmd` 한 번으로 두 스냅샷과 결합 카탈로그를 만든다.
+
 1. Windows에서 `scripts\\extract-bdo-client.cmd`를 더블클릭한다.
 2. 스크립트가 `bdo-data-extractor`로 클라이언트의 아이템, 제작식, 의뢰, NPC, 월드 데이터를 읽는다.
 3. 원본 JSON은 `%LOCALAPPDATA%\\bdo-ship-materials\\extracted\\<실행시각>`에 날짜별 스냅샷으로 저장한다.
@@ -26,12 +28,13 @@
 
 ### 한국 클라이언트의 현재 원시 출력
 
-한국 설치본은 아이템 표시 문자열과 아이템별 제작 XML을 제공하지 않아 전체 카탈로그 모드가 동작하지 않는다. `Auto`/`Raw` 모드는 대신 다음을 만든다.
+한국 설치본은 별도 LOC와 아이템별 제작 XML이 없어 전체 카탈로그 모드가 동작하지 않는다. 아이템 표시명은 `itemenchant.dbss` 인라인 UTF-16 문자열에서 추출된다. `Auto`/`Raw` 모드는 다음을 만든다.
 
 - `paz-index/paz_files.json`: 클라이언트 아카이브 파일 목록
 - `raw/gamecommondata/binary/itemenchant.dbss`: 아이템 ID·정적 스탯 원본
 - `raw/gamecommondata/binary/manufacture.bss`: 가공 원본
 - `data/manufacture.raw.json`: `manufacture.bss`에서 디코딩한 `{group,type,success,inputs:[{item,count}]}`
+- `data/item-names.ko.json`: 한국어 아이템 이름을 ID로 연결한 맵
 
 `group`은 서버가 결과물로 해석하는 드롭 그룹이라, 이것만으로 결과 아이템을 확정해 재귀 제작 트리를 만들면 안 된다. 후속 병합기는 이름·결과물을 가진 별도 버전 카탈로그를 명시적으로 입력받아야 한다.
 
@@ -65,8 +68,8 @@ node .\\scripts\\normalize-kr-crafting-notes.mjs `
 
 ## 구현 순서
 
-1. 실제 스냅샷의 JSON 모양과 한국어 로컬라이즈 가능 범위를 검증한다. 완료: 한국 설치본에는 게임 LOC·아이템별 제작 XML이 없음을 확인했다.
+1. 실제 스냅샷의 JSON 모양과 한국어 로컬라이즈 가능 범위를 검증한다. 완료: 한국 설치본에는 별도 게임 LOC·아이템별 제작 XML이 없지만 인라인 한국어 아이템명 71,344개를 추출했다.
 2. 입력 ID·수량·가공 유형 기반 `manufacture.raw.json`을 생성한다. 완료: 현재 설치본에서 7,077개를 디코딩했다.
-3. 같은 버전 전체 카탈로그와의 서명 조인 정규화기를 실행하고 `unmatched` 목록을 검토한다.
+3. 전체 카탈로그와의 서명 조인 정규화기를 실행한다. 완료: 글로벌 XML 제작식 13,316개, 한국어 이름 연결 70,231개, 한국 제조식 단일 결과 일치 2,022개. 복수 후보 207개와 미일치 4,848개는 추가 분석 대상이다. 한국과 글로벌 패치가 동일하다고 가정하지 않는다.
 4. 제작 노트 전용 화면에서 검색, 아이템 상세, 재료 트리, NPC/노드 출처를 읽기 전용으로 표시한다.
 5. 데이터의 버전·추출 시각을 앱에 표시해 게임 패치 이후 재생성 여부를 판단하게 한다.
