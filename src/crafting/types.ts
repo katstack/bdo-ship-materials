@@ -7,6 +7,17 @@ export type SourceItem = {
   descriptionLocale?: string
   descriptionSource?: string
   enhancementSource?: string
+  buyPrice?: number
+  vendors?: { urns?: string[] }
+  unresolvedVendors?: string[]
+  rentalOffers?: {
+    vendor: string
+    count?: number
+    pointType?: number
+    pointCost?: number
+    conditionDsl?: string
+  }[]
+  gatheredFrom?: string[]
   enhancement?: {
     levels?: EnhancementLevel[]
     [key: string]: unknown
@@ -44,6 +55,13 @@ export type SearchItem = {
   chunk: number
 }
 export type ChunkFile = { file: string; sha256: string; bytes: number; decodedBytes: number }
+export type SourceNpc = {
+  id: number | string
+  name: string
+  title?: string
+  spawns?: { regionName?: string; pos?: number[] }[]
+  itemService?: { conditionDsl?: string; name?: string }
+}
 export type CatalogManifest = {
   schemaVersion: number
   generatedAt: string
@@ -51,6 +69,7 @@ export type CatalogManifest = {
   recipeCount: number
   searchIndex: ChunkFile
   chunks: ChunkFile[]
+  npcs?: ChunkFile
 }
 export const sourceItemId = (reference: string) => reference.replace(/^urn::item:/, '')
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-14T15:27:26.051Z",
+  "generatedAt": "2026-10-14T15:47:20.582Z",
   "codec": "zstd",
   "itemCount": 74889,
   "recipeCount": 13316,
@@ -558,8 +558,14 @@
       "decodedBytes": 544019
     }
   ],
+  "npcs": {
+    "file": "npcs-466758f2a997f87b.json.zst",
+    "sha256": "466758f2a997f87b34ae554060d0b3d30277f898a0733b535eaf7e4c4a31b3ef",
+    "bytes": 94090,
+    "decodedBytes": 690626
+  },
   "provenance": {
-    "generatedAt": "2026-10-14T15:25:46.884Z",
+    "generatedAt": "2026-10-14T15:47:16.264Z",
     "counts": {
       "items": 74869,
       "koreanNames": 70231,
@@ -579,6 +585,6 @@
       "Global XML recipes are not all verified against Korean manufacture rows; consult matchState."
     ]
   },
-  "originalBytes": 105142245,
-  "compressedBytes": 5221702
+  "originalBytes": 105832871,
+  "compressedBytes": 5315792
 }

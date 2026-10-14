@@ -15,6 +15,12 @@ async function decode(file) {
   return JSON.parse(new TextDecoder().decode(raw))
 }
 const index = await decode(manifest.searchIndex)
+if (manifest.npcs) {
+  const npcs = await decode(manifest.npcs)
+  if (!Array.isArray(npcs) || npcs.some((npc) => !npc.id || typeof npc.name !== 'string'))
+    throw new Error('Invalid NPC catalog')
+  console.log(`NPC catalog verified: ${npcs.length} records.`)
+}
 const chunks = []
 for (const file of manifest.chunks) chunks.push(await decode(file))
 let recipeCount = 0

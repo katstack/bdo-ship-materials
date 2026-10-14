@@ -98,6 +98,15 @@ for (const [id, record] of [...records].sort(([a], [b]) => Number(a) - Number(b)
 }
 await flush()
 const searchIndex = await save(index, 'index')
+// NPC records are independent of the item chunks and downloaded only for vendor details.
+let npcs
+try {
+  const records = JSON.parse(await readFile(join(catalog, 'npcs.json'), 'utf8'))
+  if (!Array.isArray(records)) throw new Error('npcs.json must be an array')
+  npcs = await save(records, 'npcs')
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error
+}
 let provenance
 try {
   const report = JSON.parse(await readFile(join(catalog, 'report.json'), 'utf8'))
@@ -117,6 +126,7 @@ const manifest = {
   recipeCount: recipes.length,
   searchIndex,
   chunks,
+  npcs,
   provenance,
   originalBytes,
   compressedBytes,

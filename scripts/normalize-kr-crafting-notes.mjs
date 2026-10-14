@@ -148,6 +148,12 @@ async function main() {
   )
   const destination = resolve(output)
   await mkdir(dirname(destination), { recursive: true })
+  try {
+    const npcText = await readFile(join(resolve(catalog), 'npcs.json'), 'utf8')
+    await writeFile(join(dirname(destination), 'npcs.json'), npcText, 'utf8')
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error
+  }
   await writeFile(destination, `${JSON.stringify(normalized, null, 2)}\n`, 'utf8')
   const localizedItems = catalogItems.map((item) => {
     const id = itemId(item.id ?? item.urn)

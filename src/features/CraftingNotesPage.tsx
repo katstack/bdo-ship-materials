@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { loadItemDetail, loadManifest, loadSearchIndex } from '../crafting/catalogClient'
 import { displayItemName, searchCatalog } from '../crafting/search'
 import { EnhancementTable } from './EnhancementTable'
+import { AcquisitionMethods } from './AcquisitionMethods'
 import {
   sourceItemId,
   resolveIngredientReference,
@@ -98,6 +99,7 @@ function IngredientBranch({
           {detail && !detail.recipes.length && (
             <p>등록된 제작식 없음 · 채집/구매 재료 또는 제작 정보 미제공</p>
           )}
+          {detail && <AcquisitionMethods detail={detail} />}
           {detail?.recipes.map((recipe, index) => (
             <div key={index}>
               <small>
@@ -251,6 +253,7 @@ export function CraftingNotesPage({
                 </p>
               )}
               <EnhancementTable item={current.detail.item} />
+              <AcquisitionMethods detail={current.detail} />
               <h3>제작식 · {current.detail.recipes.length}개</h3>
               <p className="save">
                 각 수량은 해당 제작식 1회 입력 기준입니다. 생산 수량·대성공에 따라 실제 소모량은

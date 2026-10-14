@@ -1,9 +1,10 @@
-import type { CatalogManifest, ChunkFile, ItemDetail, SearchItem } from './types'
+import type { CatalogManifest, ChunkFile, ItemDetail, SearchItem, SourceNpc } from './types'
 import { displayItemName } from './search'
 
 const base = `${import.meta.env.BASE_URL}crafting/`
 let manifestPromise: Promise<CatalogManifest> | undefined
 let indexPromise: Promise<SearchItem[]> | undefined
+let npcPromise: Promise<SourceNpc[]> | undefined
 let worker: Worker | undefined
 let serial = 0
 const requests = new Map<
@@ -90,6 +91,17 @@ export function loadSearchIndex() {
       throw error
     })
   return indexPromise
+}
+export function loadNpcs() {
+  npcPromise ??= loadManifest()
+    .then((manifest) =>
+      manifest.npcs ? (loadCompressed(manifest.npcs) as Promise<SourceNpc[]>) : [],
+    )
+    .catch((error) => {
+      npcPromise = undefined
+      throw error
+    })
+  return npcPromise
 }
 export async function loadItemDetail(id: string): Promise<ItemDetail> {
   const [manifest, index] = await Promise.all([loadManifest(), loadSearchIndex()])

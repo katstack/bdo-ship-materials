@@ -1669,3 +1669,37 @@ tr:last-child td {
 .enhancement-table {
   margin: 20px 0;
 }
+.acquisition-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 10px;
+}
+.acquisition-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #344b50;
+  border-radius: 8px;
+  background: #14272a;
+  overflow-wrap: anywhere;
+}
+.acquisition-card h4 {
+  margin: 0 0 10px;
+}
+.acquisition-card p {
+  margin: 8px 0;
+}
+.acquisition-card a {
+  color: #91e4d5;
+}
+.acquisition-vendors ul {
+  padding-left: 20px;
+}
+.acquisition-vendors li {
+  margin: 10px 0;
+}
+.acquisition-vendors summary {
+  cursor: pointer;
+}
+.acquisition-methods {
+  margin: 20px 0;
+}

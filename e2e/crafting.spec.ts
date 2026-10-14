@@ -1,5 +1,35 @@
 import { test, expect } from '@playwright/test'
 
+test('acquisition methods distinguish vendors, special currency, variable barter and rentals', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('./#/crafting/item/9002')
+  const methods = page.locator('.crafting-detail > .acquisition-methods')
+  await expect(methods).toContainText('NPC 구매')
+  await expect(methods).toContainText('아이템 기본 가격값: 20')
+  await methods.locator('.acquisition-vendors summary').click()
+  await expect(methods.getByRole('link', { name: 'David Finto', exact: true })).toBeVisible()
+  await expect(methods).toContainText('Velia')
+  await expect(methods).not.toContainText('까마귀 주화 구매')
+  await page.reload()
+  await expect(methods).toContainText('아이템 기본 가격값: 20')
+  await page.goto('./#/crafting/item/5812')
+  await expect(methods).toContainText('1개당 80 까마귀 주화')
+  await expect(methods).toContainText('교역품 1개 → 1 또는 2개')
+  await expect(methods).not.toContainText('아이템 기본 가격값')
+  await page.goto('./#/crafting/item/3001')
+  await expect(methods).toContainText('공헌도 10')
+  await page.goto('./#/crafting/item/4001')
+  await expect(methods).not.toContainText('NPC 구매')
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
+  expect(errors).toEqual([])
+})
+
 test('search, unnamed items, recipes, tree expansion, cached reload and mobile', async ({
   page,
 }) => {
