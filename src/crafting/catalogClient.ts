@@ -1,4 +1,5 @@
 import type { CatalogManifest, ChunkFile, ItemDetail, SearchItem } from './types'
+import { displayItemName } from './search'
 
 const base = `${import.meta.env.BASE_URL}crafting/`
 let manifestPromise: Promise<CatalogManifest> | undefined
@@ -83,6 +84,7 @@ export function loadManifest() {
 export function loadSearchIndex() {
   indexPromise ??= loadManifest()
     .then((manifest) => loadCompressed(manifest.searchIndex) as Promise<SearchItem[]>)
+    .then((items) => items.map((item) => ({ ...item, name: displayItemName(item, item.id) })))
     .catch((error) => {
       indexPromise = undefined
       throw error

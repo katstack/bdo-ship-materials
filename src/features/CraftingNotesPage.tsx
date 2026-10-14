@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadItemDetail, loadManifest, loadSearchIndex } from '../crafting/catalogClient'
+import { displayItemName, searchCatalog } from '../crafting/search'
 import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/types'
 
 const methods: Record<string, string> = {
@@ -158,16 +159,7 @@ export function CraftingNotesPage({
     }
   }, [itemId, reload])
   const names = useMemo(() => new Map(index.map((item) => [item.id, item.name])), [index])
-  const results = useMemo(() => {
-    const text = query.trim().toLocaleLowerCase()
-    return index.filter(
-      (item) =>
-        !text ||
-        item.name.toLocaleLowerCase().includes(text) ||
-        item.nameEn?.toLocaleLowerCase().includes(text) ||
-        item.id === text,
-    )
-  }, [index, query])
+  const results = useMemo(() => searchCatalog(index, query), [index, query])
   const current = selection?.id === itemId ? selection : undefined
   return (
     <section className="crafting-notes">
@@ -234,7 +226,7 @@ export function CraftingNotesPage({
           )}
           {current?.detail && (
             <>
-              <h2>{current.detail.item.name}</h2>
+              <h2>{displayItemName(current.detail.item, itemId!)}</h2>
               <p className="save">
                 ID {itemId} · {current.detail.item.nameEn} · {current.detail.item.grade}
               </p>

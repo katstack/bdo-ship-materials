@@ -1,7 +1,7 @@
 export type SourceItem = {
   id?: number | string
   urn?: string
-  name: string
+  name?: string
   nameEn?: string
   description?: string
   grade?: string

@@ -71,7 +71,12 @@ for (const [id, record] of [...records].sort(([a], [b]) => Number(a) - Number(b)
   bytes += recordBytes
   index.push({
     id,
-    name: record.item.name,
+    name:
+      typeof record.item.name === 'string' && record.item.name.trim()
+        ? record.item.name
+        : typeof record.item.nameEn === 'string' && record.item.nameEn.trim()
+          ? record.item.nameEn
+          : `아이템 ${id}`,
     nameEn: record.item.nameEn,
     grade: record.item.grade,
     category: record.item.category,

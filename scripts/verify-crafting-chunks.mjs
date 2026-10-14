@@ -20,7 +20,15 @@ for (const file of manifest.chunks) chunks.push(await decode(file))
 let recipeCount = 0
 for (const entry of index) {
   const record = chunks[entry.chunk]?.[entry.id]
-  if (!record || record.item.name !== entry.name) throw new Error(`Index mismatch: ${entry.id}`)
+  const name =
+    record &&
+    (typeof record.item.name === 'string' && record.item.name.trim()
+      ? record.item.name
+      : typeof record.item.nameEn === 'string' && record.item.nameEn.trim()
+        ? record.item.nameEn
+        : `아이템 ${entry.id}`)
+  if (!record || name !== entry.name || typeof entry.name !== 'string')
+    throw new Error(`Index mismatch: ${entry.id}`)
   recipeCount += record.recipes.length
 }
 if (index.length !== manifest.itemCount || recipeCount !== manifest.recipeCount)
