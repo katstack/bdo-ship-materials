@@ -4,6 +4,14 @@ import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/type
 
 const methods: Record<string, string> = {
   HOUSE: '공방 제작',
+  FIREWOOD: '장작패기',
+  THINNING: '솎아내기',
+  SIMPLE_ALCHEMY: '간이 연금',
+  SIMPLE_COOK: '간이 요리',
+  CRAFT: '공작',
+  ROYALGIFT_COOK: '황실 요리 포장',
+  ROYALGIFT_ALCHEMY: '황실 연금 포장',
+  GUILD: '길드 제작',
   HEAT: '가열하기',
   CHOP: '장작패기',
   GRIND: '빻기',
