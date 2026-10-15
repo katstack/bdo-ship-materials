@@ -1,0 +1,5081 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-15T00:59:21.070Z",
+  "publisher": "Garmoth",
+  "upstreamSource": null,
+  "retrieval": "Public page text retrieved through web browsing; direct HTTP returned an access-denied page. No protection bypass.",
+  "snapshotSha256": "192a31451c5a88e3e16f3fb4442c10ad5f6e0632565b6f3c2839cd1ca05847c1",
+  "percentConvention": "Display percent: 34.11 means 34.11%, not 0.3411. Increase percentages may exceed 100; do not clamp.",
+  "notes": [
+    "Column names retain source meaning; increase percentages are not automatically absolute probabilities.",
+    "Processing starts at mastery 2 on Garmoth; preserved as published, not silently changed to 0.",
+    "Only gathering extra display was retrievable. Other extra variants were unavailable and are not fabricated.",
+    "No change to crafting yield assumptions or recipe output rules."
+  ],
+  "tables": {
+    "cooking": {
+      "source": "https://garmoth.com/mastery-brackets/cooking",
+      "columns": [
+        {
+          "key": "productIncrease",
+          "sourceLabel": "Product Increase Amount",
+          "unit": "percent"
+        },
+        {
+          "key": "byProductIncrease",
+          "sourceLabel": "By Product Amount Increase",
+          "unit": "percent"
+        },
+        {
+          "key": "rareProductIncrease",
+          "sourceLabel": "Rare Product Amount Increase",
+          "unit": "percent"
+        },
+        {
+          "key": "massProductChance",
+          "sourceLabel": "Mass Product Chance",
+          "unit": "percent"
+        },
+        {
+          "key": "imperialSilverBonus",
+          "sourceLabel": "Imperial Silver Bonus",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "productIncrease": 0,
+            "byProductIncrease": 0,
+            "rareProductIncrease": 0,
+            "massProductChance": 0,
+            "imperialSilverBonus": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "productIncrease": 0.64,
+            "byProductIncrease": 0.64,
+            "rareProductIncrease": 0.25,
+            "massProductChance": 10.89,
+            "imperialSilverBonus": 1.85
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "productIncrease": 0.96,
+            "byProductIncrease": 0.96,
+            "rareProductIncrease": 0.36,
+            "massProductChance": 11.76,
+            "imperialSilverBonus": 2.96
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "productIncrease": 1.35,
+            "byProductIncrease": 1.35,
+            "rareProductIncrease": 0.49,
+            "massProductChance": 12.67,
+            "imperialSilverBonus": 4.33
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "productIncrease": 1.8,
+            "byProductIncrease": 1.8,
+            "rareProductIncrease": 0.64,
+            "massProductChance": 13.62,
+            "imperialSilverBonus": 5.95
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "productIncrease": 2.31,
+            "byProductIncrease": 2.31,
+            "rareProductIncrease": 0.81,
+            "massProductChance": 14.59,
+            "imperialSilverBonus": 7.84
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "productIncrease": 2.89,
+            "byProductIncrease": 2.89,
+            "rareProductIncrease": 1,
+            "massProductChance": 15.6,
+            "imperialSilverBonus": 9.99
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "productIncrease": 3.53,
+            "byProductIncrease": 3.53,
+            "rareProductIncrease": 1.21,
+            "massProductChance": 16.65,
+            "imperialSilverBonus": 12.39
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "productIncrease": 4.24,
+            "byProductIncrease": 4.24,
+            "rareProductIncrease": 1.44,
+            "massProductChance": 17.72,
+            "imperialSilverBonus": 15.05
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "productIncrease": 5.02,
+            "byProductIncrease": 5.02,
+            "rareProductIncrease": 1.69,
+            "massProductChance": 18.84,
+            "imperialSilverBonus": 17.98
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "productIncrease": 5.86,
+            "byProductIncrease": 5.86,
+            "rareProductIncrease": 1.96,
+            "massProductChance": 19.98,
+            "imperialSilverBonus": 21.16
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "productIncrease": 6.76,
+            "byProductIncrease": 6.76,
+            "rareProductIncrease": 2.25,
+            "massProductChance": 21.16,
+            "imperialSilverBonus": 24.6
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "productIncrease": 7.73,
+            "byProductIncrease": 7.73,
+            "rareProductIncrease": 2.56,
+            "massProductChance": 22.37,
+            "imperialSilverBonus": 28.3
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "productIncrease": 8.76,
+            "byProductIncrease": 8.76,
+            "rareProductIncrease": 2.89,
+            "massProductChance": 23.62,
+            "imperialSilverBonus": 32.26
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "productIncrease": 9.86,
+            "byProductIncrease": 9.86,
+            "rareProductIncrease": 3.24,
+            "massProductChance": 24.9,
+            "imperialSilverBonus": 36.48
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "productIncrease": 11.02,
+            "byProductIncrease": 11.02,
+            "rareProductIncrease": 3.61,
+            "massProductChance": 26.21,
+            "imperialSilverBonus": 40.96
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "productIncrease": 12.25,
+            "byProductIncrease": 12.25,
+            "rareProductIncrease": 4,
+            "massProductChance": 27.56,
+            "imperialSilverBonus": 45.7
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "productIncrease": 13.54,
+            "byProductIncrease": 13.54,
+            "rareProductIncrease": 4.41,
+            "massProductChance": 28.94,
+            "imperialSilverBonus": 50.69
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "productIncrease": 14.9,
+            "byProductIncrease": 14.9,
+            "rareProductIncrease": 4.84,
+            "massProductChance": 30.58,
+            "imperialSilverBonus": 55.95
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "productIncrease": 16.32,
+            "byProductIncrease": 16.32,
+            "rareProductIncrease": 5.29,
+            "massProductChance": 32.26,
+            "imperialSilverBonus": 61.47
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "productIncrease": 17.81,
+            "byProductIncrease": 17.81,
+            "rareProductIncrease": 5.76,
+            "massProductChance": 33.99,
+            "imperialSilverBonus": 67.24
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "productIncrease": 19.36,
+            "byProductIncrease": 19.36,
+            "rareProductIncrease": 6.25,
+            "massProductChance": 35.76,
+            "imperialSilverBonus": 73.27
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "productIncrease": 20.98,
+            "byProductIncrease": 20.98,
+            "rareProductIncrease": 6.76,
+            "massProductChance": 37.58,
+            "imperialSilverBonus": 79.57
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "productIncrease": 22.66,
+            "byProductIncrease": 22.66,
+            "rareProductIncrease": 7.29,
+            "massProductChance": 39.44,
+            "imperialSilverBonus": 86.12
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "productIncrease": 24.4,
+            "byProductIncrease": 24.4,
+            "rareProductIncrease": 7.84,
+            "massProductChance": 41.34,
+            "imperialSilverBonus": 92.93
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "productIncrease": 26.21,
+            "byProductIncrease": 26.21,
+            "rareProductIncrease": 8.41,
+            "massProductChance": 44.22,
+            "imperialSilverBonus": 95.84
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "productIncrease": 28.09,
+            "byProductIncrease": 28.09,
+            "rareProductIncrease": 9,
+            "massProductChance": 47.2,
+            "imperialSilverBonus": 98.8
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "productIncrease": 30.03,
+            "byProductIncrease": 30.03,
+            "rareProductIncrease": 9.61,
+            "massProductChance": 50.27,
+            "imperialSilverBonus": 101.81
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "productIncrease": 32.04,
+            "byProductIncrease": 32.04,
+            "rareProductIncrease": 10.24,
+            "massProductChance": 53.44,
+            "imperialSilverBonus": 104.86
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "productIncrease": 34.11,
+            "byProductIncrease": 34.11,
+            "rareProductIncrease": 10.89,
+            "massProductChance": 56.7,
+            "imperialSilverBonus": 107.95
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "productIncrease": 36.24,
+            "byProductIncrease": 36.24,
+            "rareProductIncrease": 11.56,
+            "massProductChance": 60.06,
+            "imperialSilverBonus": 111.09
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "productIncrease": 38.44,
+            "byProductIncrease": 38.44,
+            "rareProductIncrease": 12.25,
+            "massProductChance": 63.52,
+            "imperialSilverBonus": 114.28
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "productIncrease": 40.7,
+            "byProductIncrease": 40.7,
+            "rareProductIncrease": 12.96,
+            "massProductChance": 67.08,
+            "imperialSilverBonus": 117.51
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "productIncrease": 43.03,
+            "byProductIncrease": 43.03,
+            "rareProductIncrease": 13.69,
+            "massProductChance": 70.73,
+            "imperialSilverBonus": 120.78
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "productIncrease": 45.43,
+            "byProductIncrease": 45.43,
+            "rareProductIncrease": 14.44,
+            "massProductChance": 74.48,
+            "imperialSilverBonus": 124.1
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "productIncrease": 47.89,
+            "byProductIncrease": 47.89,
+            "rareProductIncrease": 15.21,
+            "massProductChance": 78.32,
+            "imperialSilverBonus": 127.46
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "productIncrease": 50.41,
+            "byProductIncrease": 50.41,
+            "rareProductIncrease": 16,
+            "massProductChance": 82.26,
+            "imperialSilverBonus": 130.87
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "productIncrease": 53,
+            "byProductIncrease": 53,
+            "rareProductIncrease": 16.81,
+            "massProductChance": 86.3,
+            "imperialSilverBonus": 134.33
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "productIncrease": 55.65,
+            "byProductIncrease": 55.65,
+            "rareProductIncrease": 17.64,
+            "massProductChance": 90.44,
+            "imperialSilverBonus": 137.83
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "productIncrease": 58.37,
+            "byProductIncrease": 58.37,
+            "rareProductIncrease": 18.49,
+            "massProductChance": 99.5,
+            "imperialSilverBonus": 141.37
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "productIncrease": 61.15,
+            "byProductIncrease": 61.15,
+            "rareProductIncrease": 19.36,
+            "massProductChance": 100,
+            "imperialSilverBonus": 144.96
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "productIncrease": 61.92,
+            "byProductIncrease": 61.92,
+            "rareProductIncrease": 19.6,
+            "massProductChance": 100,
+            "imperialSilverBonus": 146.77
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "productIncrease": 62.68,
+            "byProductIncrease": 62.68,
+            "rareProductIncrease": 19.84,
+            "massProductChance": 100,
+            "imperialSilverBonus": 148.59
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "productIncrease": 63.45,
+            "byProductIncrease": 63.45,
+            "rareProductIncrease": 20.09,
+            "massProductChance": 100,
+            "imperialSilverBonus": 150.4
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "productIncrease": 64.21,
+            "byProductIncrease": 64.21,
+            "rareProductIncrease": 20.33,
+            "massProductChance": 100,
+            "imperialSilverBonus": 152.21
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "productIncrease": 64.98,
+            "byProductIncrease": 64.98,
+            "rareProductIncrease": 20.57,
+            "massProductChance": 100,
+            "imperialSilverBonus": 154.02
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "productIncrease": 65.74,
+            "byProductIncrease": 65.74,
+            "rareProductIncrease": 20.81,
+            "massProductChance": 100,
+            "imperialSilverBonus": 155.84
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "productIncrease": 66.51,
+            "byProductIncrease": 66.51,
+            "rareProductIncrease": 21.05,
+            "massProductChance": 100,
+            "imperialSilverBonus": 157.65
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "productIncrease": 67.27,
+            "byProductIncrease": 67.27,
+            "rareProductIncrease": 21.3,
+            "massProductChance": 100,
+            "imperialSilverBonus": 159.46
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "productIncrease": 68.04,
+            "byProductIncrease": 68.04,
+            "rareProductIncrease": 21.54,
+            "massProductChance": 100,
+            "imperialSilverBonus": 161.27
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "productIncrease": 68.8,
+            "byProductIncrease": 68.8,
+            "rareProductIncrease": 21.78,
+            "massProductChance": 100,
+            "imperialSilverBonus": 163.09
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "productIncrease": 69.57,
+            "byProductIncrease": 69.57,
+            "rareProductIncrease": 22.02,
+            "massProductChance": 100,
+            "imperialSilverBonus": 164.9
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "productIncrease": 70.33,
+            "byProductIncrease": 70.33,
+            "rareProductIncrease": 22.26,
+            "massProductChance": 100,
+            "imperialSilverBonus": 166.71
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "productIncrease": 71.09,
+            "byProductIncrease": 71.09,
+            "rareProductIncrease": 22.51,
+            "massProductChance": 100,
+            "imperialSilverBonus": 168.52
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "productIncrease": 71.86,
+            "byProductIncrease": 71.86,
+            "rareProductIncrease": 22.75,
+            "massProductChance": 100,
+            "imperialSilverBonus": 170.34
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "productIncrease": 72.62,
+            "byProductIncrease": 72.62,
+            "rareProductIncrease": 22.99,
+            "massProductChance": 100,
+            "imperialSilverBonus": 172.15
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "productIncrease": 73.39,
+            "byProductIncrease": 73.39,
+            "rareProductIncrease": 23.23,
+            "massProductChance": 100,
+            "imperialSilverBonus": 173.96
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "productIncrease": 74.15,
+            "byProductIncrease": 74.15,
+            "rareProductIncrease": 23.47,
+            "massProductChance": 100,
+            "imperialSilverBonus": 175.77
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "productIncrease": 74.92,
+            "byProductIncrease": 74.92,
+            "rareProductIncrease": 23.72,
+            "massProductChance": 100,
+            "imperialSilverBonus": 177.59
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "productIncrease": 75.68,
+            "byProductIncrease": 75.68,
+            "rareProductIncrease": 23.96,
+            "massProductChance": 100,
+            "imperialSilverBonus": 179.4
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "productIncrease": 76.45,
+            "byProductIncrease": 76.45,
+            "rareProductIncrease": 24.2,
+            "massProductChance": 100,
+            "imperialSilverBonus": 181.25
+          }
+        }
+      ]
+    },
+    "alchemy": {
+      "source": "https://garmoth.com/mastery-brackets/alchemy",
+      "columns": [
+        {
+          "key": "productIncrease",
+          "sourceLabel": "Product Increase Amount",
+          "unit": "percent"
+        },
+        {
+          "key": "commonItemChance",
+          "sourceLabel": "Chance to get common item",
+          "unit": "percent"
+        },
+        {
+          "key": "specialItemChance",
+          "sourceLabel": "Chance to get special items",
+          "unit": "percent"
+        },
+        {
+          "key": "rareItemChance",
+          "sourceLabel": "Chance to get rare items",
+          "unit": "percent"
+        },
+        {
+          "key": "imperialSilverBonus",
+          "sourceLabel": "Imperial Silver Bonus",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "productIncrease": 0,
+            "commonItemChance": 0.25,
+            "specialItemChance": 0.04,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "productIncrease": 5.76,
+            "commonItemChance": 0.28,
+            "specialItemChance": 0.05,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 1.85
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "productIncrease": 6.35,
+            "commonItemChance": 0.32,
+            "specialItemChance": 0.06,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 2.96
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "productIncrease": 6.97,
+            "commonItemChance": 0.37,
+            "specialItemChance": 0.07,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 4.33
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "productIncrease": 7.62,
+            "commonItemChance": 0.42,
+            "specialItemChance": 0.09,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 5.95
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "productIncrease": 8.29,
+            "commonItemChance": 0.47,
+            "specialItemChance": 0.1,
+            "rareItemChance": 0.01,
+            "imperialSilverBonus": 7.84
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "productIncrease": 9,
+            "commonItemChance": 0.53,
+            "specialItemChance": 0.12,
+            "rareItemChance": 0.02,
+            "imperialSilverBonus": 9.99
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "productIncrease": 9.73,
+            "commonItemChance": 0.59,
+            "specialItemChance": 0.13,
+            "rareItemChance": 0.02,
+            "imperialSilverBonus": 12.39
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "productIncrease": 10.5,
+            "commonItemChance": 0.65,
+            "specialItemChance": 0.15,
+            "rareItemChance": 0.02,
+            "imperialSilverBonus": 15.05
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "productIncrease": 11.29,
+            "commonItemChance": 0.71,
+            "specialItemChance": 0.17,
+            "rareItemChance": 0.02,
+            "imperialSilverBonus": 17.98
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "productIncrease": 12.11,
+            "commonItemChance": 0.78,
+            "specialItemChance": 0.19,
+            "rareItemChance": 0.02,
+            "imperialSilverBonus": 21.16
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "productIncrease": 12.96,
+            "commonItemChance": 0.85,
+            "specialItemChance": 0.22,
+            "rareItemChance": 0.03,
+            "imperialSilverBonus": 24.6
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "productIncrease": 13.84,
+            "commonItemChance": 0.92,
+            "specialItemChance": 0.24,
+            "rareItemChance": 0.03,
+            "imperialSilverBonus": 28.3
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "productIncrease": 14.75,
+            "commonItemChance": 0.99,
+            "specialItemChance": 0.27,
+            "rareItemChance": 0.03,
+            "imperialSilverBonus": 32.26
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "productIncrease": 15.68,
+            "commonItemChance": 1.07,
+            "specialItemChance": 0.3,
+            "rareItemChance": 0.04,
+            "imperialSilverBonus": 36.48
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "productIncrease": 16.65,
+            "commonItemChance": 1.14,
+            "specialItemChance": 0.33,
+            "rareItemChance": 0.04,
+            "imperialSilverBonus": 40.96
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "productIncrease": 17.64,
+            "commonItemChance": 1.22,
+            "specialItemChance": 0.37,
+            "rareItemChance": 0.05,
+            "imperialSilverBonus": 45.7
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "productIncrease": 18.66,
+            "commonItemChance": 1.3,
+            "specialItemChance": 0.4,
+            "rareItemChance": 0.05,
+            "imperialSilverBonus": 50.69
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "productIncrease": 19.71,
+            "commonItemChance": 1.39,
+            "specialItemChance": 0.44,
+            "rareItemChance": 0.05,
+            "imperialSilverBonus": 55.95
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "productIncrease": 20.79,
+            "commonItemChance": 1.47,
+            "specialItemChance": 0.48,
+            "rareItemChance": 0.06,
+            "imperialSilverBonus": 61.47
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "productIncrease": 21.9,
+            "commonItemChance": 1.56,
+            "specialItemChance": 0.52,
+            "rareItemChance": 0.06,
+            "imperialSilverBonus": 67.24
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "productIncrease": 23.04,
+            "commonItemChance": 1.65,
+            "specialItemChance": 0.56,
+            "rareItemChance": 0.07,
+            "imperialSilverBonus": 73.27
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "productIncrease": 24.21,
+            "commonItemChance": 1.74,
+            "specialItemChance": 0.61,
+            "rareItemChance": 0.08,
+            "imperialSilverBonus": 79.57
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "productIncrease": 25.4,
+            "commonItemChance": 1.83,
+            "specialItemChance": 0.66,
+            "rareItemChance": 0.08,
+            "imperialSilverBonus": 86.12
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "productIncrease": 26.63,
+            "commonItemChance": 1.92,
+            "specialItemChance": 0.71,
+            "rareItemChance": 0.09,
+            "imperialSilverBonus": 92.93
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "productIncrease": 27.88,
+            "commonItemChance": 2.02,
+            "specialItemChance": 0.77,
+            "rareItemChance": 0.09,
+            "imperialSilverBonus": 95.84
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "productIncrease": 29.16,
+            "commonItemChance": 2.11,
+            "specialItemChance": 0.82,
+            "rareItemChance": 0.1,
+            "imperialSilverBonus": 98.8
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "productIncrease": 30.47,
+            "commonItemChance": 2.21,
+            "specialItemChance": 0.88,
+            "rareItemChance": 0.11,
+            "imperialSilverBonus": 101.81
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "productIncrease": 31.81,
+            "commonItemChance": 2.31,
+            "specialItemChance": 0.94,
+            "rareItemChance": 0.11,
+            "imperialSilverBonus": 104.86
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "productIncrease": 33.18,
+            "commonItemChance": 2.41,
+            "specialItemChance": 1.01,
+            "rareItemChance": 0.12,
+            "imperialSilverBonus": 107.95
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "productIncrease": 34.57,
+            "commonItemChance": 2.51,
+            "specialItemChance": 1.08,
+            "rareItemChance": 0.13,
+            "imperialSilverBonus": 111.09
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "productIncrease": 36,
+            "commonItemChance": 2.62,
+            "specialItemChance": 1.15,
+            "rareItemChance": 0.14,
+            "imperialSilverBonus": 114.28
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "productIncrease": 37.45,
+            "commonItemChance": 2.72,
+            "specialItemChance": 1.22,
+            "rareItemChance": 0.15,
+            "imperialSilverBonus": 117.51
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "productIncrease": 38.94,
+            "commonItemChance": 2.82,
+            "specialItemChance": 1.3,
+            "rareItemChance": 0.16,
+            "imperialSilverBonus": 120.78
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "productIncrease": 40.45,
+            "commonItemChance": 2.93,
+            "specialItemChance": 1.38,
+            "rareItemChance": 0.17,
+            "imperialSilverBonus": 124.1
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "productIncrease": 41.99,
+            "commonItemChance": 3.03,
+            "specialItemChance": 1.46,
+            "rareItemChance": 0.18,
+            "imperialSilverBonus": 127.46
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "productIncrease": 43.56,
+            "commonItemChance": 3.14,
+            "specialItemChance": 1.55,
+            "rareItemChance": 0.19,
+            "imperialSilverBonus": 130.87
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "productIncrease": 45.16,
+            "commonItemChance": 3.25,
+            "specialItemChance": 1.64,
+            "rareItemChance": 0.2,
+            "imperialSilverBonus": 134.33
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "productIncrease": 46.79,
+            "commonItemChance": 3.36,
+            "specialItemChance": 1.73,
+            "rareItemChance": 0.21,
+            "imperialSilverBonus": 137.83
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "productIncrease": 48.44,
+            "commonItemChance": 3.47,
+            "specialItemChance": 1.83,
+            "rareItemChance": 0.22,
+            "imperialSilverBonus": 141.37
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "productIncrease": 50,
+            "commonItemChance": 3.57,
+            "specialItemChance": 1.92,
+            "rareItemChance": 0.23,
+            "imperialSilverBonus": 144.96
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "productIncrease": 50.63,
+            "commonItemChance": 3.59,
+            "specialItemChance": 1.97,
+            "rareItemChance": 0.23,
+            "imperialSilverBonus": 146.77
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "productIncrease": 51.25,
+            "commonItemChance": 3.61,
+            "specialItemChance": 2.02,
+            "rareItemChance": 0.24,
+            "imperialSilverBonus": 148.59
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "productIncrease": 51.88,
+            "commonItemChance": 3.63,
+            "specialItemChance": 2.07,
+            "rareItemChance": 0.25,
+            "imperialSilverBonus": 150.4
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "productIncrease": 52.5,
+            "commonItemChance": 3.64,
+            "specialItemChance": 2.12,
+            "rareItemChance": 0.25,
+            "imperialSilverBonus": 152.21
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "productIncrease": 53.13,
+            "commonItemChance": 3.66,
+            "specialItemChance": 2.17,
+            "rareItemChance": 0.26,
+            "imperialSilverBonus": 154.02
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "productIncrease": 53.75,
+            "commonItemChance": 3.68,
+            "specialItemChance": 2.22,
+            "rareItemChance": 0.26,
+            "imperialSilverBonus": 155.84
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "productIncrease": 54.38,
+            "commonItemChance": 3.69,
+            "specialItemChance": 2.27,
+            "rareItemChance": 0.27,
+            "imperialSilverBonus": 157.65
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "productIncrease": 55,
+            "commonItemChance": 3.7,
+            "specialItemChance": 2.32,
+            "rareItemChance": 0.28,
+            "imperialSilverBonus": 159.46
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "productIncrease": 55.63,
+            "commonItemChance": 3.72,
+            "specialItemChance": 2.37,
+            "rareItemChance": 0.28,
+            "imperialSilverBonus": 161.27
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "productIncrease": 56.25,
+            "commonItemChance": 3.73,
+            "specialItemChance": 2.42,
+            "rareItemChance": 0.29,
+            "imperialSilverBonus": 163.09
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "productIncrease": 56.88,
+            "commonItemChance": 3.74,
+            "specialItemChance": 2.48,
+            "rareItemChance": 0.3,
+            "imperialSilverBonus": 164.9
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "productIncrease": 57.5,
+            "commonItemChance": 3.76,
+            "specialItemChance": 2.53,
+            "rareItemChance": 0.3,
+            "imperialSilverBonus": 166.71
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "productIncrease": 58.13,
+            "commonItemChance": 3.77,
+            "specialItemChance": 2.58,
+            "rareItemChance": 0.31,
+            "imperialSilverBonus": 168.52
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "productIncrease": 58.75,
+            "commonItemChance": 3.78,
+            "specialItemChance": 2.64,
+            "rareItemChance": 0.32,
+            "imperialSilverBonus": 170.34
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "productIncrease": 59.38,
+            "commonItemChance": 3.79,
+            "specialItemChance": 2.69,
+            "rareItemChance": 0.32,
+            "imperialSilverBonus": 172.15
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "productIncrease": 60,
+            "commonItemChance": 3.8,
+            "specialItemChance": 2.75,
+            "rareItemChance": 0.33,
+            "imperialSilverBonus": 173.96
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "productIncrease": 60.63,
+            "commonItemChance": 3.8,
+            "specialItemChance": 2.8,
+            "rareItemChance": 0.33,
+            "imperialSilverBonus": 175.77
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "productIncrease": 61.25,
+            "commonItemChance": 3.81,
+            "specialItemChance": 2.86,
+            "rareItemChance": 0.34,
+            "imperialSilverBonus": 177.59
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "productIncrease": 61.88,
+            "commonItemChance": 3.82,
+            "specialItemChance": 2.92,
+            "rareItemChance": 0.35,
+            "imperialSilverBonus": 179.4
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "productIncrease": 62.5,
+            "commonItemChance": 3.83,
+            "specialItemChance": 2.98,
+            "rareItemChance": 0.36,
+            "imperialSilverBonus": 181.25
+          }
+        }
+      ]
+    },
+    "gathering": {
+      "source": "https://garmoth.com/mastery-brackets/gathering",
+      "columns": [
+        {
+          "key": "commonItemChance",
+          "sourceLabel": "Chance to get common item",
+          "unit": "percent"
+        },
+        {
+          "key": "commonDropIncrease",
+          "sourceLabel": "Drop Amount Increase",
+          "unit": "percent"
+        },
+        {
+          "key": "specialItemChance",
+          "sourceLabel": "Chance to get special items",
+          "unit": "percent"
+        },
+        {
+          "key": "specialDropIncrease",
+          "sourceLabel": "Drop Amount Increase",
+          "unit": "percent"
+        },
+        {
+          "key": "rareItemChance",
+          "sourceLabel": "Chance to get rare items",
+          "unit": "percent"
+        },
+        {
+          "key": "rareDropIncrease",
+          "sourceLabel": "Drop Amount Increase",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "commonItemChance": 0,
+            "commonDropIncrease": 0,
+            "specialItemChance": 0,
+            "specialDropIncrease": 0,
+            "rareItemChance": 0,
+            "rareDropIncrease": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "commonItemChance": 0,
+            "commonDropIncrease": 16,
+            "specialItemChance": 8,
+            "specialDropIncrease": 4,
+            "rareItemChance": 10,
+            "rareDropIncrease": 3.33
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 19.8,
+            "specialItemChance": 9.9,
+            "specialDropIncrease": 4.95,
+            "rareItemChance": 12.38,
+            "rareDropIncrease": 4.13
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 23.99,
+            "specialItemChance": 11.99,
+            "specialDropIncrease": 6,
+            "rareItemChance": 14.99,
+            "rareDropIncrease": 5
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 28.56,
+            "specialItemChance": 14.28,
+            "specialDropIncrease": 7.14,
+            "rareItemChance": 17.85,
+            "rareDropIncrease": 5.95
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 33.49,
+            "specialItemChance": 16.75,
+            "specialDropIncrease": 8.37,
+            "rareItemChance": 20.93,
+            "rareDropIncrease": 6.98
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 38.8,
+            "specialItemChance": 19.4,
+            "specialDropIncrease": 9.7,
+            "rareItemChance": 24.25,
+            "rareDropIncrease": 8.08
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 44.47,
+            "specialItemChance": 22.23,
+            "specialDropIncrease": 11.12,
+            "rareItemChance": 27.79,
+            "rareDropIncrease": 9.26
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 50.49,
+            "specialItemChance": 25.25,
+            "specialDropIncrease": 12.62,
+            "rareItemChance": 31.56,
+            "rareDropIncrease": 10.52
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 56.87,
+            "specialItemChance": 28.43,
+            "specialDropIncrease": 14.22,
+            "rareItemChance": 35.54,
+            "rareDropIncrease": 11.85
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 63.59,
+            "specialItemChance": 31.8,
+            "specialDropIncrease": 15.9,
+            "rareItemChance": 39.74,
+            "rareDropIncrease": 13.25
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 70.65,
+            "specialItemChance": 35.33,
+            "specialDropIncrease": 17.66,
+            "rareItemChance": 44.16,
+            "rareDropIncrease": 14.72
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 78.05,
+            "specialItemChance": 39.02,
+            "specialDropIncrease": 19.51,
+            "rareItemChance": 48.78,
+            "rareDropIncrease": 16.26
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 85.77,
+            "specialItemChance": 42.89,
+            "specialDropIncrease": 21.44,
+            "rareItemChance": 53.61,
+            "rareDropIncrease": 17.87
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 93.82,
+            "specialItemChance": 46.91,
+            "specialDropIncrease": 23.46,
+            "rareItemChance": 58.64,
+            "rareDropIncrease": 19.55
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 102.19,
+            "specialItemChance": 51.09,
+            "specialDropIncrease": 25.55,
+            "rareItemChance": 63.87,
+            "rareDropIncrease": 21.29
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 110.87,
+            "specialItemChance": 55.44,
+            "specialDropIncrease": 27.72,
+            "rareItemChance": 69.29,
+            "rareDropIncrease": 23.1
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 119.86,
+            "specialItemChance": 59.93,
+            "specialDropIncrease": 29.96,
+            "rareItemChance": 74.91,
+            "rareDropIncrease": 24.97
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 129.15,
+            "specialItemChance": 64.57,
+            "specialDropIncrease": 32.29,
+            "rareItemChance": 80.72,
+            "rareDropIncrease": 26.91
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 138.74,
+            "specialItemChance": 69.37,
+            "specialDropIncrease": 34.68,
+            "rareItemChance": 86.71,
+            "rareDropIncrease": 28.9
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 148.62,
+            "specialItemChance": 74.31,
+            "specialDropIncrease": 37.15,
+            "rareItemChance": 92.89,
+            "rareDropIncrease": 30.96
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 158.79,
+            "specialItemChance": 79.39,
+            "specialDropIncrease": 39.7,
+            "rareItemChance": 99.24,
+            "rareDropIncrease": 33.08
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 169.23,
+            "specialItemChance": 84.62,
+            "specialDropIncrease": 42.31,
+            "rareItemChance": 105.77,
+            "rareDropIncrease": 35.26
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 179.96,
+            "specialItemChance": 89.98,
+            "specialDropIncrease": 44.99,
+            "rareItemChance": 112.47,
+            "rareDropIncrease": 37.49
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 190.96,
+            "specialItemChance": 95.48,
+            "specialDropIncrease": 47.74,
+            "rareItemChance": 119.35,
+            "rareDropIncrease": 39.78
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 202.22,
+            "specialItemChance": 101.11,
+            "specialDropIncrease": 50.55,
+            "rareItemChance": 126.39,
+            "rareDropIncrease": 42.13
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 213.74,
+            "specialItemChance": 106.87,
+            "specialDropIncrease": 53.44,
+            "rareItemChance": 133.59,
+            "rareDropIncrease": 44.53
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 225.53,
+            "specialItemChance": 112.76,
+            "specialDropIncrease": 56.38,
+            "rareItemChance": 140.95,
+            "rareDropIncrease": 46.98
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 237.56,
+            "specialItemChance": 118.78,
+            "specialDropIncrease": 59.39,
+            "rareItemChance": 148.47,
+            "rareDropIncrease": 49.49
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 249.84,
+            "specialItemChance": 124.92,
+            "specialDropIncrease": 62.46,
+            "rareItemChance": 156.15,
+            "rareDropIncrease": 52.05
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 262.36,
+            "specialItemChance": 131.18,
+            "specialDropIncrease": 65.59,
+            "rareItemChance": 163.97,
+            "rareDropIncrease": 54.66
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 275.11,
+            "specialItemChance": 137.56,
+            "specialDropIncrease": 68.78,
+            "rareItemChance": 171.94,
+            "rareDropIncrease": 57.31
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 288.1,
+            "specialItemChance": 144.05,
+            "specialDropIncrease": 72.02,
+            "rareItemChance": 180.06,
+            "rareDropIncrease": 60.02
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 301.31,
+            "specialItemChance": 150.66,
+            "specialDropIncrease": 75.33,
+            "rareItemChance": 188.32,
+            "rareDropIncrease": 62.77
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 314.75,
+            "specialItemChance": 157.38,
+            "specialDropIncrease": 78.69,
+            "rareItemChance": 196.72,
+            "rareDropIncrease": 65.57
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 328.4,
+            "specialItemChance": 164.2,
+            "specialDropIncrease": 82.1,
+            "rareItemChance": 205.25,
+            "rareDropIncrease": 68.42
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 342.27,
+            "specialItemChance": 171.13,
+            "specialDropIncrease": 85.57,
+            "rareItemChance": 213.92,
+            "rareDropIncrease": 71.31
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 356.34,
+            "specialItemChance": 178.17,
+            "specialDropIncrease": 89.09,
+            "rareItemChance": 222.71,
+            "rareDropIncrease": 74.24
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 370.62,
+            "specialItemChance": 185.31,
+            "specialDropIncrease": 92.65,
+            "rareItemChance": 231.64,
+            "rareDropIncrease": 77.21
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 385.09,
+            "specialItemChance": 192.54,
+            "specialDropIncrease": 96.27,
+            "rareItemChance": 240.68,
+            "rareDropIncrease": 80.23
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 400,
+            "specialItemChance": 200,
+            "specialDropIncrease": 100,
+            "rareItemChance": 249.85,
+            "rareDropIncrease": 85
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 404.49,
+            "specialItemChance": 202.24,
+            "specialDropIncrease": 101.12,
+            "rareItemChance": 252.81,
+            "rareDropIncrease": 85.97
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 409.25,
+            "specialItemChance": 204.62,
+            "specialDropIncrease": 102.31,
+            "rareItemChance": 255.78,
+            "rareDropIncrease": 86.96
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 414.04,
+            "specialItemChance": 207.02,
+            "specialDropIncrease": 103.51,
+            "rareItemChance": 258.77,
+            "rareDropIncrease": 87.96
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 418.85,
+            "specialItemChance": 209.43,
+            "specialDropIncrease": 104.71,
+            "rareItemChance": 261.78,
+            "rareDropIncrease": 88.96
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 423.7,
+            "specialItemChance": 211.85,
+            "specialDropIncrease": 105.92,
+            "rareItemChance": 264.81,
+            "rareDropIncrease": 89.97
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 428.57,
+            "specialItemChance": 214.28,
+            "specialDropIncrease": 107.14,
+            "rareItemChance": 267.86,
+            "rareDropIncrease": 90.99
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 433.47,
+            "specialItemChance": 216.73,
+            "specialDropIncrease": 108.37,
+            "rareItemChance": 270.92,
+            "rareDropIncrease": 92.01
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 438.4,
+            "specialItemChance": 219.2,
+            "specialDropIncrease": 109.6,
+            "rareItemChance": 274,
+            "rareDropIncrease": 93.03
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 443.35,
+            "specialItemChance": 221.68,
+            "specialDropIncrease": 110.84,
+            "rareItemChance": 277.09,
+            "rareDropIncrease": 94.06
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 448.33,
+            "specialItemChance": 224.17,
+            "specialDropIncrease": 112.08,
+            "rareItemChance": 280.21,
+            "rareDropIncrease": 95.1
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 453.35,
+            "specialItemChance": 226.67,
+            "specialDropIncrease": 113.34,
+            "rareItemChance": 283.34,
+            "rareDropIncrease": 96.15
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 458.38,
+            "specialItemChance": 229.19,
+            "specialDropIncrease": 114.6,
+            "rareItemChance": 286.49,
+            "rareDropIncrease": 97.2
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 463.45,
+            "specialItemChance": 231.73,
+            "specialDropIncrease": 115.86,
+            "rareItemChance": 289.66,
+            "rareDropIncrease": 98.25
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 468.54,
+            "specialItemChance": 234.27,
+            "specialDropIncrease": 117.14,
+            "rareItemChance": 292.84,
+            "rareDropIncrease": 99.31
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 473.67,
+            "specialItemChance": 236.83,
+            "specialDropIncrease": 118.42,
+            "rareItemChance": 296.04,
+            "rareDropIncrease": 100.38
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 478.82,
+            "specialItemChance": 239.41,
+            "specialDropIncrease": 119.7,
+            "rareItemChance": 299.26,
+            "rareDropIncrease": 101.45
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 484,
+            "specialItemChance": 242,
+            "specialDropIncrease": 121,
+            "rareItemChance": 302.5,
+            "rareDropIncrease": 102.53
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 489.2,
+            "specialItemChance": 244.6,
+            "specialDropIncrease": 122.3,
+            "rareItemChance": 305.75,
+            "rareDropIncrease": 103.62
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 494.44,
+            "specialItemChance": 247.22,
+            "specialDropIncrease": 123.61,
+            "rareItemChance": 309.02,
+            "rareDropIncrease": 104.71
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "commonItemChance": 80,
+            "commonDropIncrease": 500,
+            "specialItemChance": 250,
+            "specialDropIncrease": 125,
+            "rareItemChance": 312.31,
+            "rareDropIncrease": 105.8
+          }
+        }
+      ],
+      "extraSource": "https://garmoth.com/mastery-brackets/gathering?extra=1",
+      "displayDeltas": [
+        {
+          "mastery": 0,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": null,
+            "specialItemChance": null,
+            "specialDropIncrease": null,
+            "rareItemChance": null,
+            "rareDropIncrease": null
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 16,
+            "specialItemChance": 8,
+            "specialDropIncrease": 4,
+            "rareItemChance": 10,
+            "rareDropIncrease": 3.3
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 3.8,
+            "specialItemChance": 1.9,
+            "specialDropIncrease": 1,
+            "rareItemChance": 2.4,
+            "rareDropIncrease": 0.8
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.2,
+            "specialItemChance": 2.1,
+            "specialDropIncrease": 1,
+            "rareItemChance": 2.6,
+            "rareDropIncrease": 0.9
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.6,
+            "specialItemChance": 2.3,
+            "specialDropIncrease": 1.1,
+            "rareItemChance": 2.9,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.9,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.3,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.3,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.7,
+            "specialItemChance": 2.8,
+            "specialDropIncrease": 1.4,
+            "rareItemChance": 3.5,
+            "rareDropIncrease": 1.2
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 6,
+            "specialItemChance": 3,
+            "specialDropIncrease": 1.5,
+            "rareItemChance": 3.8,
+            "rareDropIncrease": 1.3
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 6.4,
+            "specialItemChance": 3.2,
+            "specialDropIncrease": 1.6,
+            "rareItemChance": 4,
+            "rareDropIncrease": 1.3
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 6.7,
+            "specialItemChance": 3.4,
+            "specialDropIncrease": 1.7,
+            "rareItemChance": 4.2,
+            "rareDropIncrease": 1.4
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 7.1,
+            "specialItemChance": 3.5,
+            "specialDropIncrease": 1.8,
+            "rareItemChance": 4.4,
+            "rareDropIncrease": 1.5
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 7.4,
+            "specialItemChance": 3.7,
+            "specialDropIncrease": 1.9,
+            "rareItemChance": 4.6,
+            "rareDropIncrease": 1.5
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 7.7,
+            "specialItemChance": 3.9,
+            "specialDropIncrease": 1.9,
+            "rareItemChance": 4.8,
+            "rareDropIncrease": 1.6
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 8,
+            "specialItemChance": 4,
+            "specialDropIncrease": 2,
+            "rareItemChance": 5,
+            "rareDropIncrease": 1.7
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 8.4,
+            "specialItemChance": 4.2,
+            "specialDropIncrease": 2.1,
+            "rareItemChance": 5.2,
+            "rareDropIncrease": 1.7
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 8.7,
+            "specialItemChance": 4.3,
+            "specialDropIncrease": 2.2,
+            "rareItemChance": 5.4,
+            "rareDropIncrease": 1.8
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 9,
+            "specialItemChance": 4.5,
+            "specialDropIncrease": 2.2,
+            "rareItemChance": 5.6,
+            "rareDropIncrease": 1.9
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 9.3,
+            "specialItemChance": 4.6,
+            "specialDropIncrease": 2.3,
+            "rareItemChance": 5.8,
+            "rareDropIncrease": 1.9
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 9.6,
+            "specialItemChance": 4.8,
+            "specialDropIncrease": 2.4,
+            "rareItemChance": 6,
+            "rareDropIncrease": 2
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 9.9,
+            "specialItemChance": 4.9,
+            "specialDropIncrease": 2.5,
+            "rareItemChance": 6.2,
+            "rareDropIncrease": 2.1
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 10.2,
+            "specialItemChance": 5.1,
+            "specialDropIncrease": 2.6,
+            "rareItemChance": 6.3,
+            "rareDropIncrease": 2.1
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 10.4,
+            "specialItemChance": 5.2,
+            "specialDropIncrease": 2.6,
+            "rareItemChance": 6.5,
+            "rareDropIncrease": 2.2
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 10.7,
+            "specialItemChance": 5.4,
+            "specialDropIncrease": 2.7,
+            "rareItemChance": 6.7,
+            "rareDropIncrease": 2.2
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 11,
+            "specialItemChance": 5.5,
+            "specialDropIncrease": 2.8,
+            "rareItemChance": 6.9,
+            "rareDropIncrease": 2.3
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 11.3,
+            "specialItemChance": 5.6,
+            "specialDropIncrease": 2.8,
+            "rareItemChance": 7,
+            "rareDropIncrease": 2.4
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 11.5,
+            "specialItemChance": 5.8,
+            "specialDropIncrease": 2.9,
+            "rareItemChance": 7.2,
+            "rareDropIncrease": 2.4
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 11.8,
+            "specialItemChance": 5.9,
+            "specialDropIncrease": 2.9,
+            "rareItemChance": 7.4,
+            "rareDropIncrease": 2.4
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 12,
+            "specialItemChance": 6,
+            "specialDropIncrease": 3,
+            "rareItemChance": 7.5,
+            "rareDropIncrease": 2.5
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 12.3,
+            "specialItemChance": 6.1,
+            "specialDropIncrease": 3.1,
+            "rareItemChance": 7.7,
+            "rareDropIncrease": 2.6
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 12.5,
+            "specialItemChance": 6.3,
+            "specialDropIncrease": 3.1,
+            "rareItemChance": 7.8,
+            "rareDropIncrease": 2.6
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 12.8,
+            "specialItemChance": 6.4,
+            "specialDropIncrease": 3.2,
+            "rareItemChance": 8,
+            "rareDropIncrease": 2.7
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 13,
+            "specialItemChance": 6.5,
+            "specialDropIncrease": 3.2,
+            "rareItemChance": 8.1,
+            "rareDropIncrease": 2.7
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 13.2,
+            "specialItemChance": 6.6,
+            "specialDropIncrease": 3.3,
+            "rareItemChance": 8.3,
+            "rareDropIncrease": 2.8
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 13.4,
+            "specialItemChance": 6.7,
+            "specialDropIncrease": 3.4,
+            "rareItemChance": 8.4,
+            "rareDropIncrease": 2.8
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 13.6,
+            "specialItemChance": 6.8,
+            "specialDropIncrease": 3.4,
+            "rareItemChance": 8.5,
+            "rareDropIncrease": 2.9
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 13.9,
+            "specialItemChance": 6.9,
+            "specialDropIncrease": 3.5,
+            "rareItemChance": 8.7,
+            "rareDropIncrease": 2.9
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 14.1,
+            "specialItemChance": 7,
+            "specialDropIncrease": 3.5,
+            "rareItemChance": 8.8,
+            "rareDropIncrease": 2.9
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 14.3,
+            "specialItemChance": 7.1,
+            "specialDropIncrease": 3.6,
+            "rareItemChance": 8.9,
+            "rareDropIncrease": 3
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 14.5,
+            "specialItemChance": 7.2,
+            "specialDropIncrease": 3.6,
+            "rareItemChance": 9,
+            "rareDropIncrease": 3
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 14.9,
+            "specialItemChance": 7.5,
+            "specialDropIncrease": 3.7,
+            "rareItemChance": 9.2,
+            "rareDropIncrease": 4.8
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.5,
+            "specialItemChance": 2.2,
+            "specialDropIncrease": 1.1,
+            "rareItemChance": 3,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.8,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.8,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.8,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.8,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.9,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.9,
+            "specialItemChance": 2.4,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 4.9,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.2,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.1,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.1,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.1,
+            "specialItemChance": 2.5,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.1,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.1,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.2,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.2,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.2,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.3,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.2,
+            "specialItemChance": 2.6,
+            "specialDropIncrease": 1.3,
+            "rareItemChance": 3.3,
+            "rareDropIncrease": 1.1
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "commonItemChance": null,
+            "commonDropIncrease": 5.6,
+            "specialItemChance": 2.8,
+            "specialDropIncrease": 1.4,
+            "rareItemChance": 3.3,
+            "rareDropIncrease": 1.1
+          }
+        }
+      ]
+    },
+    "fishing": {
+      "source": "https://garmoth.com/mastery-brackets/fishing",
+      "columns": [
+        {
+          "key": "prizeFishRate",
+          "sourceLabel": "Prize Catch Fish Rate",
+          "unit": "percent"
+        },
+        {
+          "key": "prizeHarpoonLevel",
+          "sourceLabel": "Prize Catch Harpoon Level",
+          "unit": "count"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "prizeFishRate": 0,
+            "prizeHarpoonLevel": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "prizeFishRate": 0.13,
+            "prizeHarpoonLevel": 0
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "prizeFishRate": 0.25,
+            "prizeHarpoonLevel": 0
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "prizeFishRate": 0.38,
+            "prizeHarpoonLevel": 0
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "prizeFishRate": 0.5,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "prizeFishRate": 0.63,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "prizeFishRate": 0.75,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "prizeFishRate": 0.88,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "prizeFishRate": 1,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "prizeFishRate": 1.13,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "prizeFishRate": 1.25,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "prizeFishRate": 1.38,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "prizeFishRate": 1.5,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "prizeFishRate": 1.63,
+            "prizeHarpoonLevel": 1
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "prizeFishRate": 1.75,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "prizeFishRate": 1.88,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "prizeFishRate": 2,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "prizeFishRate": 2.13,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "prizeFishRate": 2.25,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "prizeFishRate": 2.38,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "prizeFishRate": 2.5,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "prizeFishRate": 2.63,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "prizeFishRate": 2.75,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "prizeFishRate": 2.88,
+            "prizeHarpoonLevel": 2
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "prizeFishRate": 3,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "prizeFishRate": 3.13,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "prizeFishRate": 3.25,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "prizeFishRate": 3.38,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "prizeFishRate": 3.5,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "prizeFishRate": 3.63,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "prizeFishRate": 3.75,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "prizeFishRate": 3.88,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "prizeFishRate": 4,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "prizeFishRate": 4.13,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "prizeFishRate": 4.25,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "prizeFishRate": 4.38,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "prizeFishRate": 4.5,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "prizeFishRate": 4.63,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "prizeFishRate": 4.75,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "prizeFishRate": 4.88,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "prizeFishRate": 5,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "prizeFishRate": 5.06,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "prizeFishRate": 5.13,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "prizeFishRate": 5.19,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "prizeFishRate": 5.25,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "prizeFishRate": 5.31,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "prizeFishRate": 5.38,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "prizeFishRate": 5.44,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "prizeFishRate": 5.5,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "prizeFishRate": 5.56,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "prizeFishRate": 5.63,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "prizeFishRate": 5.69,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "prizeFishRate": 5.75,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "prizeFishRate": 5.81,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "prizeFishRate": 5.88,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "prizeFishRate": 5.94,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "prizeFishRate": 6,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "prizeFishRate": 6.06,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "prizeFishRate": 6.13,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "prizeFishRate": 6.19,
+            "prizeHarpoonLevel": 3
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "prizeFishRate": 6.25,
+            "prizeHarpoonLevel": 3
+          }
+        }
+      ]
+    },
+    "hunting": {
+      "source": "https://garmoth.com/mastery-brackets/hunting",
+      "columns": [
+        {
+          "key": "dropIncrease",
+          "sourceLabel": "Drop Amount Increase",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "dropIncrease": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "dropIncrease": 15
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "dropIncrease": 19.2
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "dropIncrease": 22.67
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "dropIncrease": 26.4
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "dropIncrease": 30.4
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "dropIncrease": 34.65
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "dropIncrease": 39.16
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "dropIncrease": 43.91
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "dropIncrease": 48.9
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "dropIncrease": 54.14
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "dropIncrease": 59.61
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "dropIncrease": 65.3
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "dropIncrease": 71.22
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "dropIncrease": 77.36
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "dropIncrease": 83.72
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "dropIncrease": 90.29
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "dropIncrease": 97.06
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "dropIncrease": 104.04
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "dropIncrease": 111.21
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "dropIncrease": 118.58
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "dropIncrease": 126.14
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "dropIncrease": 133.88
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "dropIncrease": 141.8
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "dropIncrease": 149.9
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "dropIncrease": 158.17
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "dropIncrease": 166.6
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "dropIncrease": 175.2
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "dropIncrease": 183.97
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "dropIncrease": 192.88
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "dropIncrease": 201.95
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "dropIncrease": 211.16
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "dropIncrease": 220.52
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "dropIncrease": 230.02
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "dropIncrease": 239.65
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "dropIncrease": 249.42
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "dropIncrease": 259.31
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "dropIncrease": 269.32
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "dropIncrease": 279.45
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "dropIncrease": 289.7
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "dropIncrease": 300
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "dropIncrease": 304
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "dropIncrease": 308
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "dropIncrease": 311
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "dropIncrease": 315
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "dropIncrease": 319
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "dropIncrease": 323
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "dropIncrease": 326
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "dropIncrease": 330
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "dropIncrease": 334
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "dropIncrease": 338
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "dropIncrease": 341
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "dropIncrease": 345
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "dropIncrease": 349
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "dropIncrease": 353
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "dropIncrease": 356
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "dropIncrease": 360
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "dropIncrease": 364
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "dropIncrease": 368
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "dropIncrease": 371
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "dropIncrease": 375
+          }
+        }
+      ]
+    },
+    "training": {
+      "source": "https://garmoth.com/mastery-brackets/training",
+      "columns": [
+        {
+          "key": "captureHorseRate",
+          "sourceLabel": "Capture Horse Rate",
+          "unit": "percent"
+        },
+        {
+          "key": "mountExpGain",
+          "sourceLabel": "Mount Exp Gain",
+          "unit": "percent"
+        },
+        {
+          "key": "breedingChance",
+          "sourceLabel": "Breeding Chance",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "captureHorseRate": 0,
+            "mountExpGain": 0,
+            "breedingChance": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "captureHorseRate": 1.54,
+            "mountExpGain": 2.7,
+            "breedingChance": 1
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "captureHorseRate": 1.85,
+            "mountExpGain": 3.1,
+            "breedingChance": 1
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "captureHorseRate": 2.19,
+            "mountExpGain": 3.6,
+            "breedingChance": 1
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "captureHorseRate": 2.56,
+            "mountExpGain": 4,
+            "breedingChance": 1
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "captureHorseRate": 2.96,
+            "mountExpGain": 4.5,
+            "breedingChance": 2
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "captureHorseRate": 3.39,
+            "mountExpGain": 5.1,
+            "breedingChance": 2
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "captureHorseRate": 3.84,
+            "mountExpGain": 5.6,
+            "breedingChance": 2
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "captureHorseRate": 4.33,
+            "mountExpGain": 6.2,
+            "breedingChance": 2
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "captureHorseRate": 4.84,
+            "mountExpGain": 6.8,
+            "breedingChance": 3
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "captureHorseRate": 5.38,
+            "mountExpGain": 7.5,
+            "breedingChance": 3
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "captureHorseRate": 5.95,
+            "mountExpGain": 8.1,
+            "breedingChance": 3
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "captureHorseRate": 6.55,
+            "mountExpGain": 8.8,
+            "breedingChance": 3
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "captureHorseRate": 7.18,
+            "mountExpGain": 9.5,
+            "breedingChance": 4
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "captureHorseRate": 7.84,
+            "mountExpGain": 10.3,
+            "breedingChance": 4
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "captureHorseRate": 8.53,
+            "mountExpGain": 11.1,
+            "breedingChance": 4
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "captureHorseRate": 9.24,
+            "mountExpGain": 11.9,
+            "breedingChance": 4
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "captureHorseRate": 9.99,
+            "mountExpGain": 12.7,
+            "breedingChance": 5
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "captureHorseRate": 10.76,
+            "mountExpGain": 13.6,
+            "breedingChance": 5
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "captureHorseRate": 11.56,
+            "mountExpGain": 14.5,
+            "breedingChance": 5
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "captureHorseRate": 12.39,
+            "mountExpGain": 16.5,
+            "breedingChance": 5
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "captureHorseRate": 13.25,
+            "mountExpGain": 18.6,
+            "breedingChance": 6
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "captureHorseRate": 14.14,
+            "mountExpGain": 20.8,
+            "breedingChance": 6
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "captureHorseRate": 15.05,
+            "mountExpGain": 23.1,
+            "breedingChance": 6
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "captureHorseRate": 16,
+            "mountExpGain": 25.6,
+            "breedingChance": 6
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "captureHorseRate": 16.97,
+            "mountExpGain": 28.2,
+            "breedingChance": 7
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "captureHorseRate": 17.98,
+            "mountExpGain": 30.9,
+            "breedingChance": 7
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "captureHorseRate": 19.01,
+            "mountExpGain": 33.8,
+            "breedingChance": 7
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "captureHorseRate": 20.07,
+            "mountExpGain": 36.7,
+            "breedingChance": 7
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "captureHorseRate": 21.16,
+            "mountExpGain": 39.8,
+            "breedingChance": 8
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "captureHorseRate": 22.28,
+            "mountExpGain": 43,
+            "breedingChance": 8
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "captureHorseRate": 23.43,
+            "mountExpGain": 46.4,
+            "breedingChance": 8
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "captureHorseRate": 24.6,
+            "mountExpGain": 49.8,
+            "breedingChance": 8
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "captureHorseRate": 25.81,
+            "mountExpGain": 52.7,
+            "breedingChance": 9
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "captureHorseRate": 27.04,
+            "mountExpGain": 55.7,
+            "breedingChance": 9
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "captureHorseRate": 28.3,
+            "mountExpGain": 58.7,
+            "breedingChance": 9
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "captureHorseRate": 29.59,
+            "mountExpGain": 61.8,
+            "breedingChance": 9
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "captureHorseRate": 30.91,
+            "mountExpGain": 65,
+            "breedingChance": 10
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "captureHorseRate": 32.26,
+            "mountExpGain": 68.2,
+            "breedingChance": 10
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "captureHorseRate": 33.64,
+            "mountExpGain": 71.6,
+            "breedingChance": 10
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "captureHorseRate": 35,
+            "mountExpGain": 75,
+            "breedingChance": 10
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "captureHorseRate": 35.44,
+            "mountExpGain": 75.94,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "captureHorseRate": 35.88,
+            "mountExpGain": 76.88,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "captureHorseRate": 36.31,
+            "mountExpGain": 77.81,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "captureHorseRate": 36.75,
+            "mountExpGain": 78.75,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "captureHorseRate": 37.19,
+            "mountExpGain": 79.69,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "captureHorseRate": 37.63,
+            "mountExpGain": 80.63,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "captureHorseRate": 38.06,
+            "mountExpGain": 81.56,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "captureHorseRate": 38.5,
+            "mountExpGain": 82.5,
+            "breedingChance": 11
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "captureHorseRate": 38.94,
+            "mountExpGain": 83.44,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "captureHorseRate": 39.38,
+            "mountExpGain": 84.38,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "captureHorseRate": 39.81,
+            "mountExpGain": 85.31,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "captureHorseRate": 40.25,
+            "mountExpGain": 86.25,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "captureHorseRate": 40.69,
+            "mountExpGain": 87.19,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "captureHorseRate": 41.13,
+            "mountExpGain": 88.13,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "captureHorseRate": 41.56,
+            "mountExpGain": 89.06,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "captureHorseRate": 42,
+            "mountExpGain": 90,
+            "breedingChance": 12
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "captureHorseRate": 42.44,
+            "mountExpGain": 90.94,
+            "breedingChance": 13
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "captureHorseRate": 42.88,
+            "mountExpGain": 91.88,
+            "breedingChance": 13
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "captureHorseRate": 43.31,
+            "mountExpGain": 92.81,
+            "breedingChance": 13
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "captureHorseRate": 43.75,
+            "mountExpGain": 93.75,
+            "breedingChance": 13
+          }
+        }
+      ]
+    },
+    "sailing": {
+      "source": "https://garmoth.com/mastery-brackets/sailing",
+      "columns": [
+        {
+          "key": "acceleration",
+          "sourceLabel": "Accel.",
+          "unit": "percent"
+        },
+        {
+          "key": "brake",
+          "sourceLabel": "Brake",
+          "unit": "percent"
+        },
+        {
+          "key": "turn",
+          "sourceLabel": "Turn",
+          "unit": "percent"
+        },
+        {
+          "key": "speed",
+          "sourceLabel": "Speed",
+          "unit": "percent"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 0,
+          "values": {
+            "acceleration": 0,
+            "brake": 0,
+            "turn": 0,
+            "speed": 0
+          }
+        },
+        {
+          "mastery": 50,
+          "values": {
+            "acceleration": 0.5,
+            "brake": 0.5,
+            "turn": 0.5,
+            "speed": 0.5
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "acceleration": 1,
+            "brake": 1,
+            "turn": 1,
+            "speed": 1
+          }
+        },
+        {
+          "mastery": 150,
+          "values": {
+            "acceleration": 1.5,
+            "brake": 1.5,
+            "turn": 1.5,
+            "speed": 1.5
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "acceleration": 2,
+            "brake": 2,
+            "turn": 2,
+            "speed": 2
+          }
+        },
+        {
+          "mastery": 250,
+          "values": {
+            "acceleration": 2.5,
+            "brake": 2.5,
+            "turn": 2.5,
+            "speed": 2.5
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "acceleration": 3,
+            "brake": 3,
+            "turn": 3,
+            "speed": 3
+          }
+        },
+        {
+          "mastery": 350,
+          "values": {
+            "acceleration": 3.5,
+            "brake": 3.5,
+            "turn": 3.5,
+            "speed": 3.5
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "acceleration": 4,
+            "brake": 4,
+            "turn": 4,
+            "speed": 4
+          }
+        },
+        {
+          "mastery": 450,
+          "values": {
+            "acceleration": 4.5,
+            "brake": 4.5,
+            "turn": 4.5,
+            "speed": 4.5
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "acceleration": 5,
+            "brake": 5,
+            "turn": 5,
+            "speed": 5
+          }
+        },
+        {
+          "mastery": 550,
+          "values": {
+            "acceleration": 5.5,
+            "brake": 5.5,
+            "turn": 5.5,
+            "speed": 5.5
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "acceleration": 6,
+            "brake": 6,
+            "turn": 6,
+            "speed": 6
+          }
+        },
+        {
+          "mastery": 650,
+          "values": {
+            "acceleration": 6.5,
+            "brake": 6.5,
+            "turn": 6.5,
+            "speed": 6.5
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "acceleration": 7,
+            "brake": 7,
+            "turn": 7,
+            "speed": 7
+          }
+        },
+        {
+          "mastery": 750,
+          "values": {
+            "acceleration": 7.5,
+            "brake": 7.5,
+            "turn": 7.5,
+            "speed": 7.5
+          }
+        },
+        {
+          "mastery": 800,
+          "values": {
+            "acceleration": 8,
+            "brake": 8,
+            "turn": 8,
+            "speed": 8
+          }
+        },
+        {
+          "mastery": 850,
+          "values": {
+            "acceleration": 8.5,
+            "brake": 8.5,
+            "turn": 8.5,
+            "speed": 8.5
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "acceleration": 9,
+            "brake": 9,
+            "turn": 9,
+            "speed": 9
+          }
+        },
+        {
+          "mastery": 950,
+          "values": {
+            "acceleration": 9.5,
+            "brake": 9.5,
+            "turn": 9.5,
+            "speed": 9.5
+          }
+        },
+        {
+          "mastery": 1000,
+          "values": {
+            "acceleration": 10,
+            "brake": 10,
+            "turn": 10,
+            "speed": 10
+          }
+        },
+        {
+          "mastery": 1050,
+          "values": {
+            "acceleration": 10.5,
+            "brake": 10.5,
+            "turn": 10.5,
+            "speed": 10.5
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "acceleration": 11,
+            "brake": 11,
+            "turn": 11,
+            "speed": 11
+          }
+        },
+        {
+          "mastery": 1150,
+          "values": {
+            "acceleration": 11.5,
+            "brake": 11.5,
+            "turn": 11.5,
+            "speed": 11.5
+          }
+        },
+        {
+          "mastery": 1200,
+          "values": {
+            "acceleration": 12,
+            "brake": 12,
+            "turn": 12,
+            "speed": 12
+          }
+        },
+        {
+          "mastery": 1250,
+          "values": {
+            "acceleration": 12.5,
+            "brake": 12.5,
+            "turn": 12.5,
+            "speed": 12.5
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "acceleration": 13,
+            "brake": 13,
+            "turn": 13,
+            "speed": 13
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "acceleration": 13.5,
+            "brake": 13.5,
+            "turn": 13.5,
+            "speed": 13.5
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "acceleration": 14,
+            "brake": 14,
+            "turn": 14,
+            "speed": 14
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "acceleration": 14.5,
+            "brake": 14.5,
+            "turn": 14.5,
+            "speed": 14.5
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "acceleration": 15,
+            "brake": 15,
+            "turn": 15,
+            "speed": 15
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "acceleration": 15.5,
+            "brake": 15.5,
+            "turn": 15.5,
+            "speed": 15.5
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "acceleration": 16,
+            "brake": 16,
+            "turn": 16,
+            "speed": 16
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "acceleration": 16.5,
+            "brake": 16.5,
+            "turn": 16.5,
+            "speed": 16.5
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "acceleration": 17,
+            "brake": 17,
+            "turn": 17,
+            "speed": 17
+          }
+        },
+        {
+          "mastery": 1750,
+          "values": {
+            "acceleration": 17.5,
+            "brake": 17.5,
+            "turn": 17.5,
+            "speed": 17.5
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "acceleration": 18,
+            "brake": 18,
+            "turn": 18,
+            "speed": 18
+          }
+        },
+        {
+          "mastery": 1850,
+          "values": {
+            "acceleration": 18.5,
+            "brake": 18.5,
+            "turn": 18.5,
+            "speed": 18.5
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "acceleration": 19,
+            "brake": 19,
+            "turn": 19,
+            "speed": 19
+          }
+        },
+        {
+          "mastery": 1950,
+          "values": {
+            "acceleration": 19.5,
+            "brake": 19.5,
+            "turn": 19.5,
+            "speed": 19.5
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "acceleration": 20,
+            "brake": 20,
+            "turn": 20,
+            "speed": 20
+          }
+        },
+        {
+          "mastery": 2050,
+          "values": {
+            "acceleration": 20.25,
+            "brake": 20.25,
+            "turn": 20.25,
+            "speed": 20.25
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "acceleration": 20.5,
+            "brake": 20.5,
+            "turn": 20.5,
+            "speed": 20.5
+          }
+        },
+        {
+          "mastery": 2150,
+          "values": {
+            "acceleration": 20.75,
+            "brake": 20.75,
+            "turn": 20.75,
+            "speed": 20.75
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "acceleration": 21,
+            "brake": 21,
+            "turn": 21,
+            "speed": 21
+          }
+        },
+        {
+          "mastery": 2250,
+          "values": {
+            "acceleration": 21.25,
+            "brake": 21.25,
+            "turn": 21.25,
+            "speed": 21.25
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "acceleration": 21.5,
+            "brake": 21.5,
+            "turn": 21.5,
+            "speed": 21.5
+          }
+        },
+        {
+          "mastery": 2350,
+          "values": {
+            "acceleration": 21.75,
+            "brake": 21.75,
+            "turn": 21.75,
+            "speed": 21.75
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "acceleration": 22,
+            "brake": 22,
+            "turn": 22,
+            "speed": 22
+          }
+        },
+        {
+          "mastery": 2450,
+          "values": {
+            "acceleration": 22.25,
+            "brake": 22.25,
+            "turn": 22.25,
+            "speed": 22.25
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "acceleration": 22.5,
+            "brake": 22.5,
+            "turn": 22.5,
+            "speed": 22.5
+          }
+        },
+        {
+          "mastery": 2550,
+          "values": {
+            "acceleration": 22.75,
+            "brake": 22.75,
+            "turn": 22.75,
+            "speed": 22.75
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "acceleration": 23,
+            "brake": 23,
+            "turn": 23,
+            "speed": 23
+          }
+        },
+        {
+          "mastery": 2650,
+          "values": {
+            "acceleration": 23.25,
+            "brake": 23.25,
+            "turn": 23.25,
+            "speed": 23.25
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "acceleration": 23.5,
+            "brake": 23.5,
+            "turn": 23.5,
+            "speed": 23.5
+          }
+        },
+        {
+          "mastery": 2750,
+          "values": {
+            "acceleration": 23.75,
+            "brake": 23.75,
+            "turn": 23.75,
+            "speed": 23.75
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "acceleration": 24,
+            "brake": 24,
+            "turn": 24,
+            "speed": 24
+          }
+        },
+        {
+          "mastery": 2850,
+          "values": {
+            "acceleration": 24.25,
+            "brake": 24.25,
+            "turn": 24.25,
+            "speed": 24.25
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "acceleration": 24.5,
+            "brake": 24.5,
+            "turn": 24.5,
+            "speed": 24.5
+          }
+        },
+        {
+          "mastery": 2950,
+          "values": {
+            "acceleration": 24.75,
+            "brake": 24.75,
+            "turn": 24.75,
+            "speed": 24.75
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "acceleration": 25,
+            "brake": 25,
+            "turn": 25,
+            "speed": 25
+          }
+        }
+      ]
+    },
+    "processing": {
+      "source": "https://garmoth.com/mastery-brackets/processing",
+      "columns": [
+        {
+          "key": "materialCount",
+          "sourceLabel": "Material Count",
+          "unit": "count"
+        }
+      ],
+      "rows": [
+        {
+          "mastery": 2,
+          "values": {
+            "materialCount": 10
+          }
+        },
+        {
+          "mastery": 20,
+          "values": {
+            "materialCount": 11
+          }
+        },
+        {
+          "mastery": 40,
+          "values": {
+            "materialCount": 12
+          }
+        },
+        {
+          "mastery": 60,
+          "values": {
+            "materialCount": 13
+          }
+        },
+        {
+          "mastery": 80,
+          "values": {
+            "materialCount": 14
+          }
+        },
+        {
+          "mastery": 100,
+          "values": {
+            "materialCount": 15
+          }
+        },
+        {
+          "mastery": 120,
+          "values": {
+            "materialCount": 16
+          }
+        },
+        {
+          "mastery": 140,
+          "values": {
+            "materialCount": 17
+          }
+        },
+        {
+          "mastery": 160,
+          "values": {
+            "materialCount": 18
+          }
+        },
+        {
+          "mastery": 180,
+          "values": {
+            "materialCount": 19
+          }
+        },
+        {
+          "mastery": 200,
+          "values": {
+            "materialCount": 20
+          }
+        },
+        {
+          "mastery": 220,
+          "values": {
+            "materialCount": 21
+          }
+        },
+        {
+          "mastery": 240,
+          "values": {
+            "materialCount": 22
+          }
+        },
+        {
+          "mastery": 260,
+          "values": {
+            "materialCount": 23
+          }
+        },
+        {
+          "mastery": 280,
+          "values": {
+            "materialCount": 24
+          }
+        },
+        {
+          "mastery": 300,
+          "values": {
+            "materialCount": 25
+          }
+        },
+        {
+          "mastery": 320,
+          "values": {
+            "materialCount": 26
+          }
+        },
+        {
+          "mastery": 340,
+          "values": {
+            "materialCount": 27
+          }
+        },
+        {
+          "mastery": 360,
+          "values": {
+            "materialCount": 28
+          }
+        },
+        {
+          "mastery": 380,
+          "values": {
+            "materialCount": 29
+          }
+        },
+        {
+          "mastery": 400,
+          "values": {
+            "materialCount": 30
+          }
+        },
+        {
+          "mastery": 420,
+          "values": {
+            "materialCount": 31
+          }
+        },
+        {
+          "mastery": 440,
+          "values": {
+            "materialCount": 32
+          }
+        },
+        {
+          "mastery": 460,
+          "values": {
+            "materialCount": 33
+          }
+        },
+        {
+          "mastery": 480,
+          "values": {
+            "materialCount": 34
+          }
+        },
+        {
+          "mastery": 500,
+          "values": {
+            "materialCount": 35
+          }
+        },
+        {
+          "mastery": 520,
+          "values": {
+            "materialCount": 36
+          }
+        },
+        {
+          "mastery": 540,
+          "values": {
+            "materialCount": 37
+          }
+        },
+        {
+          "mastery": 560,
+          "values": {
+            "materialCount": 38
+          }
+        },
+        {
+          "mastery": 580,
+          "values": {
+            "materialCount": 39
+          }
+        },
+        {
+          "mastery": 600,
+          "values": {
+            "materialCount": 40
+          }
+        },
+        {
+          "mastery": 620,
+          "values": {
+            "materialCount": 41
+          }
+        },
+        {
+          "mastery": 640,
+          "values": {
+            "materialCount": 42
+          }
+        },
+        {
+          "mastery": 660,
+          "values": {
+            "materialCount": 43
+          }
+        },
+        {
+          "mastery": 680,
+          "values": {
+            "materialCount": 45
+          }
+        },
+        {
+          "mastery": 700,
+          "values": {
+            "materialCount": 47
+          }
+        },
+        {
+          "mastery": 720,
+          "values": {
+            "materialCount": 49
+          }
+        },
+        {
+          "mastery": 740,
+          "values": {
+            "materialCount": 51
+          }
+        },
+        {
+          "mastery": 760,
+          "values": {
+            "materialCount": 53
+          }
+        },
+        {
+          "mastery": 780,
+          "values": {
+            "materialCount": 57
+          }
+        },
+        {
+          "mastery": 810,
+          "values": {
+            "materialCount": 60
+          }
+        },
+        {
+          "mastery": 840,
+          "values": {
+            "materialCount": 64
+          }
+        },
+        {
+          "mastery": 870,
+          "values": {
+            "materialCount": 68
+          }
+        },
+        {
+          "mastery": 900,
+          "values": {
+            "materialCount": 72
+          }
+        },
+        {
+          "mastery": 930,
+          "values": {
+            "materialCount": 76
+          }
+        },
+        {
+          "mastery": 960,
+          "values": {
+            "materialCount": 80
+          }
+        },
+        {
+          "mastery": 990,
+          "values": {
+            "materialCount": 85
+          }
+        },
+        {
+          "mastery": 1020,
+          "values": {
+            "materialCount": 90
+          }
+        },
+        {
+          "mastery": 1060,
+          "values": {
+            "materialCount": 96
+          }
+        },
+        {
+          "mastery": 1100,
+          "values": {
+            "materialCount": 112
+          }
+        },
+        {
+          "mastery": 1140,
+          "values": {
+            "materialCount": 118
+          }
+        },
+        {
+          "mastery": 1180,
+          "values": {
+            "materialCount": 124
+          }
+        },
+        {
+          "mastery": 1220,
+          "values": {
+            "materialCount": 130
+          }
+        },
+        {
+          "mastery": 1260,
+          "values": {
+            "materialCount": 137
+          }
+        },
+        {
+          "mastery": 1300,
+          "values": {
+            "materialCount": 144
+          }
+        },
+        {
+          "mastery": 1350,
+          "values": {
+            "materialCount": 154
+          }
+        },
+        {
+          "mastery": 1400,
+          "values": {
+            "materialCount": 162
+          }
+        },
+        {
+          "mastery": 1450,
+          "values": {
+            "materialCount": 170
+          }
+        },
+        {
+          "mastery": 1500,
+          "values": {
+            "materialCount": 178
+          }
+        },
+        {
+          "mastery": 1550,
+          "values": {
+            "materialCount": 186
+          }
+        },
+        {
+          "mastery": 1600,
+          "values": {
+            "materialCount": 194
+          }
+        },
+        {
+          "mastery": 1650,
+          "values": {
+            "materialCount": 203
+          }
+        },
+        {
+          "mastery": 1700,
+          "values": {
+            "materialCount": 212
+          }
+        },
+        {
+          "mastery": 1800,
+          "values": {
+            "materialCount": 222
+          }
+        },
+        {
+          "mastery": 1900,
+          "values": {
+            "materialCount": 235
+          }
+        },
+        {
+          "mastery": 2000,
+          "values": {
+            "materialCount": 250
+          }
+        },
+        {
+          "mastery": 2100,
+          "values": {
+            "materialCount": 260
+          }
+        },
+        {
+          "mastery": 2200,
+          "values": {
+            "materialCount": 270
+          }
+        },
+        {
+          "mastery": 2300,
+          "values": {
+            "materialCount": 280
+          }
+        },
+        {
+          "mastery": 2400,
+          "values": {
+            "materialCount": 285
+          }
+        },
+        {
+          "mastery": 2500,
+          "values": {
+            "materialCount": 290
+          }
+        },
+        {
+          "mastery": 2600,
+          "values": {
+            "materialCount": 295
+          }
+        },
+        {
+          "mastery": 2700,
+          "values": {
+            "materialCount": 300
+          }
+        },
+        {
+          "mastery": 2800,
+          "values": {
+            "materialCount": 305
+          }
+        },
+        {
+          "mastery": 2900,
+          "values": {
+            "materialCount": 310
+          }
+        },
+        {
+          "mastery": 3000,
+          "values": {
+            "materialCount": 315
+          }
+        }
+      ]
+    }
+  },
+  "comparisons": [
+    {
+      "table": "cooking",
+      "matchedCells": 244,
+      "discrepancies": []
+    },
+    {
+      "table": "alchemy",
+      "matchedCells": 61,
+      "discrepancies": []
+    },
+    {
+      "table": "processing",
+      "matchedCells": 75,
+      "discrepancies": [
+        {
+          "mastery": 2,
+          "reason": "No identical threshold in existing source"
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,8 @@
     "codex:index": "node scripts/codex-index.mjs",
     "crafting:chunks": "node scripts/build-crafting-chunks.mjs",
     "crafting:verify": "node scripts/verify-crafting-chunks.mjs",
-    "mastery:fetch": "node scripts/fetch-mastery-tables.mjs"
+    "mastery:fetch": "node scripts/fetch-mastery-tables.mjs",
+    "mastery:garmoth": "node scripts/build-garmoth-mastery.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
