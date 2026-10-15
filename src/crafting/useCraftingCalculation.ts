@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { calculateCraftingPlan, samePlanDependencyGraph } from './planCalculation'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { calculateCraftingPlan, hasPlanDetails } from './planCalculation'
 import { loadPlanDetails } from './loadPlanDetails'
 import type { CraftingPlan } from './planTypes'
 import type { ItemDetail } from './types'
@@ -25,23 +25,27 @@ export function useCraftingCalculation(plan: CraftingPlan, names: ReadonlyMap<st
     error?: string
   }>()
   const [retry, setRetry] = useState(0)
-  const compatible =
-    !!loaded?.details && samePlanDependencyGraph(graphPlan, loaded.plan, loaded.details, names)
+  const detailsRef = useRef<Map<string, ItemDetail>>(new Map())
+  const compatible = !!loaded?.details && hasPlanDetails(graphPlan, loaded.details, names)
   useEffect(() => {
     if (!names.size || compatible) return
     let cancelled = false
     const timer = window.setTimeout(() => {
-      loadPlanDetails(graphPlan, names, () => cancelled)
+      loadPlanDetails(graphPlan, names, () => cancelled, undefined, detailsRef.current)
         .then((details) => {
-          if (!cancelled) setLoaded({ key, plan: graphPlan, details })
+          if (!cancelled) {
+            detailsRef.current = details
+            setLoaded({ key, plan: graphPlan, details })
+          }
         })
         .catch((error: unknown) => {
           if (!cancelled)
-            setLoaded({
+            setLoaded((previous) => ({
               key,
-              plan: graphPlan,
+              plan: previous?.details ? previous.plan : graphPlan,
+              details: previous?.details,
               error: error instanceof Error ? error.message : '재료 계산 실패',
-            })
+            }))
         })
     }, 150)
     return () => {
@@ -49,11 +53,24 @@ export function useCraftingCalculation(plan: CraftingPlan, names: ReadonlyMap<st
       window.clearTimeout(timer)
     }
   }, [graphPlan, key, names, retry, compatible])
-  const current = loaded?.key === key || compatible ? loaded : undefined
+  // Keep the last complete graph mounted while a genuinely new branch downloads.
+  const current = useMemo(
+    () => (compatible && loaded?.error ? { ...loaded, error: undefined } : loaded),
+    [compatible, loaded],
+  )
+  const updating = !!loaded?.details && !compatible && !loaded.error
   const result = useMemo(() => {
     if (!current?.details) return undefined
     try {
-      return { ...calculateCraftingPlan(plan, current.details, names), error: '' }
+      const displayPlan = compatible
+        ? plan
+        : {
+            ...plan,
+            goals: current.plan.goals,
+            choices: current.plan.choices,
+            view: current.plan.view,
+          }
+      return { ...calculateCraftingPlan(displayPlan, current.details, names), error: '' }
     } catch (error) {
       return {
         rows: [],
@@ -61,6 +78,6 @@ export function useCraftingCalculation(plan: CraftingPlan, names: ReadonlyMap<st
         error: error instanceof Error ? error.message : '수량 계산 실패',
       }
     }
-  }, [plan, current, names])
-  return { current, result, retry: () => setRetry((value) => value + 1) }
+  }, [plan, current, names, compatible])
+  return { current, result, updating, retry: () => setRetry((value) => value + 1) }
 }

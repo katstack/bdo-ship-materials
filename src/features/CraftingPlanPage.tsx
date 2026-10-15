@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useCraftingCalculation } from '../crafting/useCraftingCalculation'
 import { CraftingPlanTable } from './CraftingPlanTable'
 import { QuantityInput } from './QuantityInput'
@@ -21,7 +21,22 @@ export function CraftingPlanPage({
   const [notice, setNotice] = useState('')
   const [confirm, setConfirm] = useState<{ type: 'clear' | 'import'; plan?: CraftingPlan }>()
   const importRef = useRef<HTMLInputElement>(null)
-  const { current, result, retry } = useCraftingCalculation(plan, names)
+  const { current, result, updating, retry } = useCraftingCalculation(plan, names)
+  const rootRef = useRef<HTMLElement>(null)
+  const anchorRef = useRef<{ id: string; top: number }>(undefined)
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor || updating) return
+    anchorRef.current = undefined
+    const row = [
+      ...(rootRef.current?.querySelectorAll<HTMLElement>('[data-crafting-item-id]') ?? []),
+    ].find((element) => element.dataset.craftingItemId === anchor.id)
+    if (!row) return
+    window.scrollBy({ top: row.getBoundingClientRect().top - anchor.top, behavior: 'instant' })
+    row
+      .querySelector<HTMLSelectElement>('select[aria-label$="획득 방식"]')
+      ?.focus({ preventScroll: true })
+  }, [result, updating])
   const exportPlan = () => {
     const url = URL.createObjectURL(
       new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' }),
@@ -33,7 +48,24 @@ export function CraftingPlanPage({
     window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   return (
-    <section>
+    <section
+      ref={rootRef}
+      aria-busy={updating}
+      onChangeCapture={(event) => {
+        const target = event.target
+        if (
+          !(target instanceof HTMLSelectElement) ||
+          !target.getAttribute('aria-label')?.endsWith('획득 방식')
+        )
+          return
+        const row = target.closest<HTMLElement>('[data-crafting-item-id]')
+        if (row?.dataset.craftingItemId)
+          anchorRef.current = {
+            id: row.dataset.craftingItemId,
+            top: row.getBoundingClientRect().top,
+          }
+      }}
+    >
       <div className="section-title">
         <div>
           <h2>제작 계획</h2>

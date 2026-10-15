@@ -43,6 +43,26 @@ export function shouldExpandPlanItem(
   )
 }
 
+/** A smaller/different graph can reuse loaded details without hiding the current tables. */
+export function hasPlanDetails(
+  plan: CraftingPlan,
+  details: ReadonlyMap<string, ItemDetail>,
+  names: ReadonlyMap<string, string>,
+) {
+  const visited = new Set<string>()
+  const visit = (id: string, depth: number): boolean => {
+    if (visited.has(id)) return true
+    visited.add(id)
+    if (visited.size > 300) return false
+    const detail = details.get(referenceForPlan(id, names).id)
+    if (!detail) return false
+    if (depth >= 20 || !shouldExpandPlanItem(plan, id, detail, names)) return true
+    const recipe = detail.recipes[plan.choices[id]?.recipeIndex ?? defaultRecipeIndex(detail)]
+    return (recipe?.inputs ?? []).every((input) => visit(sourceItemId(input.item), depth + 1))
+  }
+  return plan.goals.every((goal) => visit(goal.itemId, 0))
+}
+
 /** Compare actual selected dependencies, not quantities, yields or redundant default choices. */
 export function samePlanDependencyGraph(
   a: CraftingPlan,

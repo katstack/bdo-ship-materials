@@ -9,6 +9,7 @@ export async function loadPlanDetails(
   names: ReadonlyMap<string, string>,
   cancelled: () => boolean,
   load = loadItemDetail,
+  cached: ReadonlyMap<string, ItemDetail> = new Map(),
 ) {
   const details = new Map<string, ItemDetail>()
   const seen = new Set<string>()
@@ -23,7 +24,7 @@ export async function loadPlanDetails(
       )
     let detail = details.get(reference.id)
     if (!detail) {
-      detail = await load(reference.id)
+      detail = cached.get(reference.id) ?? (await load(reference.id))
       details.set(reference.id, detail)
     }
     if (depth >= 20 || !shouldExpandPlanItem(plan, id, detail, names)) return

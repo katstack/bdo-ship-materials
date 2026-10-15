@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { calculateCraftingPlan, planItemName, samePlanDependencyGraph } from './planCalculation'
+import {
+  calculateCraftingPlan,
+  hasPlanDetails,
+  planItemName,
+  samePlanDependencyGraph,
+} from './planCalculation'
 import { emptyCraftingPlan } from './planTypes'
 import type { ItemDetail, SourceRecipe } from './types'
 import { loadPlanDetails } from './loadPlanDetails'
@@ -30,6 +35,36 @@ const plan = () => ({
   inventory: { '3': 1, '4': 1 },
 })
 describe('multi-goal crafting calculation', () => {
+  it('reuses loaded details when obtaining a material prunes the graph', () => {
+    const narrowed = {
+      ...plan(),
+      view: 'raw' as const,
+      choices: { '3': { mode: 'obtain' as const, recipeIndex: 0, outputPerCraft: 1 } },
+    }
+    const partial = new Map(details)
+    partial.delete('4')
+    expect(hasPlanDetails(narrowed, partial, names)).toBe(true)
+    expect(hasPlanDetails({ ...narrowed, choices: {} }, partial, names)).toBe(false)
+    expect(hasPlanDetails({ ...narrowed, choices: {} }, details, names)).toBe(true)
+  })
+  it('loads only genuinely missing dependencies and keeps the supplied cache intact', async () => {
+    const cached = new Map(details)
+    cached.delete('4')
+    const requested: string[] = []
+    const loaded = await loadPlanDetails(
+      { ...plan(), view: 'raw' },
+      names,
+      () => false,
+      async (id) => {
+        requested.push(id)
+        return details.get(id)!
+      },
+      cached,
+    )
+    expect(requested).toEqual(['4'])
+    expect(loaded.get('3')).toBe(cached.get('3'))
+    expect(cached.has('4')).toBe(false)
+  })
   it('keeps the same dependency graph when only quantities, yields or equivalent choices change', () => {
     const a = { ...plan(), view: 'raw' as const }
     const b = {

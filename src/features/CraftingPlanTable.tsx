@@ -61,7 +61,7 @@ export function CraftingPlanTable({
             const reference = referenceForPlan(row.id, names)
             const detail = details?.get(reference.id)
             return (
-              <tr key={row.id}>
+              <tr key={row.id} data-crafting-item-id={row.id}>
                 <td>
                   <button className="crafting-item-link" onClick={() => onSelect(reference.id)}>
                     {row.name}
@@ -84,7 +84,7 @@ export function CraftingPlanTable({
                   {detail?.recipes.length && !row.enhancementLevel ? (
                     <select
                       aria-label={`${row.name} 획득 방식`}
-                      value={row.mode}
+                      value={plan.choices[row.id]?.mode ?? row.mode}
                       onChange={(event) =>
                         changeChoice(row, { mode: event.target.value as 'craft' | 'obtain' })
                       }
