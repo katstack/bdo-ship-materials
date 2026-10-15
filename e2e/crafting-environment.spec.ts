@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openCraftingNode, supplyRow } from './crafting-helpers'
 test('life profiles persist, select production models, and change conservative material totals', async ({
   page,
 }) => {
@@ -28,13 +29,12 @@ test('life profiles persist, select production models, and change conservative m
     .getByRole('navigation', { name: '제작 시뮬레이터 메뉴' })
     .getByRole('link', { name: '제작 계획 (1)', exact: true })
     .click()
+  await openCraftingNode(page, '4051')
   await page.locator('tr[data-crafting-item-id="4051"] .crafting-yield-settings summary').click()
   await page
     .getByRole('combobox', { name: '녹아내린 철 조각 생산량 모형', exact: true })
     .selectOption('processing')
-  const iron = page
-    .locator('.crafting-plan-table tr')
-    .filter({ has: page.getByRole('button', { name: '철 광석', exact: true }) })
+  const iron = supplyRow(page, '4001')
   await expect(iron.locator('td').nth(1)).toHaveText('1,200')
   await page
     .getByRole('navigation', { name: '제작 시뮬레이터 메뉴' })
@@ -60,6 +60,7 @@ test('life profiles persist, select production models, and change conservative m
   const p99 = Number((await iron.locator('td').nth(1).innerText()).replaceAll(',', ''))
   expect(p99).toBeGreaterThanOrEqual(p95)
   await page.reload()
+  await openCraftingNode(page, '4051')
   await page.locator('tr[data-crafting-item-id="4051"] .crafting-yield-settings summary').click()
   await expect(
     page.getByRole('combobox', { name: '녹아내린 철 조각 생산량 모형', exact: true }),

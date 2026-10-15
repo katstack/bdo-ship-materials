@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openCraftingNode } from './crafting-helpers'
 
 test('switching acquisition keeps tables visible and preserves the moved row position and focus', async ({
   page,
@@ -22,6 +23,7 @@ test('switching acquisition keeps tables visible and preserves the moved row pos
     ),
   )
   await page.reload()
+  await openCraftingNode(page, '4051')
   const mode = page.getByRole('combobox', { name: '녹아내린 철 조각 획득 방식', exact: true })
   await expect(mode).toHaveValue('craft')
   await mode.scrollIntoViewIfNeeded()
@@ -50,5 +52,6 @@ test('switching acquisition keeps tables visible and preserves the moved row pos
     ),
   ).toBe(0)
   await page.reload()
+  await openCraftingNode(page, '4051')
   await expect(mode).toHaveValue('craft')
 })

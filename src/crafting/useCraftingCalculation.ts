@@ -75,6 +75,7 @@ export function useCraftingCalculation(plan: CraftingPlan, names: ReadonlyMap<st
       return {
         rows: [],
         warnings: [],
+        routes: undefined,
         error: error instanceof Error ? error.message : '수량 계산 실패',
       }
     }

@@ -1858,6 +1858,168 @@ tr:last-child td {
 .crafting-search select {
   max-width: 100%;
 }
+.crafting-plan-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.crafting-tree-panel,
+.crafting-materials-panel {
+  min-width: 0;
+}
+.crafting-plan-panel-tabs {
+  display: none;
+}
+.crafting-plan-tree ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.crafting-plan-tree li {
+  margin: 10px 0;
+}
+.crafting-tree-branch > ul {
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid #3b5961;
+}
+.crafting-tree-branch > summary {
+  color: #a5c4c9;
+  font-size: 0.85rem;
+  margin: 8px 0 0 12px;
+  cursor: pointer;
+}
+.crafting-tree-node {
+  padding: 12px;
+  background: #14272c;
+  border: 1px solid #30494f;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.crafting-tree-node.is-shared {
+  background: #142026;
+  border-style: dashed;
+}
+.crafting-tree-node-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  scroll-margin-top: 20px;
+}
+.crafting-tree-node-title > span {
+  font-size: 0.85rem;
+  color: #add4d6;
+}
+.crafting-tree-node-meta {
+  margin: 6px 0 10px;
+}
+.crafting-tree-shared {
+  font-size: 0.8rem;
+  padding: 5px 8px;
+}
+.crafting-tree-settings > summary {
+  color: #7edbd0;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.crafting-node-editor table {
+  display: block;
+  min-width: 0 !important;
+  width: 100%;
+}
+.crafting-node-editor thead {
+  display: none;
+}
+.crafting-node-editor tbody {
+  display: block;
+}
+.crafting-node-editor tr {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 12px;
+}
+.crafting-node-editor td {
+  display: block;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  white-space: normal;
+}
+.crafting-node-editor td[hidden] {
+  display: none;
+}
+.crafting-node-editor td:first-child,
+.crafting-node-editor td[data-label='제작식'] {
+  grid-column: 1 / -1;
+}
+.crafting-node-editor td[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  font-size: 0.8rem;
+  color: #a2bdc2;
+  margin-bottom: 6px;
+}
+.crafting-node-editor select,
+.crafting-node-editor input {
+  max-width: 100%;
+  min-width: 0;
+}
+.crafting-summary-option {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0;
+}
+.crafting-usage-path {
+  color: #9bc6d0;
+  font-size: 0.85rem;
+}
+.crafting-materials-panel .crafting-supply-table table {
+  min-width: 520px;
+}
+.crafting-materials-panel .crafting-supply-table input {
+  width: 90px;
+}
+.crafting-materials-panel td:first-child {
+  min-width: 160px;
+  max-width: 240px;
+  white-space: normal;
+}
+.crafting-material-usage {
+  margin-top: 6px;
+  max-width: 240px;
+  overflow-wrap: anywhere;
+}
+.crafting-material-usage summary {
+  cursor: pointer;
+  color: #8fc6c1;
+  font-size: 0.8rem;
+}
+.crafting-materials-panel td small {
+  display: block;
+}
+@media (max-width: 900px) {
+  .crafting-plan-split {
+    display: block;
+  }
+  .crafting-plan-panel-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .crafting-plan-panel-tabs [aria-selected='true'] {
+    background: #1e7269;
+    border-color: #54b4a8;
+  }
+  .crafting-plan-split[data-active-panel='tree'] .crafting-materials-panel,
+  .crafting-plan-split[data-active-panel='materials'] .crafting-tree-panel {
+    display: none;
+  }
+}
 .crafting-browser-options label {
   display: flex;
   align-items: center;
@@ -1878,6 +2040,10 @@ tr:last-child td {
 }
 .crafting-plan-table td:first-child {
   min-width: 220px;
+}
+.crafting-tree-settings .crafting-node-editor td {
+  white-space: normal;
+  min-width: 0;
 }
 .crafting-plan-table input {
   width: 105px;

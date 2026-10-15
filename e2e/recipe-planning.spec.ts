@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openCraftingNode, supplyRow } from './crafting-helpers'
 
 test('recipe-first browsing preserves recipe URL and slot substitution through save, reload and obtain/craft round trips', async ({
   page,
@@ -21,14 +22,14 @@ test('recipe-first browsing preserves recipe URL and slot substitution through s
     .getByRole('navigation', { name: '제작 시뮬레이터 메뉴' })
     .getByRole('link', { name: '제작 계획 (1)', exact: true })
     .click()
-  const recipe = page.locator('tr[data-crafting-item-id="9202"]')
+  const recipe = await openCraftingNode(page, '9202')
   await recipe.locator('.crafting-route-inputs summary').click()
   const substitute = recipe.getByRole('combobox', {
     name: '채소 절임 일반 채소 대체재',
     exact: true,
   })
   await substitute.selectOption('7306')
-  const pumpkin = page.locator('tr[data-crafting-item-id="7306"]')
+  const pumpkin = supplyRow(page, '7306')
   await expect(pumpkin.locator('td').nth(1)).toHaveText('80')
   await pumpkin.getByRole('spinbutton', { name: '호박 제작 재고', exact: true }).fill('5')
   await expect(pumpkin.locator('td').nth(3)).toHaveText('75')
@@ -36,6 +37,7 @@ test('recipe-first browsing preserves recipe URL and slot substitution through s
     '75',
   )
   await page.reload()
+  await openCraftingNode(page, '9202')
   await recipe.locator('.crafting-route-inputs summary').click()
   await expect(substitute).toHaveValue('7306')
   const mode = recipe.getByRole('combobox', { name: '채소 절임 획득 방식', exact: true })
@@ -47,8 +49,8 @@ test('recipe-first browsing preserves recipe URL and slot substitution through s
   await substitute.selectOption('7312')
   await mode.selectOption('craft')
   await expect(mode).toHaveValue('craft')
-  await expect(page.locator('tr[data-crafting-item-id="7312"] td').nth(1)).toHaveText('80')
-  await expect(page.locator('tr[data-crafting-item-id="7306"]')).toHaveCount(0)
+  await expect(supplyRow(page, '7312').locator('td').nth(1)).toHaveText('80')
+  await expect(supplyRow(page, '7306')).toHaveCount(0)
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('bdo-crafting-plan-v1')!))
   expect(saved.choices['9202'].recipeId).toMatch(/^recipe-9202-/)
   expect(saved.inventory['7306']).toBe(5)

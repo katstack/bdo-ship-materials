@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useCraftingCalculation } from '../crafting/useCraftingCalculation'
-import { CraftingPlanTable } from './CraftingPlanTable'
+import { CraftingPlanTree } from './CraftingPlanTree'
 import { CraftingSupplySummary } from './CraftingSupplySummary'
 import { QuantityInput } from './QuantityInput'
 import { parseCraftingPlan } from '../crafting/planStorage'
@@ -20,6 +20,7 @@ export function CraftingPlanPage({
   onSelect: (id: string) => void
 }) {
   const [notice, setNotice] = useState('')
+  const [panel, setPanel] = useState<'tree' | 'materials'>('tree')
   const [confirm, setConfirm] = useState<{ type: 'clear' | 'import'; plan?: CraftingPlan }>()
   const importRef = useRef<HTMLInputElement>(null)
   const { current, result, updating, retry } = useCraftingCalculation(plan, names)
@@ -238,24 +239,54 @@ export function CraftingPlanPage({
               </ul>
             </details>
           )}
-          {result && !result.error && (
-            <>
-              <h3>제작 경로 · {result.rows.length}종</h3>
-              <p className="save">
-                선택한 획득 방식은 유지됩니다. 제작식과 대체재는 직접 수급 상태에서도 바꿀 수
-                있습니다.
-              </p>
-              <CraftingPlanTable
-                rows={result.rows}
-                crafted={true}
-                plan={plan}
-                update={update}
-                names={names}
-                details={current?.details}
-                onSelect={onSelect}
-              />
-              <CraftingSupplySummary rows={result.rows} names={names} sort={plan.sort} />
-            </>
+          {result && !result.error && result.routes && (
+            <div className="crafting-plan-split" data-active-panel={panel}>
+              <div className="crafting-plan-panel-tabs" role="tablist" aria-label="제작 계획 보기">
+                <button
+                  role="tab"
+                  aria-selected={panel === 'tree'}
+                  aria-controls="crafting-tree-panel"
+                  id="crafting-tree-tab"
+                  onClick={() => setPanel('tree')}
+                >
+                  제작 트리
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={panel === 'materials'}
+                  aria-controls="crafting-materials-panel"
+                  id="crafting-materials-tab"
+                  onClick={() => setPanel('materials')}
+                >
+                  필요 재료
+                </button>
+              </div>
+              <section
+                className="crafting-tree-panel"
+                id="crafting-tree-panel"
+                aria-labelledby="crafting-tree-heading"
+              >
+                <h3 id="crafting-tree-heading">제작 트리</h3>
+                <CraftingPlanTree
+                  result={result}
+                  plan={plan}
+                  update={update}
+                  names={names}
+                  details={current?.details}
+                  onSelect={onSelect}
+                />
+              </section>
+              <div className="crafting-materials-panel" id="crafting-materials-panel">
+                <CraftingSupplySummary
+                  rows={result.rows}
+                  result={result}
+                  names={names}
+                  sort={plan.sort}
+                  plan={plan}
+                  update={update}
+                />
+              </div>
+            </div>
           )}
         </>
       )}

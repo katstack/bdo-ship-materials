@@ -15,6 +15,7 @@ export function CraftingPlanTable({
   names,
   details,
   onSelect,
+  layout = 'table',
 }: {
   rows: PlanRow[]
   crafted: boolean
@@ -23,6 +24,7 @@ export function CraftingPlanTable({
   names: ReadonlyMap<string, string>
   details?: ReadonlyMap<string, ItemDetail>
   onSelect: (id: string) => void
+  layout?: 'table' | 'node'
 }) {
   const choiceFor = (row: PlanRow) =>
     plan.choices[row.id] ?? {
@@ -46,13 +48,15 @@ export function CraftingPlanTable({
         : a.name.localeCompare(b.name, 'ko'),
     )
   return (
-    <div className="table-scroll crafting-plan-table">
+    <div
+      className={`table-scroll crafting-plan-table${layout === 'node' ? ' crafting-node-editor' : ''}`}
+    >
       <table>
         <thead>
           <tr>
             <th>아이템</th>
             <th>총 필요</th>
-            <th>제작 재고</th>
+            {layout !== 'node' && <th>제작 재고</th>}
             <th>부족</th>
             <th>획득 방식</th>
             {crafted && (
@@ -92,19 +96,23 @@ export function CraftingPlanTable({
                     </details>
                   )}
                 </td>
-                <td>{n(row.required)}</td>
-                <td>
-                  <QuantityInput
-                    min={0}
-                    aria-label={`${row.name} 제작 재고`}
-                    value={row.owned}
-                    onValueChange={(value) =>
-                      update({ ...plan, inventory: { ...plan.inventory, [row.id]: value } })
-                    }
-                  />
+                <td hidden={layout === 'node'}>{n(row.required)}</td>
+                {layout !== 'node' && (
+                  <td>
+                    <QuantityInput
+                      min={0}
+                      aria-label={`${row.name} 제작 재고`}
+                      value={row.owned}
+                      onValueChange={(value) =>
+                        update({ ...plan, inventory: { ...plan.inventory, [row.id]: value } })
+                      }
+                    />
+                  </td>
+                )}
+                <td hidden={layout === 'node'} className={row.shortage ? 'short' : 'save'}>
+                  {n(row.shortage)}
                 </td>
-                <td className={row.shortage ? 'short' : 'save'}>{n(row.shortage)}</td>
-                <td>
+                <td data-label="획득 방식">
                   {detail?.recipes.length && !row.enhancementLevel ? (
                     <select
                       aria-label={`${row.name} 획득 방식`}
@@ -124,7 +132,7 @@ export function CraftingPlanTable({
                 </td>
                 {crafted && (
                   <>
-                    <td>
+                    <td data-label="제작식">
                       {routes.length ? (
                         <select
                           aria-label={`${row.name} 제작식`}
@@ -209,7 +217,7 @@ export function CraftingPlanTable({
                         </details>
                       )}
                     </td>
-                    <td>
+                    <td data-label="1회 예상 생산량">
                       {routes.length ? (
                         <>
                           <QuantityInput
@@ -294,7 +302,7 @@ export function CraftingPlanTable({
                         <span className="save">—</span>
                       )}
                     </td>
-                    <td>
+                    <td data-label="필요 제작 횟수">
                       {row.requestedMode === 'craft' ? `${n(row.crafts)}회` : '—'}
                       {row.purchaseRequired > 0 && row.requestedMode === 'craft' && (
                         <small className="short">별도 수급 {n(row.purchaseRequired)}개</small>

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openCraftingNode, supplyRow } from './crafting-helpers'
 
 for (const view of ['direct', 'raw']) {
   test(`frigate ${view} plan remains usable when recovery recipes form a cycle`, async ({
@@ -25,7 +26,7 @@ for (const view of ['direct', 'raw']) {
       )
     }, view)
     await page.reload()
-    const trace = page.locator('tr[data-crafting-item-id="5960"]')
+    const trace = await openCraftingNode(page, '5960')
     await expect(trace).toBeVisible()
     await expect(
       trace.getByRole('combobox', { name: '자연의 흔적 획득 방식', exact: true }),
@@ -48,13 +49,14 @@ for (const view of ['direct', 'raw']) {
     const amount = Number((await trace.locator('td').nth(1).textContent())!.replaceAll(',', ''))
     expect(amount).toBeGreaterThan(0)
     await expect(page.getByRole('alert')).toHaveCount(0)
+    await openCraftingNode(page, '49009')
     await expect(
       page.getByRole('spinbutton', {
         name: '선박 등록증: 에페리아 호위함 1회 예상 생산량',
         exact: true,
       }),
     ).toBeVisible()
-    await expect(page.locator('tr[data-crafting-item-id="4921"] td').nth(1)).toHaveText('25')
+    await expect(supplyRow(page, '4921').locator('td').nth(1)).toHaveText('25')
     const saved = await page.evaluate(
       () => JSON.parse(localStorage.getItem('bdo-crafting-plan-v1')!).choices['5960'].mode,
     )

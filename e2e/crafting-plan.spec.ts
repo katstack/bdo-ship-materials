@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openCraftingNode, supplyRow } from './crafting-helpers'
 
 test('quantity editing replaces defaults and permits clearing before typing', async ({ page }) => {
   await page.goto('./#/crafting/item/4051')
@@ -23,6 +24,7 @@ test('quantity editing replaces defaults and permits clearing before typing', as
   await goal.pressSequentially('600')
   await expect(goal).toHaveValue('600')
   await goal.blur()
+  await openCraftingNode(page, '4051')
   const yieldInput = page.getByRole('spinbutton', {
     name: '녹아내린 철 조각 1회 예상 생산량',
     exact: true,
@@ -64,12 +66,11 @@ test('multiple crafting goals aggregate materials, persist independently and res
     .getByRole('link', { name: '제작 계획 (2)', exact: true })
     .click()
   await expect(page).toHaveURL(/#\/crafting\/plan$/)
-  const iron = page
-    .locator('.crafting-plan-table tr')
-    .filter({ has: page.getByRole('button', { name: '철 광석', exact: true }) })
+  const iron = supplyRow(page, '4001')
   await expect(iron.locator('td').nth(1)).toHaveText('40')
   await iron.getByRole('spinbutton', { name: '철 광석 제작 재고', exact: true }).fill('7')
   await expect(iron.locator('td').nth(3)).toHaveText('33')
+  await openCraftingNode(page, '4051')
   await page
     .getByRole('spinbutton', { name: '녹아내린 철 조각 1회 예상 생산량', exact: true })
     .fill('2')
@@ -144,9 +145,7 @@ test('raw materials and independent JSON import retain settings without overwrit
     buffer: Buffer.from(JSON.stringify(plan)),
   })
   await page.getByRole('dialog').getByRole('button', { name: '확인', exact: true }).click()
-  const iron = page
-    .locator('.crafting-plan-table tr')
-    .filter({ has: page.getByRole('button', { name: '철 광석', exact: true }) })
+  const iron = supplyRow(page, '4001')
   await expect(iron.locator('td').nth(1)).toHaveText('10')
   await expect(iron.locator('td').nth(3)).toHaveText('7')
   await expect(page.getByRole('combobox', { name: '제작 재료 범위', exact: true })).toHaveValue(
@@ -167,6 +166,7 @@ test('raw materials and independent JSON import retain settings without overwrit
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   )
-  const viewport = page.locator('.crafting-plan-table').first()
+  await page.getByRole('tab', { name: '필요 재료', exact: true }).click()
+  const viewport = page.locator('.crafting-supply-table').first()
   expect(await viewport.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true)
 })
