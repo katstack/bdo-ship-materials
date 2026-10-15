@@ -54,7 +54,7 @@ export function CraftingNotesPage({
     'materials',
   )
   const [quantity, setQuantity] = useState(1)
-  const [selectedRecipeIndex, setRecipeIndex] = useState<number>()
+  const [recipeSelection, setRecipeSelection] = useState<{ itemId: string; index: number }>()
   useEffect(() => {
     let active = true
     Promise.all([loadSearchIndex(), loadManifest(), loadRecipeIndex()])
@@ -101,7 +101,9 @@ export function CraftingNotesPage({
   const recipeIndex =
     (selectedRecipeId && current?.detail
       ? current.detail.recipes.findIndex((recipe) => recipeId(recipe) === selectedRecipeId)
-      : selectedRecipeIndex) ?? (current?.detail ? defaultRecipeIndex(current.detail) : 0)
+      : recipeSelection && recipeSelection.itemId === itemId
+        ? recipeSelection.index
+        : undefined) ?? (current?.detail ? defaultRecipeIndex(current.detail) : 0)
   return (
     <section className="crafting-notes">
       <div className="section-title">
@@ -308,7 +310,7 @@ export function CraftingNotesPage({
                           const index = Number(event.target.value)
                           if (onSelectRecipe && current?.detail?.recipes[index])
                             onSelectRecipe(recipeId(current.detail.recipes[index]))
-                          else setRecipeIndex(index)
+                          else if (itemId) setRecipeSelection({ itemId, index })
                         }}
                       >
                         {current.detail.recipes.map((recipe, index) => (
@@ -326,28 +328,26 @@ export function CraftingNotesPage({
                   {!current.detail.recipes.length && (
                     <p>제작식이 등록되지 않았습니다. 획득처 탭에서 구매·채집 정보를 확인하세요.</p>
                   )}
-                  {current.detail.recipes
-                    .slice(recipeIndex, recipeIndex + 1)
-                    .map((recipe, position) => (
-                      <div className="crafting-recipe" key={`${itemId}-${position}`}>
-                        <h4>
-                          {methods[recipe.type] ?? recipe.type}
-                          {recipe.station ? ` · ${recipe.station}` : ''}
-                        </h4>
-                        <ul>
-                          {recipe.inputs.map((input, i) => (
-                            <IngredientBranch
-                              key={`${itemId}-${position}-${i}`}
-                              id={sourceItemId(input.item)}
-                              count={input.count}
-                              ancestors={[itemId!]}
-                              names={names}
-                              onSelect={onSelect}
-                            />
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                  {current.detail.recipes.slice(recipeIndex, recipeIndex + 1).map((recipe) => (
+                    <div className="crafting-recipe" key={recipeId(recipe)}>
+                      <h4>
+                        {methods[recipe.type] ?? recipe.type}
+                        {recipe.station ? ` · ${recipe.station}` : ''}
+                      </h4>
+                      <ul>
+                        {recipe.inputs.map((input, i) => (
+                          <IngredientBranch
+                            key={`${recipeId(recipe)}-${i}`}
+                            id={sourceItemId(input.item)}
+                            count={input.count}
+                            ancestors={[itemId!]}
+                            names={names}
+                            onSelect={onSelect}
+                          />
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               )}
               {detailTab === 'usage' && (

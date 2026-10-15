@@ -116,7 +116,6 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
         <CraftingPlanPage plan={plan} update={update} names={names} onSelect={select} />
       ) : (
         <CraftingNotesPage
-          key={route.recipeId ?? route.itemId ?? 'search'}
           itemId={route.itemId}
           selectedRecipeId={route.recipeId}
           onSelectRecipe={(id) => {
