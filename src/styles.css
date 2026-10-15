@@ -1858,6 +1858,16 @@ tr:last-child td {
 .crafting-search select {
   max-width: 100%;
 }
+.crafting-browser-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.crafting-browser-options input[type='checkbox'] {
+  width: auto;
+  padding: 0;
+  flex: none;
+}
 .crafting-plan-table table {
   min-width: 800px;
 }

@@ -14,6 +14,13 @@ import { craftingMethods as methods } from '../crafting/methods'
 import { defaultRecipeIndex, recipeLabel } from '../crafting/recipeSelection'
 import { recipeId } from '../crafting/recipeCatalog'
 import {
+  browserOptionsKey,
+  defaultBrowserOptions,
+  isBrowserRecipeVisible,
+  parseBrowserOptions,
+  type RecipeBrowserOptions,
+} from '../crafting/browserOptions'
+import {
   sourceItemId,
   type ItemDetail,
   type SearchItem,
@@ -43,7 +50,28 @@ export function CraftingNotesPage({
   const [index, setIndex] = useState<SearchItem[]>([])
   const [recipes, setRecipes] = useState<RecipeSearchItem[]>([])
   const [method, setMethod] = useState('all')
-  const [kind, setKind] = useState('production')
+  const [kind, setKind] = useState('all')
+  const [initialOptions] = useState(() => {
+    try {
+      return { options: parseBrowserOptions(localStorage.getItem(browserOptionsKey)), error: '' }
+    } catch {
+      return { options: defaultBrowserOptions, error: '탐색 옵션을 읽지 못해 기본값을 사용합니다.' }
+    }
+  })
+  const [options, setOptions] = useState(initialOptions.options)
+  const [optionsError, setOptionsError] = useState(initialOptions.error)
+  const updateOptions = (next: RecipeBrowserOptions) => {
+    setOptions(next)
+    setLimit(80)
+    if (!next.showWorkshop && method === 'HOUSE') setMethod('all')
+    if (!next.showRecovery && kind === 'recovery') setKind('all')
+    try {
+      localStorage.setItem(browserOptionsKey, JSON.stringify(next))
+      setOptionsError('')
+    } catch {
+      setOptionsError('탐색 옵션을 저장하지 못했습니다. 현재 화면에는 적용됩니다.')
+    }
+  }
   const [query, setQuery] = useState('')
   const [limit, setLimit] = useState(80)
   const [error, setError] = useState('')
@@ -93,10 +121,11 @@ export function CraftingNotesPage({
     return recipes.filter(
       (recipe) =>
         (matching.has(recipe.id) || recipe.outputId === query.trim()) &&
+        isBrowserRecipeVisible(recipe, options) &&
         (method === 'all' || recipe.type === method) &&
         (kind === 'all' || recipe.kind === kind),
     )
-  }, [recipes, query, method, kind])
+  }, [recipes, query, method, kind, options])
   const current = selection?.id === itemId ? selection : undefined
   const recipeIndex =
     (selectedRecipeId && current?.detail
@@ -149,11 +178,14 @@ export function CraftingNotesPage({
               }}
             >
               <option value="all">전체 방법</option>
-              {[...new Set(recipes.map((recipe) => recipe.type))].sort().map((type) => (
-                <option key={type} value={type}>
-                  {methods[type] ?? type}
-                </option>
-              ))}
+              {[...new Set(recipes.map((recipe) => recipe.type))]
+                .filter((type) => type !== 'HOUSE' || options.showWorkshop)
+                .sort()
+                .map((type) => (
+                  <option key={type} value={type}>
+                    {methods[type] ?? type}
+                  </option>
+                ))}
             </select>
           </label>
           <label>
@@ -167,12 +199,35 @@ export function CraftingNotesPage({
               }}
             >
               <option value="production">일반 제작</option>
-              <option value="recovery">장비 회수</option>
+              {options.showRecovery && <option value="recovery">장비 회수</option>}
               <option value="byproduct">부산물</option>
               <option value="exchange">교환</option>
               <option value="all">전체 경로</option>
             </select>
           </label>
+          <div className="crafting-browser-options" role="group" aria-label="추가 레시피 표시 옵션">
+            <label>
+              <input
+                type="checkbox"
+                checked={options.showWorkshop}
+                onChange={(event) =>
+                  updateOptions({ ...options, showWorkshop: event.target.checked })
+                }
+              />
+              공방 제작 포함
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={options.showRecovery}
+                onChange={(event) =>
+                  updateOptions({ ...options, showRecovery: event.target.checked })
+                }
+              />
+              장비 회수 포함
+            </label>
+          </div>
+          {optionsError && <p role="alert">{optionsError}</p>}
           <p>{results.length.toLocaleString('ko-KR')}개 레시피 검색됨</p>
           <div className="crafting-results">
             {results.slice(0, limit).map((item) => (
