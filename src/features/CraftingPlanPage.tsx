@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useCraftingCalculation } from '../crafting/useCraftingCalculation'
 import { CraftingPlanTable } from './CraftingPlanTable'
+import { CraftingSupplySummary } from './CraftingSupplySummary'
 import { QuantityInput } from './QuantityInput'
 import { parseCraftingPlan } from '../crafting/planStorage'
 import { emptyCraftingPlan, type CraftingPlan } from '../crafting/planTypes'
@@ -77,7 +78,7 @@ export function CraftingPlanPage({
         아닙니다.
       </p>
       <div className="crafting-plan-toolbar">
-        <a href="#/crafting">아이템 찾아 추가</a>
+        <a href="#/crafting">레시피 찾아 추가</a>
         <button onClick={exportPlan}>계획 JSON 내보내기</button>
         <button onClick={() => importRef.current?.click()}>가져오기</button>
         <button onClick={() => setConfirm({ type: 'clear' })}>계획·재고 초기화</button>
@@ -216,6 +217,11 @@ export function CraftingPlanPage({
             · <a href="#/crafting/settings">숙련도·생활 등급 설정</a>
           </p>
           {!current && <p role="status">제작 경로 불러오는 중…</p>}
+          {updating && (
+            <p role="status" className="crafting-update-status">
+              선택한 경로를 불러오는 중… 기존 계산을 표시하고 있습니다.
+            </p>
+          )}
           {current?.error && (
             <p role="alert">
               {current.error} <button onClick={retry}>다시 시도</button>
@@ -234,37 +240,21 @@ export function CraftingPlanPage({
           )}
           {result && !result.error && (
             <>
-              <h3>
-                직접 수급·구매할 재료 · {result.rows.filter((row) => row.mode === 'obtain').length}
-                종
-              </h3>
-              {result.rows.some((row) => row.mode === 'obtain') ? (
-                <CraftingPlanTable
-                  rows={result.rows.filter((row) => row.mode === 'obtain')}
-                  crafted={false}
-                  plan={plan}
-                  update={update}
-                  names={names}
-                  details={current?.details}
-                  onSelect={onSelect}
-                />
-              ) : (
-                <p className="save">현재 재고로 충족되거나 직접 수급할 재료가 없습니다.</p>
-              )}
-              <h3>제작할 아이템·중간 재료</h3>
-              {result.rows.some((row) => row.mode === 'craft') ? (
-                <CraftingPlanTable
-                  rows={result.rows.filter((row) => row.mode === 'craft')}
-                  crafted={true}
-                  plan={plan}
-                  update={update}
-                  names={names}
-                  details={current?.details}
-                  onSelect={onSelect}
-                />
-              ) : (
-                <p className="save">선택한 경로에서 제작할 아이템이 없습니다.</p>
-              )}
+              <h3>제작 경로 · {result.rows.length}종</h3>
+              <p className="save">
+                선택한 획득 방식은 유지됩니다. 제작식과 대체재는 직접 수급 상태에서도 바꿀 수
+                있습니다.
+              </p>
+              <CraftingPlanTable
+                rows={result.rows}
+                crafted={true}
+                plan={plan}
+                update={update}
+                names={names}
+                details={current?.details}
+                onSelect={onSelect}
+              />
+              <CraftingSupplySummary rows={result.rows} names={names} sort={plan.sort} />
             </>
           )}
         </>

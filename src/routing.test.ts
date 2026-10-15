@@ -2,6 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { hashForRoute, normalizeRouteForShips, routeFromHash } from './routing'
 
 describe('semantic hash routes', () => {
+  it('restores a selected recipe without relying on its array position', () => {
+    const route = { tab: 'crafting' as const, itemId: '9202', recipeId: 'recipe-9202-aabbccdd' }
+    expect(routeFromHash(hashForRoute(route))).toEqual(route)
+    expect(routeFromHash('#/crafting/recipe/not-a-recipe')).toEqual({
+      tab: 'crafting',
+      itemId: undefined,
+    })
+  })
   it('keeps independent crafting plan bookmarks', () => {
     expect(routeFromHash(hashForRoute({ tab: 'crafting', craftingScreen: 'settings' }))).toEqual({
       tab: 'crafting',

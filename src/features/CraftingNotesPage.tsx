@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { loadItemDetail, loadManifest, loadSearchIndex } from '../crafting/catalogClient'
+import {
+  loadItemDetail,
+  loadManifest,
+  loadSearchIndex,
+  loadRecipeIndex,
+} from '../crafting/catalogClient'
 import { displayItemName, searchCatalog } from '../crafting/search'
 import { EnhancementTable } from './EnhancementTable'
 import { AcquisitionMethods } from './AcquisitionMethods'
@@ -7,14 +12,24 @@ import { IngredientBranch } from './CraftingIngredientBranch'
 import { QuantityInput } from './QuantityInput'
 import { craftingMethods as methods } from '../crafting/methods'
 import { defaultRecipeIndex, recipeLabel } from '../crafting/recipeSelection'
-import { sourceItemId, type ItemDetail, type SearchItem } from '../crafting/types'
+import { recipeId } from '../crafting/recipeCatalog'
+import {
+  sourceItemId,
+  type ItemDetail,
+  type SearchItem,
+  type RecipeSearchItem,
+} from '../crafting/types'
 
 export function CraftingNotesPage({
   itemId,
   onSelect,
   onAddToPlan,
+  selectedRecipeId,
+  onSelectRecipe,
 }: {
   itemId?: string
+  selectedRecipeId?: string
+  onSelectRecipe?: (id: string) => void
   onSelect: (id: string) => void
   onAddToPlan?: (
     id: string,
@@ -22,9 +37,13 @@ export function CraftingNotesPage({
     quantity: number,
     recipeIndex: number,
     mode: 'craft' | 'obtain',
+    stableRecipeId?: string,
   ) => void
 }) {
   const [index, setIndex] = useState<SearchItem[]>([])
+  const [recipes, setRecipes] = useState<RecipeSearchItem[]>([])
+  const [method, setMethod] = useState('all')
+  const [kind, setKind] = useState('production')
   const [query, setQuery] = useState('')
   const [limit, setLimit] = useState(80)
   const [error, setError] = useState('')
@@ -38,10 +57,11 @@ export function CraftingNotesPage({
   const [selectedRecipeIndex, setRecipeIndex] = useState<number>()
   useEffect(() => {
     let active = true
-    Promise.all([loadSearchIndex(), loadManifest()])
-      .then(([items, manifest]) => {
+    Promise.all([loadSearchIndex(), loadManifest(), loadRecipeIndex()])
+      .then(([items, manifest, recipes]) => {
         if (active) {
           setIndex(items)
+          setRecipes(recipes)
           setUpdatedAt(manifest.generatedAt)
           setError('')
         }
@@ -68,21 +88,34 @@ export function CraftingNotesPage({
     }
   }, [itemId, reload])
   const names = useMemo(() => new Map(index.map((item) => [item.id, item.name])), [index])
-  const results = useMemo(() => searchCatalog(index, query), [index, query])
+  const results = useMemo(() => {
+    const matching = new Set(searchCatalog(recipes, query).map((recipe) => recipe.id))
+    return recipes.filter(
+      (recipe) =>
+        (matching.has(recipe.id) || recipe.outputId === query.trim()) &&
+        (method === 'all' || recipe.type === method) &&
+        (kind === 'all' || recipe.kind === kind),
+    )
+  }, [recipes, query, method, kind])
   const current = selection?.id === itemId ? selection : undefined
   const recipeIndex =
-    selectedRecipeIndex ?? (current?.detail ? defaultRecipeIndex(current.detail) : 0)
+    (selectedRecipeId && current?.detail
+      ? current.detail.recipes.findIndex((recipe) => recipeId(recipe) === selectedRecipeId)
+      : selectedRecipeIndex) ?? (current?.detail ? defaultRecipeIndex(current.detail) : 0)
   return (
     <section className="crafting-notes">
       <div className="section-title">
         <div>
           <h2>제작노트</h2>
-          <p>아이템 제작식과 원재료를 찾아봅니다.</p>
+          <p>
+            레시피를 선택하고 재료·대체재·예상 생산량을 확인합니다. 아이템 상세는 재료 사전으로
+            연결됩니다.
+          </p>
         </div>
       </div>
       {updatedAt && (
         <p className="save">
-          아이템 {index.length.toLocaleString('ko-KR')}종 · 추출{' '}
+          레시피 {recipes.length.toLocaleString('ko-KR')}개 · 추출{' '}
           {new Date(updatedAt).toLocaleString('ko-KR')}
         </p>
       )}
@@ -95,25 +128,69 @@ export function CraftingNotesPage({
       <div className="crafting-layout">
         <aside className="crafting-search">
           <input
-            aria-label="제작노트 아이템 검색"
-            placeholder="아이템명 또는 ID 검색"
+            aria-label="제작노트 레시피 검색"
+            placeholder="결과물 이름 또는 아이템 ID 검색"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value)
               setLimit(80)
             }}
           />
-          <p>{results.length.toLocaleString('ko-KR')}개 검색됨</p>
+          <label>
+            제작 방법{' '}
+            <select
+              aria-label="레시피 제작 방법"
+              value={method}
+              onChange={(event) => {
+                setMethod(event.target.value)
+                setLimit(80)
+              }}
+            >
+              <option value="all">전체 방법</option>
+              {[...new Set(recipes.map((recipe) => recipe.type))].sort().map((type) => (
+                <option key={type} value={type}>
+                  {methods[type] ?? type}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            경로 종류{' '}
+            <select
+              aria-label="레시피 경로 종류"
+              value={kind}
+              onChange={(event) => {
+                setKind(event.target.value)
+                setLimit(80)
+              }}
+            >
+              <option value="production">일반 제작</option>
+              <option value="recovery">장비 회수</option>
+              <option value="byproduct">부산물</option>
+              <option value="exchange">교환</option>
+              <option value="all">전체 경로</option>
+            </select>
+          </label>
+          <p>{results.length.toLocaleString('ko-KR')}개 레시피 검색됨</p>
           <div className="crafting-results">
             {results.slice(0, limit).map((item) => (
               <button
                 key={item.id}
-                className={itemId === item.id ? 'primary' : ''}
-                onClick={() => onSelect(item.id)}
+                className={selectedRecipeId === item.id ? 'primary' : ''}
+                data-recipe-id={item.id}
+                onClick={() => onSelectRecipe?.(item.id)}
               >
                 <span>{item.name}</span>
                 <small>
-                  {item.id} · {item.category}
+                  {methods[item.type] ?? item.type} ·{' '}
+                  {item.station ??
+                    {
+                      production: '제작',
+                      recovery: '장비 회수',
+                      byproduct: '부산물',
+                      exchange: '교환',
+                    }[item.kind]}{' '}
+                  · 재료 {item.inputs.length}칸
                 </small>
               </button>
             ))}
@@ -125,7 +202,8 @@ export function CraftingNotesPage({
         <article className="crafting-detail">
           {!itemId && (
             <p>
-              왼쪽에서 아이템을 선택하세요. 재료의 + 버튼을 누르면 원재료까지 펼쳐 볼 수 있습니다.
+              왼쪽에서 레시피를 선택하세요. 같은 결과물도 제작 방법과 투입 재료에 따라 별도 레시피로
+              표시됩니다.
             </p>
           )}
           {itemId && !current && <p>아이템 불러오는 중…</p>}
@@ -152,6 +230,7 @@ export function CraftingNotesPage({
                     />
                   </label>
                   <button
+                    disabled={recipeIndex < 0}
                     onClick={() =>
                       onAddToPlan(
                         itemId!,
@@ -159,6 +238,9 @@ export function CraftingNotesPage({
                         quantity,
                         recipeIndex,
                         current.detail!.recipes.length ? 'craft' : 'obtain',
+                        current.detail!.recipes[recipeIndex]
+                          ? recipeId(current.detail!.recipes[recipeIndex])
+                          : undefined,
                       )
                     }
                   >
@@ -222,7 +304,12 @@ export function CraftingNotesPage({
                       <select
                         aria-label="제작노트 제작식 선택"
                         value={recipeIndex}
-                        onChange={(event) => setRecipeIndex(Number(event.target.value))}
+                        onChange={(event) => {
+                          const index = Number(event.target.value)
+                          if (onSelectRecipe && current?.detail?.recipes[index])
+                            onSelectRecipe(recipeId(current.detail.recipes[index]))
+                          else setRecipeIndex(index)
+                        }}
                       >
                         {current.detail.recipes.map((recipe, index) => (
                           <option key={index} value={index}>

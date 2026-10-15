@@ -146,20 +146,24 @@ describe('multi-goal crafting calculation', () => {
       calculateCraftingPlan(data, details, names).rows.find((row) => row.id === '3'),
     ).toMatchObject({ required: 3, crafts: 3 })
   })
-  it('turns cyclic intermediates into shopping leaves without discarding their demand', () => {
+  it('keeps crafting intent and cuts only the returning cycle dependency', () => {
     const cycle = new Map(details)
     cycle.set('3', make('3', [{ item: 'urn::item:1', count: 1 }]))
     const result = calculateCraftingPlan({ ...plan(), inventory: {}, view: 'raw' }, cycle, names)
     expect(result.rows.find((row) => row.id === '3')).toMatchObject({
-      mode: 'obtain',
+      mode: 'craft',
       required: 2,
       shortage: 2,
-      blockedReason: 'cycle',
+      crafts: 2,
     })
-    expect(result.rows.find((row) => row.id === '1')).toMatchObject({ mode: 'craft', crafts: 1 })
+    expect(result.rows.find((row) => row.id === '1')).toMatchObject({
+      mode: 'craft',
+      crafts: 1,
+      purchaseRequired: 2,
+    })
     expect(result.warnings.some((warning) => warning.includes('순환 경로'))).toBe(true)
   })
-  it('keeps a self-referential target and its full quantity as a shopping requirement', () => {
+  it('keeps self-referential intent and separately counts bootstrap inputs', () => {
     const self = new Map([['1', make('1', [{ item: 'urn::item:1', count: 1 }])]])
     const result = calculateCraftingPlan(
       { ...emptyCraftingPlan(), goals: [{ itemId: '1', name: 'A', quantity: 3 }] },
@@ -168,10 +172,11 @@ describe('multi-goal crafting calculation', () => {
     )
     expect(result.rows).toHaveLength(1)
     expect(result.rows[0]).toMatchObject({
-      mode: 'obtain',
-      required: 3,
-      shortage: 3,
-      blockedReason: 'cycle',
+      mode: 'craft',
+      required: 6,
+      shortage: 6,
+      purchaseRequired: 3,
+      crafts: 3,
     })
   })
   it('separates enhanced gear requirements from unenhanced stock', () => {

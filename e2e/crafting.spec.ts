@@ -2,9 +2,13 @@ import { test, expect } from '@playwright/test'
 
 test('Korean composing text and initials keep the Valencia meal searchable', async ({ page }) => {
   await page.goto('./#/crafting')
-  const search = page.getByRole('textbox', { name: '제작노트 아이템 검색' })
+  const search = page.getByRole('textbox', { name: '제작노트 레시피 검색' })
   await expect(page.locator('.crafting-results button').first()).toBeVisible()
-  const meal = page.getByRole('button', { name: '특제 발렌시아 정식 9610 · Cook', exact: true })
+  await page.getByRole('combobox', { name: '레시피 경로 종류', exact: true }).selectOption('all')
+  const meal = page
+    .locator('.crafting-results button')
+    .filter({ hasText: '특제 발렌시아 정식' })
+    .first()
   for (const query of [
     '특제 발렌시아 정',
     '특제 발렌시아 정ㅅ',
@@ -60,13 +64,12 @@ test('search, unnamed items, recipes, tree expansion, cached reload and mobile',
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('./#/crafting')
-  const search = page.getByRole('textbox', { name: '제작노트 아이템 검색' })
+  const search = page.getByRole('textbox', { name: '제작노트 레시피 검색' })
   await expect(page.locator('.crafting-results button').first()).toBeVisible()
-  await search.fill('16263')
-  await page.locator('.crafting-results button').first().click()
+  await page.goto('./#/crafting/item/16263')
   await expect(page.locator('.crafting-detail h2')).toHaveText('아이템 16263')
   await search.fill('규격 각목')
-  await page.getByRole('button', { name: '규격 각목 4685 · Wood', exact: true }).click()
+  await page.locator('.crafting-results button').filter({ hasText: '규격 각목' }).first().click()
   await expect(page.locator('.crafting-detail h2')).toHaveText('규격 각목')
   await page.getByRole('tab', { name: '성능·설명', exact: true }).click()
   await expect(page.locator('.crafting-description')).toContainText('건축에 필요한 목재다')

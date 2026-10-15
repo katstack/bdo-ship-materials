@@ -586,5 +586,12 @@
     ]
   },
   "originalBytes": 105832871,
-  "compressedBytes": 5315792
+  "compressedBytes": 5315792,
+  "recipeIndex": {
+    "file": "recipes-7d79d8fde8aa456a.json.zst",
+    "sha256": "7d79d8fde8aa456a1053be04f40980fe88b4c58d5828a42f52f934a1374f26b7",
+    "bytes": 285634,
+    "decodedBytes": 3559989
+  },
+  "recipeIndexCount": 10973
 }

@@ -52,6 +52,7 @@ export function parseCraftingPlan(value: unknown): CraftingPlan {
     choices[id] = {
       mode: choice.mode,
       recipeIndex: choice.recipeIndex,
+      ...(choice.recipeId !== undefined ? { recipeId: choice.recipeId as string } : {}),
       outputPerCraft: choice.outputPerCraft,
       yieldConfirmed: choice.yieldConfirmed === true,
       ...(choice.yieldModel !== undefined
@@ -59,6 +60,35 @@ export function parseCraftingPlan(value: unknown): CraftingPlan {
         : {}),
       ...(choice.yieldMin !== undefined ? { yieldMin: choice.yieldMin as number } : {}),
       ...(choice.yieldMax !== undefined ? { yieldMax: choice.yieldMax as number } : {}),
+    }
+    if (
+      choice.recipeId !== undefined &&
+      (typeof choice.recipeId !== 'string' || !/^recipe-\d+-[a-f0-9]+$/.test(choice.recipeId))
+    )
+      throw Error('제작식 ID가 올바르지 않습니다.')
+    if (choice.substitutions !== undefined) {
+      if (!object(choice.substitutions) || Object.keys(choice.substitutions).length > 100)
+        throw Error('대체재 선택이 올바르지 않습니다.')
+      const substitutions: Record<string, Record<string, string>> = {}
+      for (const [recipe, slots] of Object.entries(choice.substitutions)) {
+        if (
+          !/^recipe-\d+-[a-f0-9]+$/.test(recipe) ||
+          !object(slots) ||
+          Object.keys(slots).length > 100
+        )
+          throw Error('대체재 제작식이 올바르지 않습니다.')
+        substitutions[recipe] = {}
+        for (const [slot, item] of Object.entries(slots)) {
+          if (
+            !/^slot-\d+-(?:\d+(?:\.\d+)?|unknown)-\d+$/.test(slot) ||
+            typeof item !== 'string' ||
+            !/^\d+$/.test(item)
+          )
+            throw Error('대체 재료 칸이 올바르지 않습니다.')
+          substitutions[recipe][slot] = item
+        }
+      }
+      choices[id].substitutions = substitutions
     }
     if (
       (choice.yieldModel !== undefined &&

@@ -27,6 +27,7 @@ export type SourceItem = {
   [key: string]: unknown
 }
 export type SourceRecipe = {
+  routeKindHint?: import('./recipeIdentity').RouteKind
   output: string
   type: string
   station?: string
@@ -56,6 +57,13 @@ export type SearchItem = {
   chunk: number
 }
 export type ChunkFile = { file: string; sha256: string; bytes: number; decodedBytes: number }
+export type RecipeSearchItem = SearchItem & {
+  outputId: string
+  type: string
+  station?: string
+  kind: import('./recipeIdentity').RouteKind
+  inputs: SourceRecipe['inputs']
+}
 export type SourceNpc = {
   id: number | string
   name: string
@@ -68,6 +76,8 @@ export type CatalogManifest = {
   generatedAt: string
   itemCount: number
   recipeCount: number
+  recipeIndex?: ChunkFile
+  recipeIndexCount?: number
   searchIndex: ChunkFile
   chunks: ChunkFile[]
   npcs?: ChunkFile

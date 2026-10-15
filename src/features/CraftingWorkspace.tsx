@@ -40,6 +40,7 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
     quantity: number,
     recipeIndex: number,
     mode: 'craft' | 'obtain',
+    stableRecipeId?: string,
   ) => {
     if (plan.goals.length >= 100 && !plan.goals.some((goal) => goal.itemId === itemId)) {
       setNotice('제작 목표는 최대 100종까지 추가할 수 있습니다.')
@@ -63,6 +64,7 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
           ...plan.choices[itemId],
           mode,
           recipeIndex,
+          recipeId: stableRecipeId,
           outputPerCraft: plan.choices[itemId]?.outputPerCraft ?? 1,
           yieldConfirmed: plan.choices[itemId]?.yieldConfirmed ?? false,
         },
@@ -114,8 +116,12 @@ export default function CraftingWorkspace({ route }: { route: AppRoute }) {
         <CraftingPlanPage plan={plan} update={update} names={names} onSelect={select} />
       ) : (
         <CraftingNotesPage
-          key={route.itemId ?? 'search'}
+          key={route.recipeId ?? route.itemId ?? 'search'}
           itemId={route.itemId}
+          selectedRecipeId={route.recipeId}
+          onSelectRecipe={(id) => {
+            window.location.hash = `/crafting/recipe/${encodeURIComponent(id)}`
+          }}
           onSelect={select}
           onAddToPlan={add}
         />

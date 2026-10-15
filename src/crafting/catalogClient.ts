@@ -1,9 +1,19 @@
-import type { CatalogManifest, ChunkFile, ItemDetail, SearchItem, SourceNpc } from './types'
+import type {
+  CatalogManifest,
+  ChunkFile,
+  ItemDetail,
+  SearchItem,
+  SourceNpc,
+  RecipeSearchItem,
+} from './types'
 import { displayItemName } from './search'
+import { adaptItemDetail } from './catalogAdapter'
 
 const base = `${import.meta.env.BASE_URL}crafting/`
 let manifestPromise: Promise<CatalogManifest> | undefined
 let indexPromise: Promise<SearchItem[]> | undefined
+let recipeIndexPromise: Promise<RecipeSearchItem[]> | undefined
+let categories = new Map<string, string | undefined>()
 let npcPromise: Promise<SourceNpc[]> | undefined
 let worker: Worker | undefined
 let serial = 0
@@ -85,7 +95,10 @@ export function loadManifest() {
 export function loadSearchIndex() {
   indexPromise ??= loadManifest()
     .then((manifest) => loadCompressed(manifest.searchIndex) as Promise<SearchItem[]>)
-    .then((items) => items.map((item) => ({ ...item, name: displayItemName(item, item.id) })))
+    .then((items) => {
+      categories = new Map(items.map((item) => [item.id, item.category]))
+      return items.map((item) => ({ ...item, name: displayItemName(item, item.id) }))
+    })
     .catch((error) => {
       indexPromise = undefined
       throw error
@@ -102,6 +115,19 @@ export function loadNpcs() {
       throw error
     })
   return npcPromise
+}
+export function loadRecipeIndex() {
+  recipeIndexPromise ??= loadManifest()
+    .then((manifest) => {
+      if (!manifest.recipeIndex)
+        throw Error('레시피 검색 인덱스가 없습니다. 카탈로그를 갱신하세요.')
+      return loadCompressed(manifest.recipeIndex) as Promise<RecipeSearchItem[]>
+    })
+    .catch((error) => {
+      recipeIndexPromise = undefined
+      throw error
+    })
+  return recipeIndexPromise
 }
 export async function loadItemDetail(id: string): Promise<ItemDetail> {
   const [manifest, index] = await Promise.all([loadManifest(), loadSearchIndex()])
@@ -123,10 +149,10 @@ export async function loadItemDetail(id: string): Promise<ItemDetail> {
     }
     const records = await pending
     if (!records[id]) throw new Error('청크에 아이템이 없습니다.')
-    return records[id]
+    return adaptItemDetail(records[id], categories)
   }
   const records = memory.get(chunk.file)!
   memory.delete(chunk.file)
   memory.set(chunk.file, records)
-  return records[id]
+  return adaptItemDetail(records[id], categories)
 }

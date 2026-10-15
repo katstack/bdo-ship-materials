@@ -28,6 +28,7 @@ test('life profiles persist, select production models, and change conservative m
     .getByRole('navigation', { name: '제작 시뮬레이터 메뉴' })
     .getByRole('link', { name: '제작 계획 (1)', exact: true })
     .click()
+  await page.locator('tr[data-crafting-item-id="4051"] .crafting-yield-settings summary').click()
   await page
     .getByRole('combobox', { name: '녹아내린 철 조각 생산량 모형', exact: true })
     .selectOption('processing')
@@ -59,6 +60,7 @@ test('life profiles persist, select production models, and change conservative m
   const p99 = Number((await iron.locator('td').nth(1).innerText()).replaceAll(',', ''))
   expect(p99).toBeGreaterThanOrEqual(p95)
   await page.reload()
+  await page.locator('tr[data-crafting-item-id="4051"] .crafting-yield-settings summary').click()
   await expect(
     page.getByRole('combobox', { name: '녹아내린 철 조각 생산량 모형', exact: true }),
   ).toHaveValue('processing')

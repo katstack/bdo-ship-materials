@@ -2,6 +2,8 @@ export type CraftingGoal = { itemId: string; name: string; quantity: number }
 export type CraftingChoice = {
   mode: 'craft' | 'obtain'
   recipeIndex: number
+  recipeId?: string
+  substitutions?: Record<string, Record<string, string>>
   outputPerCraft: number
   yieldConfirmed?: boolean
   yieldModel?: YieldModel

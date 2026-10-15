@@ -132,6 +132,7 @@ const manifest = {
   compressedBytes,
 }
 await writeFile(join(output, 'manifest.json'), JSON.stringify(manifest, null, 2))
+await import('./build-recipe-index.mjs')
 console.log(
   JSON.stringify({
     items: index.length,

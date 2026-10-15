@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 import { decompress } from 'fzstd'
 import { deepStrictEqual } from 'node:assert'
+import { recipeId } from '../src/crafting/recipeIdentity.ts'
 
 const directory = resolve(process.argv[2] ?? 'public/crafting')
 const manifest = JSON.parse(await readFile(join(directory, 'manifest.json'), 'utf8'))
@@ -24,6 +25,7 @@ if (manifest.npcs) {
 const chunks = []
 for (const file of manifest.chunks) chunks.push(await decode(file))
 let recipeCount = 0
+const recipeIds = new Set()
 for (const entry of index) {
   const record = chunks[entry.chunk]?.[entry.id]
   const name =
@@ -36,6 +38,21 @@ for (const entry of index) {
   if (!record || name !== entry.name || typeof entry.name !== 'string')
     throw new Error(`Index mismatch: ${entry.id}`)
   recipeCount += record.recipes.length
+  for (const recipe of record.recipes) recipeIds.add(recipeId(recipe))
+}
+if (manifest.recipeIndex) {
+  const recipes = await decode(manifest.recipeIndex)
+  if (recipes.length !== manifest.recipeIndexCount || recipes.length !== recipeIds.size)
+    throw Error('Recipe index counts mismatch')
+  for (const recipe of recipes)
+    if (
+      !recipeIds.has(recipe.id) ||
+      !chunks[recipe.chunk]?.[recipe.outputId]?.recipes.some(
+        (entry) => recipeId(entry) === recipe.id,
+      )
+    )
+      throw Error('Recipe index target mismatch')
+  console.log(`Recipe browser verified: ${recipes.length} unique recipes.`)
 }
 if (index.length !== manifest.itemCount || recipeCount !== manifest.recipeCount)
   throw new Error('Catalog counts mismatch')

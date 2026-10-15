@@ -9,6 +9,7 @@ export type AppRoute = {
   shipId?: string
   scope?: DemandScope
   itemId?: string
+  recipeId?: string
   craftingScreen?: 'plan' | 'settings'
 }
 
@@ -40,7 +41,9 @@ export function routeFromHash(hash: string): AppRoute {
   if (screen === 'crafting')
     return target === 'plan' || target === 'settings'
       ? { tab: 'crafting', craftingScreen: target }
-      : { tab: 'crafting', itemId: target === 'item' ? third : undefined }
+      : target === 'recipe' && third?.match(/^recipe-(\d+)-[a-f0-9]+$/)
+        ? { tab: 'crafting', recipeId: third, itemId: third.match(/^recipe-(\d+)-/)![1] }
+        : { tab: 'crafting', itemId: target === 'item' ? third : undefined }
 
   if (screen === 'fleet') return { tab: 'ship', shipId: target }
   if (screen === 'materials') {
@@ -54,13 +57,22 @@ export function routeFromHash(hash: string): AppRoute {
   return { tab: 'dashboard' }
 }
 
-export function hashForRoute({ tab, shipId, scope, itemId, craftingScreen }: AppRoute): string {
+export function hashForRoute({
+  tab,
+  shipId,
+  scope,
+  itemId,
+  recipeId,
+  craftingScreen,
+}: AppRoute): string {
   if (tab === 'crafting')
     return craftingScreen
       ? `#/crafting/${craftingScreen}`
-      : itemId
-        ? `#/crafting/item/${encodeURIComponent(itemId)}`
-        : '#/crafting'
+      : recipeId
+        ? `#/crafting/recipe/${encodeURIComponent(recipeId)}`
+        : itemId
+          ? `#/crafting/item/${encodeURIComponent(itemId)}`
+          : '#/crafting'
   if (tab === 'ship') return shipId ? `#/fleet/${encodeURIComponent(shipId)}` : '#/fleet'
   if (tab === 'materials' || tab === 'barter') {
     const screen = tab

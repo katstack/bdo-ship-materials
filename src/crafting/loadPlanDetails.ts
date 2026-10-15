@@ -1,8 +1,9 @@
 import { loadItemDetail } from './catalogClient'
-import { referenceForPlan, shouldExpandPlanItem } from './planCalculation'
+import { resolveIngredientReference } from './types'
 import type { CraftingPlan } from './planTypes'
 import type { ItemDetail } from './types'
-import { defaultRecipeIndex } from './recipeSelection'
+import { selectedRecipe, routeInputs } from './recipeCatalog'
+import { requestedMode } from './planRoutes'
 
 export async function loadPlanDetails(
   plan: CraftingPlan,
@@ -15,7 +16,7 @@ export async function loadPlanDetails(
   const seen = new Set<string>()
   const visit = async (id: string, depth: number): Promise<void> => {
     if (cancelled()) return
-    const reference = referenceForPlan(id, names)
+    const reference = resolveIngredientReference(id, names)
     if (seen.has(id)) return
     seen.add(id)
     if (seen.size > 300)
@@ -27,10 +28,31 @@ export async function loadPlanDetails(
       detail = cached.get(reference.id) ?? (await load(reference.id))
       details.set(reference.id, detail)
     }
-    if (depth >= 20 || !shouldExpandPlanItem(plan, id, detail, names)) return
-    const recipe = detail.recipes[plan.choices[id]?.recipeIndex ?? defaultRecipeIndex(detail)]
-    for (const input of recipe?.inputs ?? [])
-      await visit(input.item.replace(/^urn::item:/, ''), depth + 1)
+    const route = selectedRecipe(detail, plan.choices[id], details)
+    if (
+      depth >= 20 ||
+      reference.enhancementLevel ||
+      requestedMode(plan, id, detail, route) !== 'craft' ||
+      !route
+    )
+      return
+    for (const input of routeInputs(route, plan.choices[id])) {
+      if (cancelled()) return
+      const inputReference = resolveIngredientReference(input.selectedItemId, names)
+      if (!details.has(inputReference.id)) {
+        if (details.size >= 300)
+          throw Error('제작 경로가 300개를 초과했습니다. 일부 경로를 직접 수급으로 선택하세요.')
+        details.set(
+          inputReference.id,
+          cached.get(inputReference.id) ?? (await load(inputReference.id)),
+        )
+      }
+    }
+    const classified = selectedRecipe(detail, plan.choices[id], details)
+    if (requestedMode(plan, id, detail, classified) !== 'craft') return
+    for (const input of routeInputs(classified ?? route, plan.choices[id]))
+      if (classified?.kind !== 'recovery' || plan.choices[input.selectedItemId]?.mode === 'craft')
+        await visit(input.selectedItemId, depth + 1)
   }
   for (const goal of plan.goals) await visit(goal.itemId, 0)
   return details
