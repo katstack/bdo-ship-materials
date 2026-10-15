@@ -2,6 +2,7 @@ import tables from '../data/masteryTables.json'
 import { defaultEnvironment, type CraftingEnvironment } from './environment'
 import type { CraftingChoice, YieldModel } from './planTypes'
 import type { SourceRecipe } from './types'
+import { lookupMasteryBracket } from './masteryLookup'
 
 export const yieldModelLabels: Record<YieldModel, string> = {
   manual: '수동 평균',
@@ -15,10 +16,10 @@ export function masteryBracket<K extends 'cooking' | 'alchemy'>(
   mastery: number,
 ): (typeof tables)[K][number] {
   const rows = tables[kind] as (typeof tables)[K][number][]
-  return [...rows].reverse().find((row) => row.mastery <= mastery) ?? rows[0]
+  return lookupMasteryBracket(rows, mastery)
 }
 export function processingBatch(mastery: number) {
-  return [...tables.processing].reverse().find((row) => row.mastery <= mastery)?.batch ?? 1
+  return lookupMasteryBracket(tables.processing, mastery).batch
 }
 export type YieldPrediction = {
   mean: number

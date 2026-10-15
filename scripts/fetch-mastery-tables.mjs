@@ -1,9 +1,10 @@
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { load } from 'cheerio'
+const evidence = JSON.parse(await readFile('src/data/masterySources.json', 'utf8'))
 const result = {
   checkedAt: new Date().toISOString(),
   source: 'https://bdocodex.com/kr/cookingmastery/',
-  officialSource: 'https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=13398',
+  officialSource: evidence.official.url,
   cooking: [],
   alchemy: [],
   processing: [],

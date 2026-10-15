@@ -11,6 +11,7 @@ import { masteryBracket, processingBatch } from '../crafting/yieldPrediction'
 import tables from '../data/masteryTables.json'
 import type { CraftingPlan } from '../crafting/planTypes'
 import { QuantityInput } from './QuantityInput'
+import { masteryEvidence } from '../crafting/masteryLookup'
 
 export function CraftingEnvironmentPage({
   plan,
@@ -189,12 +190,20 @@ export function CraftingEnvironmentPage({
           제작식에 일반 1~4 모형을 일괄 적용하지 않습니다. 수동 평균만 지정한 항목에는 확률 하한을
           계산하지 않습니다.
         </p>
-        <a href={tables.officialSource} target="_blank" rel="noreferrer">
+        <p className="save">
+          숙련도 효과는 입력값 이하의 가장 높은 구간을 조회합니다. 중간 보간이나 추정 수식은
+          적용하지 않습니다. 클라이언트 형식 문서는 커뮤니티 역공학 자료이며 공식 공지와 구분합니다.
+        </p>
+        <a href={masteryEvidence.official.url} target="_blank" rel="noreferrer">
           공식 숙련도·대량 가공 표
         </a>{' '}
         ·{' '}
         <a href={tables.source} target="_blank" rel="noreferrer">
           Codex 숙련도 표
+        </a>
+        {' · '}
+        <a href={masteryEvidence.clientFormat.url} target="_blank" rel="noreferrer">
+          클라이언트 테이블 형식 (비공식)
         </a>
         <p className="save">조회: {new Date(tables.checkedAt).toLocaleString('ko-KR')}</p>
       </section>

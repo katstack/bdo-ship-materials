@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-16",
+  "official": {
+    "title": "공식 2025년 1월 8일 업데이트 · 생활 숙련도 효과 표",
+    "url": "https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=13398",
+    "kind": "official",
+    "supports": "생활 숙련도 구간별 효과와 대량 가공 횟수",
+    "limitation": "숙련도에서 퍼센트를 생성하는 전체 수식이나 제작식별 기본 생산 분포는 공개하지 않는다."
+  },
+  "clientFormat": {
+    "title": "bdo-data-extractor · 클라이언트 숙련도 테이블 형식",
+    "url": "https://github.com/iDevelopThings/bdo-data-extractor/blob/main/FORMATS.md#life-skill-mastery-and-level-effect-tables",
+    "kind": "community-reverse-engineering",
+    "supports": "숙련도 기준값과 효과 값이 클라이언트 테이블에 저장되는 구조",
+    "limitation": "펄어비스 공식 문서가 아닌 추출기 작성자의 역공학 문서이며 일부 열 의미는 미확정이다.",
+    "files": {
+      "cooking": "cookingstatdata.bss",
+      "alchemy": "alchemystatdata.bss",
+      "processing": "manufacturingstat.bss"
+    }
+  },
+  "lookupPolicy": {
+    "method": "floor-bracket",
+    "interpolate": false,
+    "extrapolate": false,
+    "note": "입력 숙련도 이하의 가장 높은 기준값을 사용한다. 표 범위 밖은 끝 구간을 사용하며 역산식으로 외삽하지 않는다."
+  },
+  "numericProvenance": {
+    "cooking": "Codex 공개 표 수집값; 가모스 공통 열과 비교 일치. 위 두 문서에서 직접 추출한 수치라고 표시하지 않는다.",
+    "alchemy": "Codex 공개 표 수집값; 가모스 최대 수량 열과 비교 일치.",
+    "processing": "공식 업데이트 HTML에서 수집한 대량 가공 횟수. 가모스 첫 기준값 2와 공식 0의 차이는 유지한다."
+  }
+}

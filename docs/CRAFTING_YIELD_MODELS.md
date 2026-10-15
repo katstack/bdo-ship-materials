@@ -6,6 +6,15 @@
 
 ## 확보한 근거와 확보하지 못한 것
 
+### 숙련도 구간 조회의 두 근거
+
+1. [펄어비스 공식 2025-01-08 업데이트](https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=13398): 숙련도별 효과를 구간표로 제공한다. 숙련도→퍼센트 전체 계산식을 공개한 문서로 해석하지 않는다.
+2. [bdo-data-extractor의 클라이언트 테이블 형식 문서](https://github.com/iDevelopThings/bdo-data-extractor/blob/main/FORMATS.md#life-skill-mastery-and-level-effect-tables): `cookingstatdata.bss`, `alchemystatdata.bss`, `manufacturingstat.bss`에 숙련도 기준값과 효과 값이 저장되는 구조를 설명한다. 추출기 작성자의 역공학 문서이며 펄어비스 공식 자료가 아니다.
+
+출처·역할·한계·수치의 실제 수집 경로는 `src/data/masterySources.json`에서 관리한다. `masteryLookup.ts`와 환경설정 화면, 수집 스크립트가 이를 참조한다. 두 문서를 출처로 연결했다고 기존 Codex 수치를 클라이언트 직접 추출값으로 바꾸어 표시하지 않는다.
+
+조회는 입력 이하의 가장 높은 구간을 사용하며 보간·수식 역산·외삽을 하지 않는다. 예: 요리 1480→1450→34.11%, 가공 1540→1500→대량 가공 178회분. 표 범위 밖은 양 끝값을 사용한다. 이는 **숙련도 효과 조회**이며 아래의 **제작식별 평균 생산량 계산**과 별개다. 이번 연결은 기존 생산 모형 선택이나 레시피별 기본 생산 규칙을 변경하지 않는다.
+
 - [한국 공식 요리 가이드](https://www.kr.playblackdesert.com/ko-kr/Wiki?wikiNo=102): 숙련도는 최대 수량·상위 요리 확률에 영향을 주며, 대량 요리는 10회분 재료를 소모한다. 대량 요리를 재료 1회분으로 생산량 10배 얻는 것으로 계산하지 않는다.
 - [한국 공식 숙련도 확장 안내](https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=13398): 요리 확률과 종류별 숙련도에 따른 대량 가공 횟수. 가공 숙련도 자체를 제품 수율 배수로 쓰지 않는다.
 - [Codex 요리 숙련도 표](https://bdocodex.com/kr/cookingmastery/), [Codex 연금 숙련도 표](https://bdocodex.com/kr/alchemymastery/): 공개 표의 최대 수량 확률을 0~3000 구간 데이터로 저장한다. 중간값은 아래 구간을 적용한다. 예: 1480 → 1450.
