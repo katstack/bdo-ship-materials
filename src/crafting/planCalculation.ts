@@ -18,6 +18,7 @@ export type PlanRow = {
   recipeIndex: number
   enhancementLevel: number
   prediction?: YieldPrediction
+  blockedReason?: 'cycle'
   meanCrafts?: number
 }
 export type PlanResult = { rows: PlanRow[]; warnings: string[] }
@@ -177,6 +178,47 @@ export function calculateCraftingPlan(
     for (const input of node.inputs) build(input.id, depth + 1)
   }
   for (const goal of plan.goals) build(goal.itemId, 0)
+  // Recovery recipes can lead back to the equipment that consumes their output.
+  // Break cyclic intermediates into explicit shopping leaves, not missing edges.
+  const state = new Map<string, number>()
+  const path: string[] = []
+  const blocked = new Set<string>()
+  const inspect = (id: string) => {
+    if (state.get(id) === 1) {
+      const cycle = path.slice(path.indexOf(id))
+      const intermediates = cycle.filter((item) => !goals.has(item))
+      for (const item of intermediates.length ? intermediates : cycle.slice(-1)) blocked.add(item)
+      return
+    }
+    if (state.get(id) === 2) return
+    state.set(id, 1)
+    path.push(id)
+    for (const input of nodes.get(id)!.inputs) inspect(input.id)
+    path.pop()
+    state.set(id, 2)
+  }
+  for (const goal of plan.goals) inspect(goal.itemId)
+  for (const id of blocked) {
+    const node = nodes.get(id)!
+    node.inputs = []
+    node.row.mode = 'obtain'
+    node.row.blockedReason = 'cycle'
+    node.row.prediction = undefined
+  }
+  const reachable = new Set<string>()
+  const retain = (id: string) => {
+    if (reachable.has(id)) return
+    reachable.add(id)
+    for (const input of nodes.get(id)!.inputs) retain(input.id)
+  }
+  for (const goal of plan.goals) retain(goal.itemId)
+  for (const [id, node] of nodes) {
+    if (!reachable.has(id)) nodes.delete(id)
+    else if (blocked.has(id))
+      warnings.add(
+        `${node.row.name}: 장비 회수·재제작 등 순환 경로가 있어 하위 제작 대신 직접 수급·구매할 재료로 계산했습니다. 필요 수량은 합계에 포함됩니다.`,
+      )
+  }
   for (const node of nodes.values())
     for (const input of node.inputs) nodes.get(input.id)!.incoming++
   for (const goal of plan.goals) nodes.get(goal.itemId)!.row.required += goal.quantity
@@ -215,8 +257,6 @@ export function calculateCraftingPlan(
     if (row.required > 0 || row.isGoal) rows.push(row)
   }
   if (ready.length !== nodes.size)
-    throw new Error(
-      '순환 제작식이 있어 계산을 중단했습니다. 직접 재료 범위로 돌아가거나 목표 아이템의 획득 방식을 직접 수급으로 바꾸세요.',
-    )
+    throw new Error('제작 경로를 정리하지 못했습니다. 계산 데이터의 순환 참조를 확인해야 합니다.')
   return { rows, warnings: [...warnings] }
 }

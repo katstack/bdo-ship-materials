@@ -67,6 +67,9 @@ export function CraftingPlanTable({
                     {row.name}
                   </button>
                   {row.isGoal && <small className="save"> · 목표</small>}
+                  {row.blockedReason === 'cycle' && (
+                    <small className="save">순환 제작 경로 · 직접 수급으로 계산</small>
+                  )}
                 </td>
                 <td>{n(row.required)}</td>
                 <td>
@@ -84,7 +87,9 @@ export function CraftingPlanTable({
                   {detail?.recipes.length && !row.enhancementLevel ? (
                     <select
                       aria-label={`${row.name} 획득 방식`}
-                      value={plan.choices[row.id]?.mode ?? row.mode}
+                      value={
+                        row.blockedReason ? row.mode : (plan.choices[row.id]?.mode ?? row.mode)
+                      }
                       onChange={(event) =>
                         changeChoice(row, { mode: event.target.value as 'craft' | 'obtain' })
                       }

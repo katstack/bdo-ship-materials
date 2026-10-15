@@ -146,12 +146,33 @@ describe('multi-goal crafting calculation', () => {
       calculateCraftingPlan(data, details, names).rows.find((row) => row.id === '3'),
     ).toMatchObject({ required: 3, crafts: 3 })
   })
-  it('rejects cyclic paths instead of presenting an incomplete shopping total', () => {
+  it('turns cyclic intermediates into shopping leaves without discarding their demand', () => {
     const cycle = new Map(details)
     cycle.set('3', make('3', [{ item: 'urn::item:1', count: 1 }]))
-    expect(() => calculateCraftingPlan({ ...plan(), view: 'raw' }, cycle, names)).toThrow(
-      '순환 제작식',
+    const result = calculateCraftingPlan({ ...plan(), inventory: {}, view: 'raw' }, cycle, names)
+    expect(result.rows.find((row) => row.id === '3')).toMatchObject({
+      mode: 'obtain',
+      required: 2,
+      shortage: 2,
+      blockedReason: 'cycle',
+    })
+    expect(result.rows.find((row) => row.id === '1')).toMatchObject({ mode: 'craft', crafts: 1 })
+    expect(result.warnings.some((warning) => warning.includes('순환 경로'))).toBe(true)
+  })
+  it('keeps a self-referential target and its full quantity as a shopping requirement', () => {
+    const self = new Map([['1', make('1', [{ item: 'urn::item:1', count: 1 }])]])
+    const result = calculateCraftingPlan(
+      { ...emptyCraftingPlan(), goals: [{ itemId: '1', name: 'A', quantity: 3 }] },
+      self,
+      names,
     )
+    expect(result.rows).toHaveLength(1)
+    expect(result.rows[0]).toMatchObject({
+      mode: 'obtain',
+      required: 3,
+      shortage: 3,
+      blockedReason: 'cycle',
+    })
   })
   it('separates enhanced gear requirements from unenhanced stock', () => {
     const packed = String(10 * 0x1000000 + 3)
