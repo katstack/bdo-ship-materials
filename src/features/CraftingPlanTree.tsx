@@ -4,6 +4,7 @@ import type { PlanResult } from '../crafting/planCalculation'
 import type { CraftingPlan } from '../crafting/planTypes'
 import type { ItemDetail } from '../crafting/types'
 import { CraftingPlanTable } from './CraftingPlanTable'
+import { QuantityInput } from './QuantityInput'
 
 const n = (value: number) => value.toLocaleString('ko-KR')
 
@@ -57,6 +58,29 @@ export function CraftingPlanTree({
           {node.row.required !== node.required && ` · 전체 필요 ${n(node.row.required)}개`}
           {node.row.owned >= node.row.required && ' · 재고 충족'}
         </p>
+        {!node.shared && !node.external && (
+          <div className="crafting-tree-stock">
+            <label>
+              보유 수량{' '}
+              <QuantityInput
+                min={0}
+                aria-label={`${node.row.name} 경로 보유 수량`}
+                value={node.row.owned}
+                onValueChange={(value) =>
+                  update({ ...plan, inventory: { ...plan.inventory, [node.row.id]: value } })
+                }
+              />
+            </label>
+            <span className={node.row.shortage ? 'short' : 'save'}>
+              부족 {n(node.row.shortage)}개 (전체 목표 기준)
+            </span>
+            {node.row.calculationMode === 'craft' && (
+              <small className="save">
+                보유분을 제외한 부족 수량만 제작하며, 하위 재료도 그만큼 줄어듭니다.
+              </small>
+            )}
+          </div>
+        )}
         {node.shared ? (
           <button className="crafting-tree-shared" onClick={() => focusShared(node.key)}>
             공유 재료 · 먼저 나온 경로에서 설정

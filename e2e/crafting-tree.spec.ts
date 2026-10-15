@@ -42,18 +42,33 @@ test('tree explains shared material demand while supply list edits stock and mob
   await expect(iron.getByRole('combobox')).toHaveCount(0)
   await iron.getByRole('spinbutton', { name: '철 광석 제작 재고', exact: true }).fill('7')
   await expect(iron.locator('td').nth(3)).toHaveText('33')
+  const treeStock = tree.getByRole('spinbutton', {
+    name: '녹아내린 철 조각 경로 보유 수량',
+    exact: true,
+  })
+  await treeStock.fill('1')
+  await expect(iron.locator('td').nth(1)).toHaveText('35')
+  await expect(iron.locator('td').nth(3)).toHaveText('28')
+  await treeStock.fill('0')
+  await expect(iron.locator('td').nth(1)).toHaveText('40')
   const root = await openCraftingNode(page, '4051')
   await root
     .getByRole('spinbutton', { name: '녹아내린 철 조각 1회 예상 생산량', exact: true })
     .fill('2')
   await expect(iron.locator('td').nth(1)).toHaveText('35')
   await expect(iron.locator('td').nth(3)).toHaveText('28')
+  await treeStock.fill('1')
+  await expect(iron.locator('td').nth(1)).toHaveText('35') // Remaining one piece still requires one craft at yield 2.
+  await treeStock.fill('2')
+  await expect(iron.locator('td').nth(1)).toHaveText('30')
+  await treeStock.fill('0')
   await page.getByRole('checkbox', { name: '중간 제작품·목표 재고도 보기', exact: true }).check()
   const rootStock = supplyRow(page, '4051').getByRole('spinbutton', {
     name: '녹아내린 철 조각 제작 재고',
     exact: true,
   })
   await rootStock.fill('2')
+  await expect(treeStock).toHaveValue('2')
   await expect(iron.locator('td').nth(1)).toHaveText('30')
   await expect(iron.locator('td').nth(3)).toHaveText('23')
   await rootStock.fill('0')

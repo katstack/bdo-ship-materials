@@ -1916,6 +1916,21 @@ tr:last-child td {
 .crafting-tree-node-meta {
   margin: 6px 0 10px;
 }
+.crafting-tree-stock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}
+.crafting-tree-stock input {
+  width: 100px;
+  max-width: 100%;
+}
+.crafting-tree-stock small {
+  flex-basis: 100%;
+}
 .crafting-tree-shared {
   font-size: 0.8rem;
   padding: 5px 8px;
