@@ -2,13 +2,13 @@
 
 ## 주소와 역할
 
-| 용도               | 주소                          | 연결 대상                                 |
-| ------------------ | ----------------------------- | ----------------------------------------- |
-| 프론트엔드         | https://bdo.katstack.dev/     | GitHub Pages: katstack/bdo-ship-materials |
-| 백엔드 (예약 이름) | https://bdo-api.katstack.dev/ | VM 주소 및 백엔드 배포 확정 후 연결       |
-| 로컬 개발          | http://localhost:5173         | Vite 개발 서버                            |
+| 용도                | 주소                          | 연결 대상                                 |
+| ------------------- | ----------------------------- | ----------------------------------------- |
+| 프론트엔드          | https://bdo.katstack.dev/     | GitHub Pages: katstack/bdo-ship-materials |
+| 백엔드 HTTPS 진입점 | https://bdo-api.katstack.dev/ | oracle VM의 nginx → 127.0.0.1:3000        |
+| 로컬 개발           | http://localhost:5173         | Vite 개발 서버                            |
 
-백엔드 이름을 정한 것만으로 OAuth 서버나 DNS가 구축된 것은 아닙니다. 프론트 도메인 연결과 백엔드 구현은 별도 작업입니다.
+프론트와 백엔드 DNS 및 HTTPS 진입점은 연결되었습니다. OAuth 애플리케이션 서버는 아직 구현되지 않았습니다. `/healthz`는 `proxy_ready` 및 `oauth: not_configured`를 반환하고, 실행 중인 백엔드가 없으면 다른 요청은 503을 반환합니다.
 
 ## DNS 및 GitHub Pages
 
@@ -17,7 +17,17 @@
 - 저장소 Pages의 Custom domain은 `bdo.katstack.dev`입니다. 인증서 발급 후 Enforce HTTPS를 활성화합니다.
 - 배포 워크플로는 `VITE_BASE_PATH=/`를 사용합니다. `public/CNAME`이 빌드 결과의 `CNAME`으로 복사됩니다.
 - Cloudflare CLI는 WSL `Ubuntu-26.04`의 `cf` 명령으로 사용합니다. 인증정보는 저장소에 기록하지 않습니다.
-- DNS를 수정하기 전에 해당 이름의 레코드를 조회해 충돌 여부를 확인합니다. 백엔드 IP는 추측해서 등록하지 않습니다.
+- DNS를 수정하기 전에 해당 이름의 레코드를 조회해 충돌 여부를 확인합니다. 백엔드 A 레코드는 사용자가 지정한 `ssh oracle` 대상 VM을 가리키며, IP는 SSH 설정 및 Cloudflare에서 확인합니다.
+
+## 백엔드 TLS 운영
+
+- VM은 Ubuntu 24.04 ARM64입니다. 실제 확인된 CPU는 4개, 메모리는 약 24 GiB입니다.
+- nginx 설정 원본은 `deploy/nginx/bdo-api.katstack.dev.conf`이며 VM의 `/etc/nginx/sites-available/bdo-api.katstack.dev`에서 활성화됩니다.
+- 기존 Let's Encrypt DNS-01 인증서 `/etc/letsencrypt/live/katstack.dev/`의 `*.katstack.dev` 인증서를 사용합니다. 인증서 개인키나 Cloudflare 인증정보는 저장소에 넣지 않습니다.
+- 기존 `certbot.timer`를 유지합니다. `deploy/certbot/reload-bdo-nginx.sh`는 VM의 `/etc/letsencrypt/renewal-hooks/deploy/`에 설치하며, 인증서 갱신 성공 후 `nginx -t`를 통과하면 reload합니다.
+- 공개 인바운드는 TCP 443을 사용합니다. DNS-01 갱신에는 공개 80 포트를 열 필요가 없습니다. Rust 서버는 추후 `127.0.0.1:3000`에 바인딩합니다.
+- 외부 HTTPS 확인: `curl --fail https://bdo-api.katstack.dev/healthz`. 이는 프록시 생존 검사이며 로그인이나 동기화가 구현되었다는 의미가 아닙니다.
+- 초기 작업 시 VM 루트 디스크가 99% 사용 중이었습니다. 대규모 빌드나 DB 설치 전에 디스크 사용량을 확인하고, 사용자 승인 없이 기존 데이터를 삭제하지 않습니다.
 
 ## 기존 브라우저 데이터 이전
 
