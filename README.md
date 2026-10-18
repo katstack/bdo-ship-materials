@@ -2,7 +2,9 @@
 
 브라우저의 LocalStorage만 사용하는 정적 React 웹앱입니다. 보유 수량은 같은 이름의 재료끼리 모든 장비에서 공유되며, 장비/전체 진행률과 부족량은 자동 계산됩니다.
 
-현재 배포 주소: [katstack.github.io/bdo-ship-materials](https://katstack.github.io/bdo-ship-materials/)
+배포 주소: [bdo.katstack.dev](https://bdo.katstack.dev/)
+
+커스텀 도메인, DNS, 로컬 데이터 이전 및 OAuth 원본 설정은 [도메인 운영 문서](docs/DOMAINS.md)를 참고하세요.
 
 함대·단계·고정 게임 데이터의 의도와 다음 작업자가 따라야 할 기준은 [앱 설계 문서](docs/APP_INTENT.md)를 참고하세요.
 
@@ -48,7 +50,9 @@ pnpm dev
 
 ## GitHub Pages 배포
 
-GitHub Actions 또는 Pages 빌드 환경에서 아래처럼 저장소 이름을 base path로 지정합니다. 예: 저장소가 `bdo-ship-materials`일 때
+현재 GitHub Actions는 커스텀 도메인 `bdo.katstack.dev`의 루트에 배포하므로 `VITE_BASE_PATH=/`로 빌드합니다. `public/CNAME`도 배포 결과에 포함됩니다.
+
+커스텀 도메인 없이 GitHub Pages 프로젝트 주소로 배포할 경우에만 저장소 이름을 base path로 지정합니다.
 
 ```bash
 VITE_BASE_PATH=/bdo-ship-materials/ pnpm build
