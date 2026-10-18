@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AppData } from './types'
+import { SERVER_AUTH_API_URL } from './serverAuth'
+import { useServerDriveSync } from './useServerDriveSync'
 import {
   cacheDriveToken,
   cancelGoogleOneTap,
@@ -27,7 +29,7 @@ export const shouldRestoreDriveOnFirstConnection = (
   hasDriveFile: boolean,
 ) => !hasLocalProgress && hasDriveFile
 
-export function useDriveSync(
+function useLegacyDriveSync(
   data: AppData,
   replaceLocal: (data: AppData) => void,
   hasLocalProgress: boolean,
@@ -214,3 +216,6 @@ export function useDriveSync(
     hasRememberedConnection,
   }
 }
+
+// Opt in only after the production Worker and its Google secret are ready.
+export const useDriveSync = SERVER_AUTH_API_URL ? useServerDriveSync : useLegacyDriveSync

@@ -5,10 +5,10 @@
 | 용도                | 주소                          | 연결 대상                                 |
 | ------------------- | ----------------------------- | ----------------------------------------- |
 | 프론트엔드          | https://bdo.katstack.dev/     | GitHub Pages: katstack/bdo-ship-materials |
-| 백엔드 HTTPS 진입점 | https://bdo-api.katstack.dev/ | oracle VM의 nginx → 127.0.0.1:3000        |
+| 백엔드 HTTPS 진입점 | https://bdo-api.katstack.dev/ | Cloudflare Worker: bdo-ship-auth          |
 | 로컬 개발           | http://localhost:5173         | Vite 개발 서버                            |
 
-프론트와 백엔드 DNS 및 HTTPS 진입점은 연결되었습니다. OAuth 애플리케이션 서버는 아직 구현되지 않았습니다. `/healthz`는 `proxy_ready` 및 `oauth: not_configured`를 반환하고, 실행 중인 백엔드가 없으면 다른 요청은 503을 반환합니다.
+OAuth 서버는 `worker/`에 Cloudflare Workers + Turso 방식으로 구현했습니다. API는 Worker 커스텀 도메인으로 전환했으며 `/healthz`는 설정 완료 시 `ready`를 반환합니다. 이는 실제 Google 계정 인증 성공을 보장하는 검사는 아닙니다. 자세한 배포·보안·롤백 절차는 [인증 Worker 운영](AUTH_WORKER.md)을 참고합니다.
 
 ## DNS 및 GitHub Pages
 
@@ -17,7 +17,7 @@
 - 저장소 Pages의 Custom domain은 `bdo.katstack.dev`입니다. 인증서 발급 후 Enforce HTTPS를 활성화합니다.
 - 배포 워크플로는 `VITE_BASE_PATH=/`를 사용합니다. `public/CNAME`이 빌드 결과의 `CNAME`으로 복사됩니다.
 - Cloudflare CLI는 WSL `Ubuntu-26.04`의 `cf` 명령으로 사용합니다. 인증정보는 저장소에 기록하지 않습니다.
-- DNS를 수정하기 전에 해당 이름의 레코드를 조회해 충돌 여부를 확인합니다. 백엔드 A 레코드는 사용자가 지정한 `ssh oracle` 대상 VM을 가리키며, IP는 SSH 설정 및 Cloudflare에서 확인합니다.
+- API의 기존 A 레코드 `193.122.124.135`는 Worker 커스텀 도메인 전환을 위해 제거했습니다. VM 설정은 복구용으로 유지합니다. DNS를 되돌릴 때는 먼저 Worker 도메인 매핑과 충돌 여부를 확인합니다.
 
 ## 백엔드 TLS 운영
 
@@ -47,7 +47,7 @@ Google Cloud Console의 기존 OAuth 클라이언트에 승인된 JavaScript 원
 
 DNS/GitHub 설정만으로 Google OAuth 허용 원본이 자동 변경되지는 않습니다. 새 원본이 미등록이면 Drive 연결에서 origin 오류가 발생할 수 있습니다.
 
-추후 서버 OAuth 흐름을 구현할 때는 실제 콜백 경로를 확정한 뒤 `https://bdo-api.katstack.dev/...`의 정확한 리다이렉트 URI를 별도로 등록합니다. 와일드카드로 등록하지 않습니다.
+서버 OAuth의 승인된 리다이렉트 URI는 `https://bdo-api.katstack.dev/auth/google/callback`입니다. JavaScript 원본과 별도로 정확히 등록하며 와일드카드는 사용하지 않습니다.
 
 ## 향후 서버 세션
 

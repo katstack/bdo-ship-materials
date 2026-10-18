@@ -15,7 +15,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  worker-check:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - id: worker-store
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.worker-store.outputs.path }}
+          key: ${{ runner.os }}-auth-worker-${{ hashFiles('worker/pnpm-lock.yaml') }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
   deploy:
+    needs: worker-check
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,10 +67,12 @@ jobs:
         env:
           VITE_BASE_PATH: /
           VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
+          VITE_AUTH_API_URL: ${{ vars.VITE_AUTH_API_URL }}
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
         env:
           VITE_BASE_PATH: /
+          VITE_AUTH_API_URL: ${{ vars.VITE_AUTH_API_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

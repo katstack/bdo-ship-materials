@@ -1,0 +1,19 @@
+{
+  "name": "bdo-ship-auth",
+  "packageManager": "pnpm@12.14.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cf dev --mode local",
+    "build": "cf build",
+    "deploy": "cf deploy",
+    "typecheck": "cf workers types && tsc",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "beta",
+    "cf": "^1.0.0-beta.18",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  }
+}
