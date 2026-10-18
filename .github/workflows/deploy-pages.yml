@@ -61,6 +61,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
+      - run: pnpm exec tsc -b
       - run: pnpm crafting:verify
       - run: pnpm test
       - run: pnpm build
@@ -73,6 +74,15 @@ jobs:
         env:
           VITE_BASE_PATH: /
           VITE_AUTH_API_URL: ${{ vars.VITE_AUTH_API_URL }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-diagnostics
+          path: |
+            playwright-report/
+            e2e/.results/
+          retention-days: 7
+          if-no-files-found: ignore
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

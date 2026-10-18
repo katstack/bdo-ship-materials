@@ -1,8 +1,4 @@
-import type { AppData } from './types'
-import { normalize } from './storage'
-
 export const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.appdata'
-const FILE_NAME = 'bdo-ship-materials.json'
 const GIS_URL = 'https://accounts.google.com/gsi/client'
 const TOKEN_CACHE_KEY = 'bdo-drive-access-token:v1'
 
@@ -40,10 +36,6 @@ interface GoogleOneTapConfig {
   callback: (response: { credential?: string }) => void
   cancel_on_tap_outside?: boolean
   context?: 'signin'
-}
-interface DriveFile {
-  id: string
-  modifiedTime?: string
 }
 
 // OAuth client IDs are public identifiers, not secrets. Never add a client secret here.
@@ -133,50 +125,4 @@ export function promptGoogleOneTap(onContinue: () => void) {
 export function cancelGoogleOneTap() {
   window.google?.accounts.id?.cancel()
 }
-export async function getDriveFile(token: string): Promise<{ id: string; data: AppData } | null> {
-  const params = new URLSearchParams({
-    spaces: 'appDataFolder',
-    q: `name = '${FILE_NAME}' and trashed = false`,
-    fields: 'files(id,modifiedTime)',
-    pageSize: '1',
-  })
-  const list = await driveFetch<{ files?: DriveFile[] }>(
-    `https://www.googleapis.com/drive/v3/files?${params}`,
-    token,
-  )
-  const file = list.files?.[0]
-  if (!file) return null
-  const response = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  if (!response.ok) throw new Error(`Drive 데이터를 읽지 못했습니다. (${response.status})`)
-  return { id: file.id, data: normalize(await response.json()) }
-}
-export async function saveDriveFile(token: string, data: AppData, fileId?: string) {
-  const boundary = `bdo-${crypto.randomUUID()}`
-  const metadata = fileId
-    ? {}
-    : { name: FILE_NAME, parents: ['appDataFolder'], mimeType: 'application/json' }
-  const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(data)}\r\n--${boundary}--`
-  const url = fileId
-    ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`
-    : 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart'
-  return driveFetch<DriveFile>(url, token, {
-    method: fileId ? 'PATCH' : 'POST',
-    headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
-    body,
-  })
-}
-async function driveFetch<T>(url: string, token: string, init: RequestInit = {}) {
-  const response = await fetch(url, {
-    ...init,
-    headers: { Authorization: `Bearer ${token}`, ...init.headers },
-  })
-  if (!response.ok) {
-    const detail = await response.text()
-    throw new Error(
-      `Google Drive 요청 실패 (${response.status})${detail ? `: ${detail.slice(0, 120)}` : ''}`,
-    )
-  }
-  return response.json() as Promise<T>
-}
+export { getDriveFile, saveDriveFile, DriveRequestError } from './sync/driveFiles'

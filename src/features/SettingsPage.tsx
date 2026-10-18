@@ -7,18 +7,14 @@ import {
   shortHullLabel,
 } from '../catalog'
 import type { AppData, Hull, Ship } from '../types'
-import type { DriveStatus } from '../useDriveSync'
+import type { DriveSyncController } from '../sync/types'
 
 interface SettingsPageProps {
   data: AppData
-  drive: {
-    status: DriveStatus
-    error: string
-    authorize: () => void
-    reauthorize: () => void
-    disconnect: () => void
-    hasRememberedConnection: boolean
-  }
+  drive: Pick<
+    DriveSyncController,
+    'status' | 'error' | 'authorize' | 'reauthorize' | 'disconnect' | 'hasRememberedConnection'
+  >
   importRef: RefObject<HTMLInputElement | null>
   onEditShip: (ship: Ship) => void
   onRemoveShip: (ship: Ship) => void
@@ -133,8 +129,8 @@ export function SettingsPage({
       <div className="panel manage">
         <h2>Google Drive 동기화</h2>
         <p>
-          진행 데이터만 앱 전용 Drive 저장소에 동기화합니다. 앱을 다시 열 때는 유효한 저장 토큰만
-          재사용하며, 계정 선택 창을 자동으로 띄우지 않습니다.
+          진행 데이터만 앱 전용 Drive 저장소에 동기화합니다. 앱을 다시 열 때 인증 상태를 복원하며,
+          계정 선택 창을 자동으로 띄우지 않습니다.
         </p>
         {drive.status === 'disconnected' || drive.status === 'failed' ? (
           <button

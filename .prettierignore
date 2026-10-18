@@ -6,3 +6,7 @@ public/crafting/
 e2e/.results/
 worker/.cloudflare/
 worker/.wrangler/
+playwright-report/
+**/.venv/
+.idea/
+research/

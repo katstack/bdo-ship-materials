@@ -5,3 +5,5 @@ dist/
 .env.local
 items.json
 quests.json
+playwright-report/
+e2e/.results/

@@ -1,3 +1,4 @@
+import { Progress } from './Progress'
 import { materialById } from '../catalog'
 import type { AppData, Recipe } from '../types'
 import { clamp, materialSupply, number } from '../utils'
@@ -10,16 +11,6 @@ type RecipeRowsProps = {
   data: AppData
   showSupply: (detail: { materialId: string; period: 'daily' | 'weekly' }) => void
 }
-
-const Progress = ({ value }: { value: number }) => (
-  <div className="progress">
-    <i
-      className={value === 100 ? 'done' : value >= 70 ? 'near' : ''}
-      style={{ width: `${value}%` }}
-    />
-    <span>{value}%</span>
-  </div>
-)
 
 export function RecipeRows({
   recipe,

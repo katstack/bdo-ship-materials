@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AppData } from './types'
-import type { DriveStatus, SyncConflict } from './useDriveSync'
+import type { DriveStatus, SyncConflict, DriveSyncController } from './sync/types'
+import { compareProgress } from './sync/policy'
+import { createSerialQueue } from './sync/serialQueue'
 import {
   clearCachedDriveToken,
+  DriveRequestError,
   getClientId,
   getDriveFile,
   isDriveConnected,
@@ -15,7 +18,7 @@ export function useServerDriveSync(
   data: AppData,
   replaceLocal: (data: AppData) => void,
   hasLocalProgress: boolean,
-) {
+): DriveSyncController {
   const [status, setStatus] = useState<DriveStatus>('connecting')
   const [error, setError] = useState(() => {
     const result = new URL(window.location.href).searchParams.get('drive_auth')
@@ -32,7 +35,7 @@ export function useServerDriveSync(
   const fileId = useRef<string | undefined>(undefined)
   const uploaded = useRef('')
   const generation = useRef(0)
-  const writes = useRef<Promise<void>>(Promise.resolve())
+  const [writes] = useState(createSerialQueue)
   const comparing = useRef(false)
   useEffect(() => {
     latest.current = { data, replaceLocal, hasLocalProgress }
@@ -55,7 +58,7 @@ export function useServerDriveSync(
       try {
         return await action(await client.token())
       } catch (issue) {
-        if (issue instanceof Error && issue.message.includes('(401)'))
+        if (issue instanceof DriveRequestError && issue.status === 401)
           return action(await client.token(true))
         throw issue
       }
@@ -67,7 +70,7 @@ export function useServerDriveSync(
   const write = useCallback(
     (next = latest.current.data) => {
       const current = generation.current
-      const operation = writes.current.then(async () => {
+      const operation = writes.run(async () => {
         if (generation.current !== current) return
         try {
           const saved = await withToken((token) => saveDriveFile(token, next, fileId.current))
@@ -81,10 +84,9 @@ export function useServerDriveSync(
           if (generation.current === current) failed(issue)
         }
       })
-      writes.current = operation
       return operation
     },
-    [failed, withToken],
+    [failed, withToken, writes],
   )
 
   const compare = useCallback(async () => {
@@ -92,7 +94,7 @@ export function useServerDriveSync(
     comparing.current = true
     const current = generation.current
     try {
-      await writes.current
+      await writes.idle()
       const remote = await withToken(getDriveFile)
       if (generation.current !== current) return
       setDriveConnected(true)
@@ -104,22 +106,20 @@ export function useServerDriveSync(
       } else {
         fileId.current = remote.id
         const local = latest.current.data
-        if (!latest.current.hasLocalProgress) {
+        const comparison = compareProgress(
+          local,
+          remote.data,
+          remote.id,
+          latest.current.hasLocalProgress,
+        )
+        if (comparison.kind === 'restore') {
           uploaded.current = remote.data.updatedAt
           latest.current.replaceLocal(remote.data)
           setLastSavedAt(remote.data.updatedAt)
-        } else if (remote.data.updatedAt === local.updatedAt) {
+        } else if (comparison.kind === 'same') {
           uploaded.current = local.updatedAt
           setLastSavedAt(local.updatedAt)
-        } else {
-          setConflict({
-            local,
-            drive: remote.data,
-            driveFileId: remote.id,
-            newer:
-              Date.parse(remote.data.updatedAt) > Date.parse(local.updatedAt) ? 'drive' : 'local',
-          })
-        }
+        } else setConflict(comparison.conflict)
       }
       if (generation.current !== current) return
       setReady(true)
@@ -130,7 +130,7 @@ export function useServerDriveSync(
     } finally {
       comparing.current = false
     }
-  }, [failed, withToken, write])
+  }, [failed, withToken, write, writes])
 
   useEffect(() => {
     let cancelled = false

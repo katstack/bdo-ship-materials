@@ -1,15 +1,7 @@
-import type { AggregateMaterial, AppData, MaterialExchangeSortKey } from '../types'
+import type { AppData, MaterialExchangeSortKey } from '../types'
+import type { BarterRow } from '../ship/materialRows'
+export type { BarterRow } from '../ship/materialRows'
 import { number } from '../utils'
-
-export type BarterRow = AggregateMaterial & {
-  exchangeKey: string
-  outputQuantity: number
-  variableOutput: boolean
-  afterExchangeShortage: number
-  progressGain: number
-  exchangeCrowValue?: number
-  priority: number
-}
 
 type BarterPriorityTableProps = {
   rows: BarterRow[]

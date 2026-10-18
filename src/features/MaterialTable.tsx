@@ -1,3 +1,4 @@
+import { Progress } from './Progress'
 import type { AggregateMaterial, MaterialSortKey } from '../types'
 import { clamp, number } from '../utils'
 
@@ -9,16 +10,6 @@ type MaterialTableProps = {
   sort: { key: MaterialSortKey; direction: 'asc' | 'desc' }
   onSort: (key: MaterialSortKey) => void
 }
-
-const Progress = ({ value }: { value: number }) => (
-  <div className="progress">
-    <i
-      className={value === 100 ? 'done' : value >= 70 ? 'near' : ''}
-      style={{ width: `${value}%` }}
-    />
-    <span>{value}%</span>
-  </div>
-)
 
 export function MaterialTable({
   rows,

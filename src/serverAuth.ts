@@ -13,7 +13,7 @@ export function createServerAuthClient(baseUrl: string, fetcher: typeof fetch = 
   let inFlight: Promise<string> | undefined
   let generation = 0
 
-  async function request<T>(path: string, method = 'GET'): Promise<T> {
+  async function request(path: string, method = 'GET'): Promise<unknown> {
     const response = await fetcher(`${baseUrl}${path}`, {
       method,
       credentials: 'include',
@@ -33,7 +33,7 @@ export function createServerAuthClient(baseUrl: string, fetcher: typeof fetch = 
           : '동기화 서버에 연결하지 못했습니다. 로컬 저장은 유지됩니다.',
       )
     }
-    return response.json() as Promise<T>
+    return response.json()
   }
 
   function clear() {
@@ -43,7 +43,17 @@ export function createServerAuthClient(baseUrl: string, fetcher: typeof fetch = 
   }
 
   return {
-    session: () => request<{ connected: boolean }>('/auth/session'),
+    async session(): Promise<{ connected: boolean }> {
+      const result = await request('/auth/session')
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        !('connected' in result) ||
+        typeof result.connected !== 'boolean'
+      )
+        throw new Error('동기화 서버의 세션 응답이 올바르지 않습니다.')
+      return { connected: result.connected }
+    },
     clear,
     token(force = false): Promise<string> {
       if (!force && cached && cached.expiresAt > Date.now() + 60_000)
@@ -53,18 +63,21 @@ export function createServerAuthClient(baseUrl: string, fetcher: typeof fetch = 
       inFlight = (async () => {
         for (let attempt = 0; ; attempt++) {
           try {
-            const result = await request<{ accessToken: string; expiresAt: number }>(
-              `/auth/token${force ? '?refresh=1' : ''}`,
-              'POST',
-            )
+            const result = await request(`/auth/token${force ? '?refresh=1' : ''}`, 'POST')
             if (generation !== current) throw new Error('연결 상태가 변경되었습니다.')
             if (
-              !result.accessToken ||
+              !result ||
+              typeof result !== 'object' ||
+              !('accessToken' in result) ||
+              typeof result.accessToken !== 'string' ||
+              !result.accessToken.trim() ||
+              !('expiresAt' in result) ||
+              typeof result.expiresAt !== 'number' ||
               !Number.isFinite(result.expiresAt) ||
               result.expiresAt <= Date.now()
             )
               throw new Error('동기화 서버의 인증 응답이 올바르지 않습니다.')
-            cached = result
+            cached = { accessToken: result.accessToken, expiresAt: result.expiresAt }
             return result.accessToken
           } catch (error) {
             if (

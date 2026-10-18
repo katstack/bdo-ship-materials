@@ -208,16 +208,16 @@ importers:
   .:
     devDependencies:
       '@cloudflare/vite-plugin':
-        specifier: beta
+        specifier: 2.0.0-beta.v.1
         version: 2.0.0-beta.v.1(vite@8.3.4)(workerd@1.20261012.1)
       cf:
-        specifier: ^1.0.0-beta.18
+        specifier: 1.0.0-beta.18
         version: 1.0.0-beta.18
       typescript:
-        specifier: ^7.0.2
+        specifier: 7.0.2
         version: 7.0.2
       vite:
-        specifier: ^8.3.0
+        specifier: 8.3.4
         version: 8.3.4
 
 packages:

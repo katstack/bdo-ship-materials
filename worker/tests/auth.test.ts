@@ -260,6 +260,18 @@ describe('Google Drive authorization worker', () => {
     assert.equal((await call('/auth/google/start')).status, 429)
   })
 
+  it('prunes expired records without deleting live sessions or user grants', async () => {
+    const session = await login()
+    db.prepare('INSERT INTO sessions VALUES(?,?,?)').run('expired-session', identity, 0)
+    await begin()
+    assert.equal(
+      db.prepare('SELECT COUNT(*) AS count FROM sessions WHERE expires_at=0').get()!.count,
+      0,
+    )
+    assert.deepEqual(await (await call('/auth/session', session)).json(), { connected: true })
+    assert.ok(db.prepare('SELECT refresh_token FROM users').get()!.refresh_token)
+  })
+
   it('fails closed on missing configuration or DB errors without leaking details', async () => {
     assert.equal(
       (await worker.fetch(new Request(`${api}/healthz`), { ...env, GOOGLE_CLIENT_SECRET: '' }))
