@@ -26,6 +26,8 @@
 - 기존 Let's Encrypt DNS-01 인증서 `/etc/letsencrypt/live/katstack.dev/`의 `*.katstack.dev` 인증서를 사용합니다. 인증서 개인키나 Cloudflare 인증정보는 저장소에 넣지 않습니다.
 - 기존 `certbot.timer`를 유지합니다. `deploy/certbot/reload-bdo-nginx.sh`는 VM의 `/etc/letsencrypt/renewal-hooks/deploy/`에 설치하며, 인증서 갱신 성공 후 `nginx -t`를 통과하면 reload합니다.
 - 공개 인바운드는 TCP 443을 사용합니다. DNS-01 갱신에는 공개 80 포트를 열 필요가 없습니다. Rust 서버는 추후 `127.0.0.1:3000`에 바인딩합니다.
+- API nginx의 TLS 리스너는 일반 NIC 주소 `10.0.0.254`와 `127.0.0.1`에만 바인딩합니다. VM 주소가 바뀌면 설정을 함께 수정합니다. `0.0.0.0:443` 및 `[::]:443` 바인딩은 같은 VM의 Tailscale 전용 GitLab과 충돌하므로 사용하지 않습니다.
+- nginx 설치 기본 사이트의 활성화 링크는 `/etc/nginx/default-site.disabled-by-bdo`로 보관합니다. 기본 사이트의 wildcard 80 리스너도 GitLab과 충돌하므로 다시 활성화하지 않습니다.
 - 외부 HTTPS 확인: `curl --fail https://bdo-api.katstack.dev/healthz`. 이는 프록시 생존 검사이며 로그인이나 동기화가 구현되었다는 의미가 아닙니다.
 - 초기 작업 시 VM 루트 디스크가 99% 사용 중이었습니다. 대규모 빌드나 DB 설치 전에 디스크 사용량을 확인하고, 사용자 승인 없이 기존 데이터를 삭제하지 않습니다.
 
